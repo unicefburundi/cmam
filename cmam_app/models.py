@@ -171,3 +171,14 @@ class ProductStockReport(models.Model):
 	def __unicode__(self):
 		return "{0} | {1} | ...".format(self.product.designation, self.quantite_en_stock)
 
+class Temporary(models.Model):
+    '''
+    This model will be used to temporary store a reporter who doesn't finish his self registration
+    '''
+    facility = models.ForeignKey(Facility)
+    phone_number = models.CharField(max_length=20)
+    supervisor_phone_number = models.CharField(max_length=20)
+
+    def __unicode__(self):
+        return self.phone_number
+

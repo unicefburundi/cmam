@@ -101,6 +101,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+KNOWN_PREFIXES = {
+    'RG':'SELF_REGISTRATION',
+}
+
+
 try:
     from localsettings import *
 except ImportError:
