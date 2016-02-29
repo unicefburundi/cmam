@@ -87,6 +87,7 @@ def check_number_of_values(args):
 
 
 def check_if_is_reporter(args):
+	''' This function checks if the contact who sent the current message is a reporter '''
 	concerned_reporter = Reporter.objects.filter(phone_number = args['phone'])
 	if len(concerned_reporter) < 1:
 		#This person is not in the list of reporters
@@ -106,6 +107,151 @@ def check_if_is_reporter(args):
 	args['facility'] = one_concerned_reporter.facility
 	args['valide'] = True
 	args['info_to_contact'] = " Le bureau d affectation de ce rapporteur est connu "
+
+
+
+def check_date_is_valid(args):
+	''' This function checks if a given date is valid '''
+	given_date = ""
+
+	#Let's put the value to check in 'given_date' variable
+		
+	if(args['message_type']=='STOCK_RECU'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='STOCK_SORTI'):
+		given_date = args['text'].split(' ')[2]
+	if(args['message_type']=='BALANCE'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='ADMISSION'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='SORTI'):
+		given_date = args['text'].split(' ')[1]
+ 
+	if not given_date:
+		args['valide'] = False
+		args['info_to_contact'] = "Exception. Pas de date trouvee pour la verification."
+		return
+
+	#expression = r'^((0[1-9])|([1-2][0-9])|(3[01]))-((0[1-9])|(1[0-2]))-[0-9]{4}$'
+	expression = r'^((0[1-9])|([1-2][0-9])|(3[01]))((0[1-9])|(1[0-2]))[0-9]{2}$'
+	if re.search(expression, given_date) is None:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide."
+		return
+
+
+	sent_date = given_date[0:2]+"-"+given_date[2:4]+"-20"+given_date[4:]
+
+	sent_date_without_dash = sent_date.replace("-","")
+	try:
+		date_sent = datetime.datetime.strptime(sent_date_without_dash, "%d%m%Y").date()
+	except:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide."
+		return
+
+	args['sent_date'] =  date_sent
+
+	if date_sent > datetime.datetime.now().date():
+		#The reporter can not report for a future date
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas encore arrivee."
+		return
+
+
+
+def check_values_validity(args):
+	''' This function checks if values sent are valid '''
+	if(args['message_type']=='STOCK_RECU'):
+		#Let's check if the value in the position number 1 is a date
+		check_date_is_valid(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 2 is a float		
+
+		#Let's check if the value in the position number 3 is a float
+
+		#Let's check if the value in the position number 4 is a float
+
+		#Let's check if the value in the position number 5 is a float
+
+		pass
+
+	if(args['message_type']=='STOCK_SORTI'):
+		#Let's check if the value in the position number 1 is a facility code and not the code of the current facility
+
+		#Let's check if the value in the position number 2 is a date		
+		check_date_is_valid(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 3 is a float
+
+		#Let's check if the value in the position number 4 is a float
+
+		#Let's check if the value in the position number 5 is a float
+
+		#Let's check if the value in the position number 6 is a float
+	
+		pass
+
+	if(args['message_type']=='RUPTURE'):
+		#Let's check if the value in the position number 1 is a product name
+
+		#Let's check if the value in the position number 2 is a float
+
+		pass
+
+	if(args['message_type']=='BALANCE'):
+		#Let's check if the value in the position number 1 is a date
+		check_date_is_valid(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 2 is a float		
+
+		#Let's check if the value in the position number 3 is a float
+
+		#Let's check if the value in the position number 4 is a float
+
+		#Let's check if the value in the position number 5 is a float
+
+		pass
+
+	if(args['message_type']=='ADMISSION'):
+		#Let's check if the value in the position number 1 is a date
+		check_date_is_valid(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 2 is an int		
+
+		#Let's check if the value in the position number 3 is an int
+
+		#Let's check if the value in the position number 4 is an int
+
+		#Let's check if the value in the position number 5 is an int
+
+		#Let's check if the value in the position number 6 is an int
+
+
+		pass
+
+	if(args['message_type']=='SORTI'):
+		#Let's check if the value in the position number 1 is a date
+		check_date_is_valid(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 2 is an int		
+
+		#Let's check if the value in the position number 3 is an int
+
+		#Let's check if the value in the position number 4 is an int
+
+		#Let's check if the value in the position number 5 is an int
+
+		#Let's check if the value in the position number 6 is an int
+
+		#Let's check if the value in the position number 7 is an int
+
+		pass
 
 #======================reporters self registration==================================
 
@@ -350,6 +496,11 @@ def record_stock_received(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the values sent are valid
+	check_values_validity(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
 #--------------------------------------------------------------------------------------
 
 
@@ -375,6 +526,11 @@ def record_sent_stock(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the values sent are valid
+	check_values_validity(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
 #--------------------------------------------------------------------------------------
 
 
@@ -399,6 +555,11 @@ def record_stock_out(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the values sent are valid
+	check_values_validity(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
 #-------------------------------------------------------------------------------------
 
 
@@ -423,6 +584,11 @@ def record_current_stock(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the values sent are valid
+	check_values_validity(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
 #--------------------------------------------------------------------------------------
 
 
@@ -447,6 +613,11 @@ def record_patient_served(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the values sent are valid
+	check_values_validity(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
 #--------------------------------------------------------------------------------------
 
 
@@ -470,4 +641,9 @@ def record_out_going_patients(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the values sent are valid
+	check_values_validity(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
 #--------------------------------------------------------------------------------------
