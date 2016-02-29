@@ -160,98 +160,249 @@ def check_date_is_valid(args):
 
 
 
+
+def check_is_float(args):
+	''' This function checks if a given value is a float '''
+
+	expression = r'^([0-9]+.[0-9]+)|([0-9]+)$'
+
+	value_to_check = args['value_to_check']
+
+	if re.search(expression, value_to_check) is None:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide."
+	else:
+		args['valide'] = True
+		args['info_to_contact'] = "La valeur envoyee en position "+str(args['position'])+" est valide."
+
+	
+	
+
+
+
+
+def check_is_int(args):
+	''' This function checks if a given value is an int '''
+
+	expression = r'^[0-9]+$'
+	
+	value_to_check = args['value_to_check']
+
+	if re.search(expression, value_to_check) is None:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide."
+	else:
+		args['valide'] = True
+		args['info_to_contact'] = "La valeur envoyee en position "+str(args['position'])+" est valide."
+	 
+
+
+
 def check_values_validity(args):
 	''' This function checks if values sent are valid '''
 	if(args['message_type']=='STOCK_RECU'):
 		#Let's check if the value in the position number 1 is a date
+		args['value_to_check'] =  args['text'].split(' ')[1]
+		args['position'] = 1 
 		check_date_is_valid(args)
 		if not args['valide']:
 			return
-		#Let's check if the value in the position number 2 is a float		
-
+		#Let's check if the value in the position number 2 is a float
+		args['value_to_check'] =  args['text'].split(' ')[2]
+		args['position'] = 2
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 3 is a float
-
+		args['value_to_check'] =  args['text'].split(' ')[3]
+		args['position'] = 3
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 4 is a float
-
+		args['value_to_check'] =  args['text'].split(' ')[4]
+		args['position'] = 4
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 5 is a float
-
-		pass
+		args['value_to_check'] =  args['text'].split(' ')[5]
+		args['position'] = 5
+		check_is_float(args)
+		if not args['valide']:
+			return
+		
 
 	if(args['message_type']=='STOCK_SORTI'):
 		#Let's check if the value in the position number 1 is a facility code and not the code of the current facility
 
-		#Let's check if the value in the position number 2 is a date		
+		#Let's check if the value in the position number 2 is a date
+		args['value_to_check'] =  args['text'].split(' ')[2]
+		args['position'] = 2		
 		check_date_is_valid(args)
 		if not args['valide']:
 			return
 		#Let's check if the value in the position number 3 is a float
-
+		args['value_to_check'] =  args['text'].split(' ')[3]
+		args['position'] = 3
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 4 is a float
-
+		args['value_to_check'] =  args['text'].split(' ')[4]
+		args['position'] = 4
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 5 is a float
-
+		args['value_to_check'] =  args['text'].split(' ')[5]
+		args['position'] = 5
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 6 is a float
-	
-		pass
+		args['value_to_check'] =  args['text'].split(' ')[6]
+		args['position'] = 6
+		check_is_float(args)
+		if not args['valide']:
+			return
 
 	if(args['message_type']=='RUPTURE'):
 		#Let's check if the value in the position number 1 is a product name
 
 		#Let's check if the value in the position number 2 is a float
-
-		pass
+		args['value_to_check'] =  args['text'].split(' ')[2]
+		args['position'] = 2
+		check_is_float(args)
+		if not args['valide']:
+			return
 
 	if(args['message_type']=='BALANCE'):
 		#Let's check if the value in the position number 1 is a date
+		args['value_to_check'] =  args['text'].split(' ')[1]
+		args['position'] = 1
 		check_date_is_valid(args)
 		if not args['valide']:
 			return
-		#Let's check if the value in the position number 2 is a float		
-
+		#Let's check if the value in the position number 2 is a float
+		args['value_to_check'] =  args['text'].split(' ')[2]
+		args['position'] = 2		
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 3 is a float
-
+		args['value_to_check'] =  args['text'].split(' ')[3]
+		args['position'] = 3
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 4 is a float
-
+		args['value_to_check'] =  args['text'].split(' ')[4]
+		args['position'] = 4
+		check_is_float(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 5 is a float
-
-		pass
+		args['value_to_check'] =  args['text'].split(' ')[5]
+		args['position'] = 5
+		check_is_float(args)
+		if not args['valide']:
+			return
 
 	if(args['message_type']=='ADMISSION'):
 		#Let's check if the value in the position number 1 is a date
+		args['value_to_check'] =  args['text'].split(' ')[1]
+		args['position'] = 1
 		check_date_is_valid(args)
 		if not args['valide']:
 			return
-		#Let's check if the value in the position number 2 is an int		
-
+		#Let's check if the value in the position number 2 is an int
+		args['value_to_check'] =  args['text'].split(' ')[2]
+		args['position'] = 2		
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 3 is an int
-
+		args['value_to_check'] =  args['text'].split(' ')[3]
+		args['position'] = 3
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 4 is an int
-
+		args['value_to_check'] =  args['text'].split(' ')[4]
+		args['position'] = 4
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 5 is an int
-
+		args['value_to_check'] =  args['text'].split(' ')[5]
+		args['position'] = 5
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 6 is an int
+		args['value_to_check'] =  args['text'].split(' ')[6]
+		args['position'] = 6
+		check_is_int(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 6 is an int
+		args['value_to_check'] =  args['text'].split(' ')[7]
+		args['position'] = 7
+		check_is_int(args)
+		if not args['valide']:
+			return
 
-
-		pass
 
 	if(args['message_type']=='SORTI'):
 		#Let's check if the value in the position number 1 is a date
+		args['value_to_check'] =  args['text'].split(' ')[1]
+		args['position'] = 1
 		check_date_is_valid(args)
 		if not args['valide']:
 			return
-		#Let's check if the value in the position number 2 is an int		
-
+		#Let's check if the value in the position number 2 is an int
+		args['value_to_check'] =  args['text'].split(' ')[2]
+		args['position'] = 2		
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 3 is an int
-
+		args['value_to_check'] =  args['text'].split(' ')[3]
+		args['position'] = 3
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 4 is an int
-
+		args['value_to_check'] =  args['text'].split(' ')[4]
+		args['position'] = 4
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 5 is an int
-
+		args['value_to_check'] =  args['text'].split(' ')[5]
+		args['position'] = 5
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 6 is an int
-
+		args['value_to_check'] =  args['text'].split(' ')[6]
+		args['position'] = 6
+		check_is_int(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 7 is an int
-
-		pass
+		args['value_to_check'] =  args['text'].split(' ')[7]
+		args['position'] = 7
+		check_is_int(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 7 is an int
+		args['value_to_check'] =  args['text'].split(' ')[8]
+		args['position'] = 8
+		check_is_int(args)
+		if not args['valide']:
+			return
 
 #======================reporters self registration==================================
 
