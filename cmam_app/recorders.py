@@ -23,9 +23,67 @@ def check_number_of_values(args):
 		if len(args['text'].split(' ')) == 3:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
-
-
-
+	if(args['message_type']=='STOCK_RECU'):
+		if len(args['text'].split(' ')) < 6:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) > 6:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) == 6:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	if(args['message_type']=='STOCK_SORTI'):
+		if len(args['text'].split(' ')) < 7:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) > 7:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) == 7:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	if(args['message_type']=='RUPTURE'):
+		if len(args['text'].split(' ')) < 3:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) > 3:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) == 3:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	if(args['message_type']=='BALANCE'):
+		if len(args['text'].split(' ')) < 6:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) > 6:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) == 6:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	if(args['message_type']=='ADMISSION'):
+		if len(args['text'].split(' ')) < 8:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) > 8:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) == 8:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	if(args['message_type']=='SORTI'):
+		if len(args['text'].split(' ')) < 9:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) > 9:
+			args['valide'] = False
+			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+		if len(args['text'].split(' ')) == 9:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+		
 
 #======================reporters self registration==================================
 
@@ -116,28 +174,28 @@ def check_has_already_session(args):
 def temporary_record_reporter(args):
 	'''This function is used to record temporary a reporter'''
 	
-	print("1")
+
 
 	#Let's check if this contact has an existing session
 	check_has_already_session(args)
 	if not args['valide']:
 		return
 
-	print("2")
+
 
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	if not args['valide']:
 		return
 
-	print("3")
+
 
 	#Let's check if the code of STA or SST ... is valid
 	check_facility(args)
 	if not args['valide']:
 		return
 
-	print("4")
+
 
 	#Let's check is the supervisor phone number is valid
 	check_supervisor_phone_number(args)
@@ -245,3 +303,113 @@ def complete_registration(args):
 
 #-----------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+#-----------------------------RECORD STOCK RECEIVED------------------------------------
+
+def record_stock_received(args):
+	''' This function records a report about medicines received '''
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+#--------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+#------------------------------RECORD SENT STOCK---------------------------------------
+
+def record_sent_stock(args):
+	''' This function records a report about medicines sent from one facility to an other '''
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+#--------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+#-------------------------------RECORD A STOCK OUT------------------------------------
+
+def record_stock_out(args):
+	''' This function records a report about a stock out of a medicine '''
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+#-------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+#--------------------------------RECORD CURRENT STOCK----------------------------------
+
+def record_current_stock(args):
+	''' This function records a report about current quantities of medicines '''
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+#--------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+#---------------------------------RECORD NUMBERS OF PATIENTS SERVED--------------------
+
+def record_patient_served(args):
+	''' This function records a report about number of patient served in a given week '''
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+#--------------------------------------------------------------------------------------
+
+
+
+
+
+
+#--------------------------------RECORD OUT GOING PATIENTS-----------------------------
+
+def record_out_going_patients(args):
+	''' This function records a report about patients taken out of the program in a given week '''
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+#--------------------------------------------------------------------------------------

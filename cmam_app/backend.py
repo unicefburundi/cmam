@@ -48,7 +48,7 @@ def handel_rapidpro_request(request):
 	This function send json data to RapidPro as a response.'''
 	#We will put all data sent by RapidPro in this variable
 	incoming_data = {}
-	print("01")
+
 	#Two couples of variable/value are separated by &
 	#Let's put couples of variable/value in a list called 'list_of_data'
 	list_of_data = request.body.split("&")
@@ -56,7 +56,7 @@ def handel_rapidpro_request(request):
 	#Let's put all the incoming data in the dictionary 'incoming_data'
 	for couple in list_of_data:
 		incoming_data[couple.split("=")[0]] = couple.split("=")[1]
-	print("02")
+
 	#Let's assume that the incoming data is valid
 	incoming_data['valide'] = True
 	incoming_data['info'] = "The default information."
@@ -64,16 +64,16 @@ def handel_rapidpro_request(request):
 	#Because RapidPro sends the contact phone number by replacing "+" by "%2B"
 	#let's rewrite the phone number in a right way.
 	incoming_data['phone'] = incoming_data['phone'].replace("%2B","+")
-	print("03")
+
 	#Let's instantiate the variable this function will return
 	response = {}
 
 	#Let's eliminate unnecessary spaces in the incoming message
 	eliminate_unnecessary_spaces(incoming_data)
-	print("04")
+
 	#Let's check which kind of message this message is.
 	identify_message(incoming_data)
-	print("05")
+
 	if(incoming_data['message_type']=='UNKNOWN_MESSAGE'):
 		#Let's check if this contact is confirming his phone number
 		#It means that he has an already created session
@@ -91,12 +91,29 @@ def handel_rapidpro_request(request):
 			response['info_to_contact'] = incoming_data['info_to_contact']
 			return response
 
-	print("06")
+
 
 	if(incoming_data['message_type']=='SELF_REGISTRATION'):
 		#The contact who sent the current message is doing self registration  in the group of reporters
 		temporary_record_reporter(incoming_data)
-
+	if(incoming_data['message_type']=='STOCK_RECU'):
+		#This contact is reporing a reception of medicines at his/her facility
+		record_stock_received(incoming_data)
+	if(incoming_data['message_type']=='STOCK_SORTI'):
+		#This contact is reporting a trensfer of medicines from his facility to an other facility
+		record_sent_stock(incoming_data)
+	if(incoming_data['message_type']=='RUPTURE'):
+		#This contact is reporting a stock out of a medicine
+		record_stock_out(incoming_data)
+	if(incoming_data['message_type']=='BALANCE'):
+		#This contact is reporting the remaining quantities of medicines
+		record_current_stock(incoming_data)
+	if(incoming_data['message_type']=='ADMISSION'):
+		#This contact is reporting numbers of patients received in a given week
+		record_patient_served(incoming_data)
+	if(incoming_data['message_type']=='SORTI'):
+		#This contact is reporting numbers of patients no longer followed by this facility since a given week
+		record_out_going_patients(incoming_data)
 
 
 	if incoming_data['valide'] :
