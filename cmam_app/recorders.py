@@ -83,7 +83,29 @@ def check_number_of_values(args):
 		if len(args['text'].split(' ')) == 9:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
-		
+
+
+
+def check_if_is_reporter(args):
+	concerned_reporter = Reporter.objects.filter(phone_number = args['phone'])
+	if len(concerned_reporter) < 1:
+		#This person is not in the list of reporters
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Vous ne vous etes pas enregistre pour pouvoir donner des rapports."
+		return
+
+	one_concerned_reporter = concerned_reporter[0]
+
+	if not one_concerned_reporter.facility:
+		#The CDS of this reporter is not known
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Votre CDS n est pas connu dans le systeme."
+		return
+
+	args['the_sender'] =  one_concerned_reporter
+	args['facility'] = one_concerned_reporter.facility
+	args['valide'] = True
+	args['info_to_contact'] = " Le bureau d affectation de ce rapporteur est connu "
 
 #======================reporters self registration==================================
 
@@ -322,6 +344,12 @@ def record_stock_received(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
 #--------------------------------------------------------------------------------------
 
 
@@ -337,6 +365,12 @@ def record_sent_stock(args):
 	''' This function records a report about medicines sent from one facility to an other '''
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -359,6 +393,12 @@ def record_stock_out(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
 #-------------------------------------------------------------------------------------
 
 
@@ -373,6 +413,12 @@ def record_current_stock(args):
 	''' This function records a report about current quantities of medicines '''
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -395,6 +441,12 @@ def record_patient_served(args):
 	if not args['valide']:
 		return
 
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
 #--------------------------------------------------------------------------------------
 
 
@@ -408,6 +460,12 @@ def record_out_going_patients(args):
 	''' This function records a report about patients taken out of the program in a given week '''
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
