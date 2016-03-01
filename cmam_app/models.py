@@ -97,7 +97,7 @@ class Reception(models.Model):
 	date_de_reception = models.DateField()
 
 	def __unicode__(self):
-		return self.date_de_reception
+		return " {0} ".format(self.date_de_reception)
 
 	class Meta:
 		ordering = ('date_de_reception',)

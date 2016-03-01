@@ -206,6 +206,8 @@ def check_facility_code_is_valid(args):
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Le code envoye existe dans le systeme."
+		
+		args['destination_facility'] = facilities[0]
 
 		#Let's check if the facility code is not the code of the facility of the contact who is reporting
 		
@@ -715,15 +717,9 @@ def record_stock_received(args):
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
-		print("len(args['text']) - 2")
-		print(len(args['text']) - 2)
-		print(args['text'])
-		print("Priority")
-		print("========")
-		print(priority)
 		value = args['text'].split(' ')[priority+1]
+		value = value.replace(",",".")
 
-		#ben_camp = CampaignBeneficiary.objects.filter(campaign = args['opened_campaign'], order_in_sms = priority)
 		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
 
 		if len(concerned_product) < 1:
@@ -776,6 +772,41 @@ def record_sent_stock(args):
 
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'STOCK_SORTI')
+
+
+	the_created_Sortie = Sortie.objects.create(report = the_created_report, date_de_sortie = args['sent_date'], destination = args['destination_facility'])
+
+
+	priority = 1
+
+	message_to_send = "Le message enregistre est (Envoie de "
+
+	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
+		#We record each beneficiary number
+		value = args['text'].split(' ')[priority+2]
+		value = value.replace(",",".")
+
+		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+
+		if len(concerned_product) < 1:
+			priority = 0
+			args['valide'] = False
+			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
+
+		the_concerned_product = concerned_product[0]
+
+		if priority == 1:
+			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+		else:
+			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+
+		product_out_record = ProductsTranferReport.objects.create(sortie = the_created_Sortie, produit = the_concerned_product, quantite_donnee = value)
+
+		priority = priority + 1
+
+	args['info_to_contact'] = message_to_send+". Destination : "+args['destination_facility'].name+")."
+
+	
 #--------------------------------------------------------------------------------------
 
 
@@ -808,6 +839,10 @@ def record_stock_out(args):
 
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'RUPTURE')
+
+
+	
+	
 #-------------------------------------------------------------------------------------
 
 
@@ -840,6 +875,38 @@ def record_current_stock(args):
 
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'BALANCE')
+
+	the_created_stock_report = StockReport.objects.create(report = the_created_report, date = args['sent_date'], week_number = 0)
+
+
+	priority = 1
+
+	message_to_send = "Le message enregistre est ("
+
+	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
+		#We record each beneficiary number
+		value = args['text'].split(' ')[priority+1]
+		value = value.replace(",",".")
+
+		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+
+		if len(concerned_product) < 1:
+			priority = 0
+			args['valide'] = False
+			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
+
+		the_concerned_product = concerned_product[0]
+
+		if priority == 1:
+			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+		else:
+			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+
+		product_stock_record = ProductStockReport.objects.create(stock_report = the_created_stock_report, product = the_concerned_product, quantite_en_stock = value)
+
+		priority = priority + 1
+
+	args['info_to_contact'] = message_to_send+")."
 #--------------------------------------------------------------------------------------
 
 
