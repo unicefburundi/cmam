@@ -197,6 +197,16 @@ def check_is_int(args):
 	 
 
 
+def check_facility_code_is_valid(args):
+	''' This function checks if the value contained in args['facility_code'] is a facility code '''
+	facilities = Facility.objects.filter(id_facility = args['facility_code'])
+	if len(facilities) < 1:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Le code envoye en position "+str(args['position'])+" n est pas enregistre dans le systeme."
+	else:
+		args['valide'] = True
+		args['info_to_contact'] = "Le code envoye existe dans le systeme."
+
 
 def check_values_validity(args):
 	''' This function checks if values sent are valid '''
@@ -235,7 +245,11 @@ def check_values_validity(args):
 
 	if(args['message_type']=='STOCK_SORTI'):
 		#Let's check if the value in the position number 1 is a facility code and not the code of the current facility
-
+		args['facility_code'] =  args['text'].split(' ')[1]
+		args['position'] = 1		
+		check_facility_code_is_valid(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 2 is a date
 		args['value_to_check'] =  args['text'].split(' ')[2]
 		args['position'] = 2		
