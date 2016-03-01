@@ -172,6 +172,7 @@ def check_is_float(args):
 		args['valide'] = False
 		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide."
 	else:
+		args['remaining_quantity'] = value_to_check
 		args['valide'] = True
 		args['info_to_contact'] = "La valeur envoyee en position "+str(args['position'])+" est valide."
 
@@ -238,6 +239,7 @@ def check_is_product_name(args):
 		args['valide'] = False
 		args['info_to_contact'] = "Erreur. Le nom du produit envoye n est pas valide."
 	else:
+		args['sent_name'] = sent_name
 		args['valide'] = True
 		args['info_to_contact'] = "Le nom du produit envoye a ete reconnu par le systeme."
 
@@ -841,8 +843,19 @@ def record_stock_out(args):
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'RUPTURE')
 
 
-	
-	
+	#Let's identify the concerned product
+	the_concerned_product = Product.objects.filter(designation = args['sent_name'])
+
+	if len(the_concerned_product) < 1:
+		args['valide'] = False
+		args['info_to_contact'] = "Exception. Un produit du nom donnee non trouve."
+		return
+
+	the_concerned_product = the_concerned_product[0]
+
+	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
+
+	args['info_to_contact'] = "Une rupture de stock est signalee pour le produit "+the_concerned_product.designation+". Lieu : "+args['facility'].name+". Quantite restante : "+args['remaining_quantity']
 #-------------------------------------------------------------------------------------
 
 
@@ -875,6 +888,7 @@ def record_current_stock(args):
 
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'BALANCE')
+
 
 	the_created_stock_report = StockReport.objects.create(report = the_created_report, date = args['sent_date'], week_number = 0)
 
