@@ -217,6 +217,27 @@ def check_facility_code_is_valid(args):
 			args['info_to_contact'] = "Le code mis est valide."
 
 
+def check_is_product_name(args):
+	''' This function checks if the value in args['product_name'] is a product name '''
+	products = Product.objects.all()
+	product_names = []
+
+	if len(products) < 1:
+		args['valide'] = False
+		args['info_to_contact'] = "Exception. Aucun produit n est enregistre dans le systeme. Consulter l administrateur du systeme."
+	else:
+		#Let's store all product names in a list. We put those names in capital letters
+		for product in products:
+			product_names.append(product.designation.upper())
+
+	sent_name = args['product_name'].upper()
+
+	if sent_name not in product_names:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Le nom du produit envoye n est pas valide."
+	else:
+		args['valide'] = True
+		args['info_to_contact'] = "Le nom du produit envoye a ete reconnu par le systeme."
 
 def check_values_validity(args):
 	''' This function checks if values sent are valid '''
@@ -293,7 +314,11 @@ def check_values_validity(args):
 
 	if(args['message_type']=='RUPTURE'):
 		#Let's check if the value in the position number 1 is a product name
-
+		args['product_name'] =  args['text'].split(' ')[1]
+		args['position'] = 1
+		check_is_product_name(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 2 is a float
 		args['value_to_check'] =  args['text'].split(' ')[2]
 		args['position'] = 2
