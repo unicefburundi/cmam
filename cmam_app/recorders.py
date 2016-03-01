@@ -661,7 +661,7 @@ def complete_registration(args):
 			Reporter.objects.create(phone_number = the_one_existing_temp.phone_number,facility = the_one_existing_temp.facility, supervisor_phone_number = the_one_existing_temp.supervisor_phone_number)
 			the_one_existing_temp.delete()
 			args['valide'] = True
-			args['info_to_contact'] = "Vous vous etes enregistre correctement."
+			args['info_to_contact'] = "Merci. Vous vous etes enregistre correctement."
 		else:
 			the_one_existing_temp.delete()
 			args['valide'] = False
@@ -701,6 +701,48 @@ def record_stock_received(args):
 	print(args['valide'])
 	if not args['valide']:
 		return
+
+	#Let's save the report
+	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'STOCK_RECU')
+
+
+	the_created_reception = Reception.objects.create(report = the_created_report, date_de_reception = args['sent_date'])
+
+
+	priority = 1
+
+	message_to_send = "Le message enregistre est ("
+
+	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
+		#We record each beneficiary number
+		print("len(args['text']) - 2")
+		print(len(args['text']) - 2)
+		print(args['text'])
+		print("Priority")
+		print("========")
+		print(priority)
+		value = args['text'].split(' ')[priority+1]
+
+		#ben_camp = CampaignBeneficiary.objects.filter(campaign = args['opened_campaign'], order_in_sms = priority)
+		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+
+		if len(concerned_product) < 1:
+			priority = 0
+			args['valide'] = False
+			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
+
+		the_concerned_product = concerned_product[0]
+
+		if priority == 1:
+			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+		else:
+			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+
+		product_reception_record = ProductsReceptionReport.objects.create(reception = the_created_reception, produit = the_concerned_product, quantite_recue = value)
+
+		priority = priority + 1
+
+	args['info_to_contact'] = message_to_send+")."
 #--------------------------------------------------------------------------------------
 
 
@@ -731,6 +773,9 @@ def record_sent_stock(args):
 	print(args['valide'])
 	if not args['valide']:
 		return
+
+	#Let's save the report
+	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'STOCK_SORTI')
 #--------------------------------------------------------------------------------------
 
 
@@ -760,6 +805,9 @@ def record_stock_out(args):
 	print(args['valide'])
 	if not args['valide']:
 		return
+
+	#Let's save the report
+	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'RUPTURE')
 #-------------------------------------------------------------------------------------
 
 
@@ -789,6 +837,9 @@ def record_current_stock(args):
 	print(args['valide'])
 	if not args['valide']:
 		return
+
+	#Let's save the report
+	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'BALANCE')
 #--------------------------------------------------------------------------------------
 
 
@@ -818,6 +869,9 @@ def record_patient_served(args):
 	print(args['valide'])
 	if not args['valide']:
 		return
+	
+	#Let's save the report
+	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'ADMISSION')
 #--------------------------------------------------------------------------------------
 
 
@@ -846,4 +900,7 @@ def record_out_going_patients(args):
 	print(args['valide'])
 	if not args['valide']:
 		return
+
+	#Let's save the report
+	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'SORTI')
 #--------------------------------------------------------------------------------------

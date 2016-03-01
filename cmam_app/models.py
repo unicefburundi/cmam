@@ -8,7 +8,7 @@ class Product(models.Model):
 	designation = models.CharField(max_length=40)
 	unite_de_mesure_au_rapportage = models.CharField(max_length=40)
 	dose_par_semaine = models.FloatField(default=0.0)
-	priorite_dans_sms = models.IntegerField()
+	priorite_dans_sms = models.IntegerField(unique=True)
 	quantite_en_stock_central = models.FloatField(default=0.0)
 
 	def __unicode__(self):
