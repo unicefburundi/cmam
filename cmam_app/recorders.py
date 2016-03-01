@@ -198,7 +198,7 @@ def check_is_int(args):
 
 
 def check_facility_code_is_valid(args):
-	''' This function checks if the value contained in args['facility_code'] is a facility code '''
+	''' This function checks if the value contained in args['facility_code'] is a facility code and not the facility of the reporter'''
 	facilities = Facility.objects.filter(id_facility = args['facility_code'])
 	if len(facilities) < 1:
 		args['valide'] = False
@@ -206,6 +206,16 @@ def check_facility_code_is_valid(args):
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Le code envoye existe dans le systeme."
+
+		#Let's check if the facility code is not the code of the facility of the contact who is reporting
+		
+		if(args['facility'].id_facility == args['facility_code']):
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez mis le code de l etablissement sur lequel vous etes affectes."
+		else:
+			args['valide'] = True
+			args['info_to_contact'] = "Le code mis est valide."
+
 
 
 def check_values_validity(args):
