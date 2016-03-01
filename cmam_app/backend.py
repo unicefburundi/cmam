@@ -4,6 +4,7 @@ import re
 from django.conf import settings
 from cmam_app.models import  Temporary
 from recorders import *
+import urllib
 
 
 def identify_message(args):
@@ -33,6 +34,9 @@ def eliminate_unnecessary_spaces(args):
     #Messages from RapidPro comes with spaces replaced by '+'
     #Let's replace those '+' (one or more) by one space
     the_new_message = re.sub('[+]+',' ',the_incoming_message)
+
+	# Find any comma
+    the_new_message = urllib.unquote_plus(the_new_message)	
 
     #Let's eliminate spaces at the begining and the end of the message
     the_new_message = the_new_message.strip()

@@ -164,7 +164,7 @@ def check_date_is_valid(args):
 def check_is_float(args):
 	''' This function checks if a given value is a float '''
 
-	expression = r'^([0-9]+.[0-9]+)|([0-9]+)$'
+	expression = r'^([0-9]+.[0-9]+)$|^([0-9]+)$|^([0-9]+,[0-9]+)$'
 
 	value_to_check = args['value_to_check']
 
