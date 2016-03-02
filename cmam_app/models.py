@@ -149,7 +149,7 @@ class OutgoingPatientsReport(models.Model):
 	deces = models.IntegerField()
 	abandon = models.IntegerField()
 	non_repondant = models.IntegerField()
-	transfert_interne = models.IntegerField()
+	transfert_interne = models.IntegerField(default=0)
 
 	def __unicode__(self):
 		return "{0} | {1} | ...".format(self.gueri, self.deces)
@@ -169,7 +169,7 @@ class ProductStockReport(models.Model):
 	quantite_en_stock = models.FloatField(default=0.0)
 
 	def __unicode__(self):
-		return "{0} | {1} | ...".format(self.product.designation, self.quantite_en_stock)
+		return "{0} : {1} | ...".format(self.product.designation, self.quantite_en_stock)
 
 class Temporary(models.Model):
     '''

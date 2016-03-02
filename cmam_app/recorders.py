@@ -74,15 +74,26 @@ def check_number_of_values(args):
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='SORTI'):
-		if len(args['text'].split(' ')) < 9:
-			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
-		if len(args['text'].split(' ')) > 9:
-			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
-		if len(args['text'].split(' ')) == 9:
-			args['valide'] = True
-			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+		if args['facility'].facility_level == 'CDS':
+			if len(args['text'].split(' ')) < 7:
+				args['valide'] = False
+				args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+			if len(args['text'].split(' ')) > 7:
+				args['valide'] = False
+				args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+			if len(args['text'].split(' ')) == 7:
+				args['valide'] = True
+				args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+		else:
+			if len(args['text'].split(' ')) < 6:
+				args['valide'] = False
+				args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+			if len(args['text'].split(' ')) > 6:
+				args['valide'] = False
+				args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+			if len(args['text'].split(' ')) == 6:
+				args['valide'] = True
+				args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 
 
 
@@ -438,13 +449,14 @@ def check_values_validity(args):
 		check_is_int(args)
 		if not args['valide']:
 			return
-		#Let's check if the value in the position number 6 is an int
-		args['value_to_check'] =  args['text'].split(' ')[6]
-		args['position'] = 6
-		check_is_int(args)
-		if not args['valide']:
-			return
-		#Let's check if the value in the position number 7 is an int
+
+		if args['facility'].facility_level == 'CDS':
+			#Let's check if the value in the position number 6 is an int
+			args['value_to_check'] =  args['text'].split(' ')[6]
+			args['position'] = 6
+			check_is_int(args)
+		
+		'''#Let's check if the value in the position number 7 is an int
 		args['value_to_check'] =  args['text'].split(' ')[7]
 		args['position'] = 7
 		check_is_int(args)
@@ -455,7 +467,7 @@ def check_values_validity(args):
 		args['position'] = 8
 		check_is_int(args)
 		if not args['valide']:
-			return
+			return'''
 
 #======================reporters self registration==================================
 
@@ -953,6 +965,11 @@ def record_patient_served(args):
 	
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'ADMISSION')
+
+
+	incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7])
+
+	args['info_to_contact'] = "Le message enregistre est (TDS : "+args['text'].split(' ')[2]+", PTB : "+args['text'].split(' ')[3]+", Oedemes : "+args['text'].split(' ')[4]+", Rechute : "+args['text'].split(' ')[5]+", Readmission : "+args['text'].split(' ')[6]+", "+args['text'].split(' ')[7]+"). Merci."
 #--------------------------------------------------------------------------------------
 
 
@@ -964,17 +981,19 @@ def record_patient_served(args):
 
 def record_out_going_patients(args):
 	''' This function records a report about patients taken out of the program in a given week '''
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
+	print(args['valide'])
+	if not args['valide']:
+		return	
+
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
-	print(args['valide'])
-	if not args['valide']:
-		return
 
 	#Let's check if the values sent are valid
 	check_values_validity(args)
@@ -984,4 +1003,14 @@ def record_out_going_patients(args):
 
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'SORTI')
+
+
+	if args['facility'].facility_level == 'CDS':
+		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6])
+
+		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+", Transfert interne : "+args['text'].split(' ')[6]+"). Merci."
+	else:
+		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5])
+
+		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+"). Merci."
 #--------------------------------------------------------------------------------------
