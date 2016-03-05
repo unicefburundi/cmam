@@ -138,6 +138,7 @@ class IncomingPatientsReport(models.Model):
 	rechute = models.IntegerField()
 	readmission = models.IntegerField()
 	transfert_interne = models.IntegerField()
+	date_of_first_week_day = models.DateField()
 	
 	def __unicode__(self):
 		return "{0} | {1} | ...".format(self.total_debut_semaine, self.ptb)
@@ -150,6 +151,7 @@ class OutgoingPatientsReport(models.Model):
 	abandon = models.IntegerField()
 	non_repondant = models.IntegerField()
 	transfert_interne = models.IntegerField(default=0)
+	date_of_first_week_day = models.DateField()
 
 	def __unicode__(self):
 		return "{0} | {1} | ...".format(self.gueri, self.deces)
@@ -157,8 +159,7 @@ class OutgoingPatientsReport(models.Model):
 class StockReport(models.Model):
 	''' In this model, we record any stock report. Different quantities of different products are stored in the ProductStockReport model'''
 	report = models.ForeignKey(Report)
-	date = models.DateField()
-	week_number = models.IntegerField()
+	date_of_first_week_day = models.DateField()
 
 	def __unicode__(self):
 		return "{0} | {1} | ...".format(self.date, self.week_number)

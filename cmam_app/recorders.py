@@ -170,7 +170,49 @@ def check_date_is_valid(args):
 		return
 
 
+def check_date_is_monday(args):
+	''' This function checks if the given date is for the first day of a week '''
+	given_date = ""
 
+	#Let's put the value to check in 'given_date' variable
+		
+	if(args['message_type']=='STOCK_RECU'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='STOCK_SORTI'):
+		given_date = args['text'].split(' ')[2]
+	if(args['message_type']=='BALANCE'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='ADMISSION'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='SORTI'):
+		given_date = args['text'].split(' ')[1]
+ 
+	if not given_date:
+		args['valide'] = False
+		args['info_to_contact'] = "Exception. Pas de date trouvee pour la verification."
+		return
+
+
+	sent_date = given_date[0:2]+"-"+given_date[2:4]+"-20"+given_date[4:]
+
+	sent_date_without_dash = sent_date.replace("-","")
+	date_sent = ""
+	try:
+		date_sent = datetime.datetime.strptime(sent_date_without_dash, "%d%m%Y").date()
+	except:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide."
+		return
+	
+	the_day = date_sent.weekday()
+	print("===The day of the week===")
+	print(the_day+1)
+	if the_day == 0:
+		args['valide'] = True
+		args['info_to_contact'] = "La date envoyee est pour lundi"
+	else:
+		args['valide'] = False
+		args['info_to_contact'] = "La date envoyee n est pas pour lundi"
 
 def check_is_float(args):
 	''' This function checks if a given value is a float '''
@@ -248,7 +290,7 @@ def check_is_product_name(args):
 
 	if sent_name not in product_names:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Le nom du produit envoye n est pas valide."
+		args['info_to_contact'] = "Erreur. Le nom du produit envoye n est pas valide. Pour corriger, reenvoyer le message commencant par RUP"
 	else:
 		args['sent_name'] = sent_name
 		args['valide'] = True
@@ -348,6 +390,12 @@ def check_values_validity(args):
 		check_date_is_valid(args)
 		if not args['valide']:
 			return
+		#Let's check if the value in the position number 1 is a date of monday
+		args['value_to_check'] =  args['text'].split(' ')[1]
+		args['position'] = 1
+		check_date_is_monday(args)
+		if not args['valide']:
+			return
 		#Let's check if the value in the position number 2 is a float
 		args['value_to_check'] =  args['text'].split(' ')[2]
 		args['position'] = 2		
@@ -378,6 +426,12 @@ def check_values_validity(args):
 		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1
 		check_date_is_valid(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 1 is a date of monday
+		args['value_to_check'] =  args['text'].split(' ')[1]
+		args['position'] = 1
+		check_date_is_monday(args)
 		if not args['valide']:
 			return
 		#Let's check if the value in the position number 2 is an int
@@ -423,6 +477,12 @@ def check_values_validity(args):
 		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1
 		check_date_is_valid(args)
+		if not args['valide']:
+			return
+		#Let's check if the value in the position number 1 is a date of monday
+		args['value_to_check'] =  args['text'].split(' ')[1]
+		args['position'] = 1
+		check_date_is_monday(args)
 		if not args['valide']:
 			return
 		#Let's check if the value in the position number 2 is an int
@@ -481,7 +541,7 @@ def check_facility(args):
 		args['info_to_contact'] = "Le code (STA ou SST ou ...) envoye est reconnu."
 	else:
 		args['valide'] = False
-		args['info_to_contact'] = "Le code (STA ou SST ou ...) envoye n est pas enregistre dans le systeme."
+		args['info_to_contact'] = "Le code envoye n est pas associe a un site. Verifier le code ou contacter l administrateur du systeme."
 
 def check_supervisor_phone_number(args):
 	''' This function checks if the phone number of the supervisor is well written '''
@@ -681,7 +741,7 @@ def complete_registration(args):
 		else:
 			the_one_existing_temp.delete()
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye le numero de telephone du superviseur de differentes manieres. Veuillez reenvoyer le message commencant par rg. Merci"
+			args['info_to_contact'] = "Vous avez envoye le numero de telephone du superviseur de differentes manieres. Pour corriger, recommencer le processus d enregistrement. Merci."
 
 
 
@@ -727,7 +787,7 @@ def record_stock_received(args):
 
 	priority = 1
 
-	message_to_send = "Le message enregistre est ("
+	message_to_send = "Vous venez de rapporter le stock recu comme suit ("
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
@@ -793,7 +853,7 @@ def record_sent_stock(args):
 
 	priority = 1
 
-	message_to_send = "Le message enregistre est (Envoie de "
+	message_to_send = "Vous venez de rapporter la sortie des produits vers SITE comme suit : (Envoie de "
 
 	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
 		#We record each beneficiary number
@@ -867,7 +927,7 @@ def record_stock_out(args):
 
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
-	args['info_to_contact'] = "Une rupture de stock est signalee pour le produit "+the_concerned_product.designation+". Lieu : "+args['facility'].name+". Quantite restante : "+args['remaining_quantity']
+	args['info_to_contact'] = "Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
 #-------------------------------------------------------------------------------------
 
 
@@ -898,11 +958,18 @@ def record_current_stock(args):
 	if not args['valide']:
 		return
 
+	#Let's check if this facility have not finished to give this report
+	the_existing_same_report = StockReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility = args['facility'])
+	if len(the_existing_same_report) > 0:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification."
+		return
+
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'BALANCE')
 
 
-	the_created_stock_report = StockReport.objects.create(report = the_created_report, date = args['sent_date'], week_number = 0)
+	the_created_stock_report = StockReport.objects.create(report = the_created_report, date_of_first_week_day = args['sent_date'])
 
 
 	priority = 1
@@ -962,12 +1029,19 @@ def record_patient_served(args):
 	print(args['valide'])
 	if not args['valide']:
 		return
+
+	#Let's check if this facility have not finished to give this report
+	the_existing_same_report = IncomingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility = args['facility'])
+	if len(the_existing_same_report) > 0:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification."
+		return
 	
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'ADMISSION')
 
 
-	incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7])
+	incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
 
 	args['info_to_contact'] = "Le message enregistre est (TDS : "+args['text'].split(' ')[2]+", PTB : "+args['text'].split(' ')[3]+", Oedemes : "+args['text'].split(' ')[4]+", Rechute : "+args['text'].split(' ')[5]+", Readmission : "+args['text'].split(' ')[6]+", "+args['text'].split(' ')[7]+"). Merci."
 #--------------------------------------------------------------------------------------
@@ -1001,16 +1075,23 @@ def record_out_going_patients(args):
 	if not args['valide']:
 		return
 
+	#Let's check if this facility have not finished to give this report
+	the_existing_same_report = OutgoingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility = args['facility'])
+	if len(the_existing_same_report) > 0:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification."
+		return
+
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'SORTI')
 
 
 	if args['facility'].facility_level == 'CDS':
-		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6])
+		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
 		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+", Transfert interne : "+args['text'].split(' ')[6]+"). Merci."
 	else:
-		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5])
+		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], date_of_first_week_day = args['sent_date'])
 
 		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+"). Merci."
 #--------------------------------------------------------------------------------------
