@@ -119,6 +119,25 @@ def handel_rapidpro_request(request):
 		#This contact is reporting numbers of patients no longer followed by this facility since a given week
 		record_out_going_patients(incoming_data)
 
+	if(incoming_data['message_type']=='STOCK_RECU_M'):
+		#This contact is reporing a reception of medicines at his/her facility
+		modify_stock_received(incoming_data)
+	if(incoming_data['message_type']=='STOCK_SORTI_M'):
+		#This contact is reporting a trensfer of medicines from his facility to an other facility
+		modify_sent_stock(incoming_data)
+	if(incoming_data['message_type']=='RUPTURE_M'):
+		#This contact is reporting a stock out of a medicine
+		modify_stock_out(incoming_data)
+	if(incoming_data['message_type']=='BALANCE_M'):
+		#This contact is reporting the remaining quantities of medicines
+		modify_current_stock(incoming_data)
+	if(incoming_data['message_type']=='ADMISSION_M'):
+		#This contact is reporting numbers of patients received in a given week
+		modify_patient_served(incoming_data)
+	if(incoming_data['message_type']=='SORTI_M'):
+		#This contact is reporting numbers of patients no longer followed by this facility since a given week
+		modify_out_going_patients(incoming_data)
+
 
 	if incoming_data['valide'] :
 		#The message have been recorded

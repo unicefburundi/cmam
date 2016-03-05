@@ -124,7 +124,7 @@ def check_if_is_reporter(args):
 def check_date_is_valid(args):
 	''' This function checks if a given date is valid '''
 	given_date = ""
-
+	print("------------------------------------------------------------------------>")
 	#Let's put the value to check in 'given_date' variable
 		
 	if(args['message_type']=='STOCK_RECU'):
@@ -136,6 +136,17 @@ def check_date_is_valid(args):
 	if(args['message_type']=='ADMISSION'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='SORTI'):
+		given_date = args['text'].split(' ')[1]
+
+	if(args['message_type']=='STOCK_RECU_M'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='STOCK_SORTI_M'):
+		given_date = args['text'].split(' ')[2]
+	if(args['message_type']=='BALANCE_M'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='ADMISSION_M'):
+		given_date = args['text'].split(' ')[1]
+	if(args['message_type']=='SORTI_M'):
 		given_date = args['text'].split(' ')[1]
  
 	if not given_date:
@@ -298,7 +309,7 @@ def check_is_product_name(args):
 
 def check_values_validity(args):
 	''' This function checks if values sent are valid '''
-	if(args['message_type']=='STOCK_RECU'):
+	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M'):
 		#Let's check if the value in the position number 1 is a date
 		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1 
@@ -331,7 +342,7 @@ def check_values_validity(args):
 			return
 		
 
-	if(args['message_type']=='STOCK_SORTI'):
+	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
 		#Let's check if the value in the position number 1 is a facility code and not the code of the current facility
 		args['facility_code'] =  args['text'].split(' ')[1]
 		args['position'] = 1		
@@ -369,7 +380,7 @@ def check_values_validity(args):
 		if not args['valide']:
 			return
 
-	if(args['message_type']=='RUPTURE'):
+	if(args['message_type']=='RUPTURE' or args['message_type']=='RUPTURE_M'):
 		#Let's check if the value in the position number 1 is a product name
 		args['product_name'] =  args['text'].split(' ')[1]
 		args['position'] = 1
@@ -383,7 +394,7 @@ def check_values_validity(args):
 		if not args['valide']:
 			return
 
-	if(args['message_type']=='BALANCE'):
+	if(args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
 		#Let's check if the value in the position number 1 is a date
 		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1
@@ -421,7 +432,7 @@ def check_values_validity(args):
 		if not args['valide']:
 			return
 
-	if(args['message_type']=='ADMISSION'):
+	if(args['message_type']=='ADMISSION' or args['message_type']=='ADMISSION_M'):
 		#Let's check if the value in the position number 1 is a date
 		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1
@@ -472,7 +483,7 @@ def check_values_validity(args):
 			return
 
 
-	if(args['message_type']=='SORTI'):
+	if(args['message_type']=='SORTI' or args['message_type']=='SORTI_M'):
 		#Let's check if the value in the position number 1 is a date
 		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1
@@ -756,8 +767,8 @@ def complete_registration(args):
 
 
 
-#-----------------------------RECORD STOCK RECEIVED------------------------------------
-
+#-----------------------------STOCK RECEIVED------------------------------------
+#RECORD 
 def record_stock_received(args):
 	''' This function records a report about medicines received '''
 	#Let's check if the message sent is composed by an expected number of values
@@ -813,6 +824,78 @@ def record_stock_received(args):
 		priority = priority + 1
 
 	args['info_to_contact'] = message_to_send+")."
+
+
+#MODIFY
+def modify_stock_received(args):
+	''' This function modifies a report about medicines received '''
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+	#Let's check if the values sent are valid
+	check_values_validity(args)
+	print(args['valide'])
+	if not args['valide']:
+		return
+
+	#======================================>
+	#Let's check if this facility sent this kind of report at this date and delete it if there is one
+	the_same_reception = Reception.objects.filter(date_de_reception = args['sent_date'], report__facility = args['facility']).order_by('id').reverse()
+	if len(the_same_reception) < 1:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun message n a ete enregistre avec cette date."
+		return
+
+	the_last_same_reception = the_same_reception[0]
+	the_related_report = the_last_same_reception.report
+	the_related_report.delete()
+	#======================================>
+
+
+	#Let's save the report
+	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'STOCK_RECU')
+
+
+	the_created_reception = Reception.objects.create(report = the_created_report, date_de_reception = args['sent_date'])
+
+
+	priority = 1
+
+	message_to_send = "Vous venez de rapporter le stock recu comme suit ("
+
+	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
+		#We record each beneficiary number
+		value = args['text'].split(' ')[priority+1]
+		value = value.replace(",",".")
+
+		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+
+		if len(concerned_product) < 1:
+			priority = 0
+			args['valide'] = False
+			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
+
+		the_concerned_product = concerned_product[0]
+
+		if priority == 1:
+			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+		else:
+			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+
+		product_reception_record = ProductsReceptionReport.objects.create(reception = the_created_reception, produit = the_concerned_product, quantite_recue = value)
+
+		priority = priority + 1
+
+	args['info_to_contact'] = message_to_send+")."
 #--------------------------------------------------------------------------------------
 
 
@@ -822,8 +905,8 @@ def record_stock_received(args):
 
 
 
-#------------------------------RECORD SENT STOCK---------------------------------------
-
+#------------------------------SENT STOCK---------------------------------------
+#RECORD
 def record_sent_stock(args):
 	''' This function records a report about medicines sent from one facility to an other '''
 	#Let's check if the message sent is composed by an expected number of values
@@ -880,7 +963,11 @@ def record_sent_stock(args):
 
 	args['info_to_contact'] = message_to_send+". Destination : "+args['destination_facility'].name+")."
 
-	
+
+#MODIFY
+def modify_sent_stock(args):
+	''' This function modifies a report about medicines sent from one facility to an other '''
+	pass
 #--------------------------------------------------------------------------------------
 
 
@@ -889,8 +976,8 @@ def record_sent_stock(args):
 
 
 
-#-------------------------------RECORD A STOCK OUT------------------------------------
-
+#-------------------------------A STOCK OUT------------------------------------
+#RECORD
 def record_stock_out(args):
 	''' This function records a report about a stock out of a medicine '''
 	#Let's check if the message sent is composed by an expected number of values
@@ -928,6 +1015,12 @@ def record_stock_out(args):
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
 	args['info_to_contact'] = "Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
+
+
+#MODIFY
+def modify_stock_out(args):
+	''' This function modifies a report about a stock out of a medicine '''
+	pass
 #-------------------------------------------------------------------------------------
 
 
@@ -936,8 +1029,8 @@ def record_stock_out(args):
 
 
 
-#--------------------------------RECORD CURRENT STOCK----------------------------------
-
+#--------------------------------CURRENT STOCK----------------------------------
+#RECORD
 def record_current_stock(args):
 	''' This function records a report about current quantities of medicines '''
 	#Let's check if the message sent is composed by an expected number of values
@@ -1000,6 +1093,12 @@ def record_current_stock(args):
 		priority = priority + 1
 
 	args['info_to_contact'] = message_to_send+")."
+
+
+#MODIFY
+def modify_current_stock(args):
+	''' This function modifies a report about current quantities of medicines '''
+	pass
 #--------------------------------------------------------------------------------------
 
 
@@ -1008,8 +1107,8 @@ def record_current_stock(args):
 
 
 
-#---------------------------------RECORD NUMBERS OF PATIENTS SERVED--------------------
-
+#---------------------------------NUMBERS OF PATIENTS SERVED--------------------
+#RECORD
 def record_patient_served(args):
 	''' This function records a report about number of patient served in a given week '''
 	#Let's check if the message sent is composed by an expected number of values
@@ -1044,6 +1143,12 @@ def record_patient_served(args):
 	incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
 
 	args['info_to_contact'] = "Le message enregistre est (TDS : "+args['text'].split(' ')[2]+", PTB : "+args['text'].split(' ')[3]+", Oedemes : "+args['text'].split(' ')[4]+", Rechute : "+args['text'].split(' ')[5]+", Readmission : "+args['text'].split(' ')[6]+", "+args['text'].split(' ')[7]+"). Merci."
+
+
+#MODIFY
+def modify_patient_served(args):
+	''' This function modifies a report about number of patient served in a given week '''
+	pass
 #--------------------------------------------------------------------------------------
 
 
@@ -1051,8 +1156,8 @@ def record_patient_served(args):
 
 
 
-#--------------------------------RECORD OUT GOING PATIENTS-----------------------------
-
+#--------------------------------OUT GOING PATIENTS-----------------------------
+#RECORD
 def record_out_going_patients(args):
 	''' This function records a report about patients taken out of the program in a given week '''
 	#Let's check if the person who send this message is a reporter
@@ -1094,4 +1199,10 @@ def record_out_going_patients(args):
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], date_of_first_week_day = args['sent_date'])
 
 		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+"). Merci."
+
+
+#MODIFY
+def modify_out_going_patients(args):
+	''' This function modifies a report about patients taken out of the program in a given week '''
+	pass
 #--------------------------------------------------------------------------------------
