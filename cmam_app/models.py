@@ -162,7 +162,7 @@ class StockReport(models.Model):
 	date_of_first_week_day = models.DateField()
 
 	def __unicode__(self):
-		return "{0} | {1} | ...".format(self.date, self.week_number)
+		return "{0}".format(self.date_of_first_week_day)
 
 class ProductStockReport(models.Model):
 	stock_report = models.ForeignKey(StockReport)
