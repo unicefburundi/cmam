@@ -13,6 +13,22 @@ def check_number_of_values(args):
 	print("==len(args['text'].split(' '))==")
 	print(len(args['text'].split(' ')))
 	print(args['text'].split(' '))
+
+	#Let's identify the number of active products
+	active_products = Product.objects.filter(is_in_use = True)
+	if len(active_products) < 1:
+		args['valide'] = False
+		args['info_to_contact'] = "Exception. Aucun produit n est active dans le systeme. Contacter l administrateur de ce systeme."
+		return
+
+	number_of_active_products = active_products.count()
+
+	args['number_of_active_products'] = number_of_active_products
+
+
+	#Each message category starts with some mandatory values which are same for all sites
+	number_of_common_values = 0	
+
 	if(args['message_type']=='SELF_REGISTRATION'):
 		if len(args['text'].split(' ')) < 3:
 			args['valide'] = False
@@ -24,23 +40,27 @@ def check_number_of_values(args):
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M'):
-		if len(args['text'].split(' ')) < 6:
+		number_of_common_values = 2
+		number_of_mandatory_values = number_of_common_values + number_of_active_products
+		if len(args['text'].split(' ')) < number_of_mandatory_values:
 			args['valide'] = False
 			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
-		if len(args['text'].split(' ')) > 6:
+		if len(args['text'].split(' ')) > number_of_mandatory_values:
 			args['valide'] = False
 			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
-		if len(args['text'].split(' ')) == 6:
+		if len(args['text'].split(' ')) == number_of_mandatory_values:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
-		if len(args['text'].split(' ')) < 7:
+		number_of_common_values = 3
+		number_of_mandatory_values = number_of_common_values + number_of_active_products
+		if len(args['text'].split(' ')) < number_of_mandatory_values:
 			args['valide'] = False
 			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
-		if len(args['text'].split(' ')) > 7:
+		if len(args['text'].split(' ')) > number_of_mandatory_values:
 			args['valide'] = False
 			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
-		if len(args['text'].split(' ')) == 7:
+		if len(args['text'].split(' ')) == number_of_mandatory_values:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='RUPTURE' or args['message_type']=='RUPTURE_M'):
@@ -54,13 +74,15 @@ def check_number_of_values(args):
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
-		if len(args['text'].split(' ')) < 6:
+		number_of_common_values = 2
+		number_of_mandatory_values = number_of_common_values + number_of_active_products
+		if len(args['text'].split(' ')) < number_of_mandatory_values:
 			args['valide'] = False
 			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
-		if len(args['text'].split(' ')) > 6:
+		if len(args['text'].split(' ')) > number_of_mandatory_values:
 			args['valide'] = False
 			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
-		if len(args['text'].split(' ')) == 6:
+		if len(args['text'].split(' ')) == number_of_mandatory_values:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='ADMISSION' or args['message_type']=='ADMISSION_M'):
@@ -126,11 +148,11 @@ def check_date_is_valid(args):
 	given_date = ""
 
 	#Let's put the value to check in 'given_date' variable
-		
+	'''	
 	if(args['message_type']=='STOCK_RECU'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='STOCK_SORTI'):
-		given_date = args['text'].split(' ')[2]
+		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='BALANCE'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='ADMISSION'):
@@ -141,12 +163,15 @@ def check_date_is_valid(args):
 	if(args['message_type']=='STOCK_RECU_M'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='STOCK_SORTI_M'):
-		given_date = args['text'].split(' ')[2]
+		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='BALANCE_M'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='ADMISSION_M'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='SORTI_M'):
+		given_date = args['text'].split(' ')[1]
+'''
+	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_SORTI' or args['message_type']=='BALANCE' or args['message_type']=='ADMISSION' or args['message_type']=='SORTI' or args['message_type']=='STOCK_RECU_M' or args['message_type']=='STOCK_SORTI_M' or args['message_type']=='BALANCE_M' or args['message_type']=='ADMISSION_M' or args['message_type']=='SORTI_M'):
 		given_date = args['text'].split(' ')[1]
 
 	print("------------------given_date-------------------")
@@ -193,7 +218,7 @@ def check_date_is_monday(args):
 	if(args['message_type']=='STOCK_RECU'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='STOCK_SORTI'):
-		given_date = args['text'].split(' ')[2]
+		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='BALANCE'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='ADMISSION'):
@@ -319,7 +344,7 @@ def check_is_product_name(args):
 
 def check_values_validity(args):
 	''' This function checks if values sent are valid '''
-	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M'):
+	'''if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M'):
 		#Let's check if the value in the position number 1 is a date
 		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1 
@@ -351,18 +376,17 @@ def check_values_validity(args):
 		if not args['valide']:
 			return
 		
-
 	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
-		#Let's check if the value in the position number 1 is a facility code and not the code of the current facility
-		args['facility_code'] =  args['text'].split(' ')[1]
+		#Let's check if the value in the position number 1 is a date
+		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1		
-		check_facility_code_is_valid(args)
+		check_date_is_valid(args)
 		if not args['valide']:
 			return
-		#Let's check if the value in the position number 2 is a date
-		args['value_to_check'] =  args['text'].split(' ')[2]
+		#Let's check if the value in the position number 2 is a facility code and not the code of the current facility
+		args['facility_code'] =  args['text'].split(' ')[2]
 		args['position'] = 2		
-		check_date_is_valid(args)
+		check_facility_code_is_valid(args)
 		if not args['valide']:
 			return
 		#Let's check if the value in the position number 3 is a float
@@ -388,7 +412,7 @@ def check_values_validity(args):
 		args['position'] = 6
 		check_is_float(args)
 		if not args['valide']:
-			return
+			return'''
 
 	if(args['message_type']=='RUPTURE' or args['message_type']=='RUPTURE_M'):
 		#Let's check if the value in the position number 1 is a product name
@@ -403,8 +427,8 @@ def check_values_validity(args):
 		check_is_float(args)
 		if not args['valide']:
 			return
-
-	if(args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
+ 
+	'''if(args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
 		#Let's check if the value in the position number 1 is a date
 		args['value_to_check'] =  args['text'].split(' ')[1]
 		args['position'] = 1
@@ -440,7 +464,7 @@ def check_values_validity(args):
 		args['position'] = 5
 		check_is_float(args)
 		if not args['valide']:
-			return
+			return'''
 
 	if(args['message_type']=='ADMISSION' or args['message_type']=='ADMISSION_M'):
 		#Let's check if the value in the position number 1 is a date
@@ -550,6 +574,88 @@ def check_values_validity(args):
 		if not args['valide']:
 			return'''
 
+
+def check_products_reports_values_validity(args):
+	''' This function checks if values sent for products quantities are valid '''
+
+	
+	#The value at the indice 1 is always a date. Let's check if it is valide
+	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M' or args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M' or args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
+		#Let's check if the value in the position number 1 is a date
+		args['value_to_check'] =  args['text'].split(' ')[1]
+		args['position'] = 1
+		check_date_is_valid(args)
+		if not args['valide']:
+			return
+
+	#For the stock sent from one site to an other, let's check if the given site code is valide
+	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
+		args['facility_code'] =  args['text'].split(' ')[2]
+		args['position'] = 2		
+		check_facility_code_is_valid(args)
+		if not args['valide']:
+			return
+
+
+	number_of_active_products = args['number_of_active_products']
+
+	
+	#Let's check if products priorities starts from 1 to the end without skip any number
+	#If we identify a value which is not correct, we will put false in ok variable
+	ok = True
+	priority = 1
+
+	while(priority <= number_of_active_products and ok == True):
+		concerned_product = Product.objects.filter(is_in_use = True, priorite_dans_sms = priority)
+		if(len(concerned_product) < 1):
+			args['valide'] = False
+			args['info_to_contact'] = "Exception. Pas de produit de priorite '"+priority+"' active. Veuillez contacter l administrateur de ce systeme."
+			ok = False
+		priority = priority + 1
+
+	if (ok == False):
+		return
+
+
+	
+	#Let's identify if numbers are correct
+	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M' or args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
+		#Products values starts at the indice 2
+		print("#Products values starts at the indice 2")
+		first_product_indice = 2
+
+	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
+		#Products values starts at the indice 3
+		print("#Products values starts at the indice 3")
+		first_product_indice = 3
+
+	ok = True
+	priority = 1
+	indice = first_product_indice
+
+	while(priority <= number_of_active_products and ok == True):
+		args['value_to_check'] =  args['text'].split(' ')[indice]
+		args['position'] = indice
+
+		print("------------INDICE----------")
+		print(indice)
+		
+		product = Product.objects.filter(is_in_use = True, priorite_dans_sms = priority)[0]
+		
+		if(product.can_be_fractioned == True):
+			#This value can be fractioned
+			check_is_float(args)
+		else:
+			#This value can not be fractioned
+			check_is_int(args)
+
+		if(args['valide'] == False):
+			ok = False
+			args['valide'] = False
+			args['info_to_contact'] = "La valeur envoyee pour le produit '"+product.designation+"' n est pas valide."
+		
+		priority = priority + 1
+		indice = indice + 1
 #======================reporters self registration==================================
 
 
@@ -794,7 +900,8 @@ def record_stock_received(args):
 		return
 
 	#Let's check if the values sent are valid
-	check_values_validity(args)
+	#check_values_validity(args)
+	check_products_reports_values_validity(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -852,7 +959,8 @@ def modify_stock_received(args):
 		return
 
 	#Let's check if the values sent are valid
-	check_values_validity(args)
+	#check_values_validity(args)
+	check_products_reports_values_validity(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -932,7 +1040,8 @@ def record_sent_stock(args):
 		return
 
 	#Let's check if the values sent are valid
-	check_values_validity(args)
+	#check_values_validity(args)
+	check_products_reports_values_validity(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -949,7 +1058,7 @@ def record_sent_stock(args):
 	message_to_send = "Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : ("
 
 	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
-		#We record each beneficiary number
+		#Let's record each product transfered
 		value = args['text'].split(' ')[priority+2]
 		value = value.replace(",",".")
 
@@ -959,6 +1068,7 @@ def record_sent_stock(args):
 			priority = 0
 			args['valide'] = False
 			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
+			return
 
 		the_concerned_product = concerned_product[0]
 
@@ -990,7 +1100,8 @@ def modify_sent_stock(args):
 		return
 
 	#Let's check if the values sent are valid
-	check_values_validity(args)
+	#check_values_validity(args)
+	check_products_reports_values_validity(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -1171,7 +1282,8 @@ def record_current_stock(args):
 		return
 
 	#Let's check if the values sent are valid
-	check_values_validity(args)
+	#check_values_validity(args)
+	check_products_reports_values_validity(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -1236,7 +1348,8 @@ def modify_current_stock(args):
 		return
 
 	#Let's check if the values sent are valid
-	check_values_validity(args)
+	#check_values_validity(args)
+	check_products_reports_values_validity(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
