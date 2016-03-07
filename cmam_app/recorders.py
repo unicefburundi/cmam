@@ -279,7 +279,8 @@ def check_facility_code_is_valid(args):
 	facilities = Facility.objects.filter(id_facility = args['facility_code'])
 	if len(facilities) < 1:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Le code envoye en position "+str(args['position'])+" n est pas enregistre dans le systeme."
+		#args['info_to_contact'] = "Erreur. Le code envoye en position "+str(args['position'])+" n est pas enregistre dans le systeme."
+		args['info_to_contact'] = "Erreur. Le code du site que vous venez d envoyer n est pas enregistre dans le systeme."
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Le code envoye existe dans le systeme."
@@ -448,6 +449,11 @@ def check_products_reports_values_validity(args):
 		check_date_is_valid(args)
 		if not args['valide']:
 			return
+		if(args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
+			args['position'] = 1
+			check_date_is_monday(args)
+			if not args['valide']:
+				return
 
 	#For the stock sent from one site to an other, let's check if the given site code is valide
 	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
@@ -513,7 +519,7 @@ def check_products_reports_values_validity(args):
 		if(args['valide'] == False):
 			ok = False
 			args['valide'] = False
-			args['info_to_contact'] = "La valeur envoyee pour le produit '"+product.designation+"' n est pas valide."
+			args['info_to_contact'] = "Erreur. La valeur envoyee pour le produit '"+product.designation+"' n est pas valide."
 		
 		priority = priority + 1
 		indice = indice + 1
@@ -901,7 +907,7 @@ def record_sent_stock(args):
 
 	priority = 1
 
-	message_to_send = "Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : ("
+	message_to_send = "Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"'. ces produits sont : ("
 
 	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
 		#Let's record each product transfered
