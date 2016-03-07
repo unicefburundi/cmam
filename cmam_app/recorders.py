@@ -674,7 +674,7 @@ def complete_registration(args):
 				check_duplication.facility = the_one_existing_temp.facility
 				check_duplication.save()
 				args['valide'] = True
-				args['info_to_contact'] = "Mise a jour du bureau d affectation reussie. Votre nouveau bureau est : "+the_one_existing_temp.facility.name
+				args['info_to_contact'] = "Mise a jour du site d affectation reussie. Votre nouveau site d affectation est : "+the_one_existing_temp.facility.name
 				the_one_existing_temp.delete()
 				return
 
@@ -792,7 +792,7 @@ def record_stock_received(args):
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+")."
+	args['info_to_contact'] = message_to_send+"). NB : Le mot cle pour corriger ce rapport est SRCM."
 
 
 #MODIFY
@@ -933,7 +933,7 @@ def record_sent_stock(args):
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+")"
+	args['info_to_contact'] = message_to_send+"). NB : Le mot cle pour corriger ce rapport est SSTM."
 
 
 #MODIFY
@@ -1054,7 +1054,7 @@ def record_stock_out(args):
 
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
-	args['info_to_contact'] = "Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
+	args['info_to_contact'] = "Une rupture de stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'. La quantite restante est "+args['remaining_quantity']+". NB : Le mot cle pour corriger ce rapport est RUPM."
 
 
 #MODIFY
@@ -1156,7 +1156,7 @@ def record_current_stock(args):
 
 	priority = 1
 
-	message_to_send = "Le message enregistre est ("
+	message_to_send = "L etat du stock vient d etre enregistre comme suit ("
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
@@ -1181,7 +1181,7 @@ def record_current_stock(args):
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+")."
+	args['info_to_contact'] = message_to_send+"). NB : Le mot cle pour corriger ce rapport est BALM."
 
 
 #MODIFY
@@ -1296,7 +1296,7 @@ def record_patient_served(args):
 
 	incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
 
-	args['info_to_contact'] = "Le message enregistre est (TDS : "+args['text'].split(' ')[2]+", PTB : "+args['text'].split(' ')[3]+", Oedemes : "+args['text'].split(' ')[4]+", Rechute : "+args['text'].split(' ')[5]+", Readmission : "+args['text'].split(' ')[6]+", TI : "+args['text'].split(' ')[7]+"). Merci."
+	args['info_to_contact'] = "Le message enregistre est (TDS : "+args['text'].split(' ')[2]+", PTB : "+args['text'].split(' ')[3]+", Oedemes : "+args['text'].split(' ')[4]+", Rechute : "+args['text'].split(' ')[5]+", Readmission : "+args['text'].split(' ')[6]+", TI : "+args['text'].split(' ')[7]+"). NB : Le mot cle pour corriger ce rapport est ADMM."
 
 
 #MODIFY
@@ -1384,11 +1384,11 @@ def record_out_going_patients(args):
 	if args['facility'].facility_level == 'CDS':
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
-		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+", Transfert interne : "+args['text'].split(' ')[6]+"). Merci."
+		args['info_to_contact'] = "Le msg enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+", Transfert interne : "+args['text'].split(' ')[6]+"). NB : Le mot cle pour corriger ce rapport est SRTM"
 	else:
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], date_of_first_week_day = args['sent_date'])
 
-		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+"). Merci."
+		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+"). NB : Le mot cle pour corriger ce rapport est SRTM"
 
 
 
