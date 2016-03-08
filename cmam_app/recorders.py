@@ -1111,7 +1111,7 @@ def modify_stock_out(args):
 	the_same_stock_out_report = StockOutReport.objects.filter(report__facility = args['facility']).order_by('id').reverse()
 	if len(the_same_stock_out_report) < 1:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de rupture de stock n a ete enregistre par votre site.
+		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de rupture de stock n a ete enregistre par votre site."
 		return
 
 	the_last_same_stock_out_report = the_same_stock_out_report[0]
