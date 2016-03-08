@@ -85,7 +85,7 @@ def handel_rapidpro_request(request):
 		if not(incoming_data['has_session']):
 			#This contact doesn't have an already created session
 			response['ok'] = False
-			response['info_to_contact'] = "Le mot qui commence votre message n'est pas reconnu par le systeme. Envoyez un message valide."
+			response['info_to_contact'] = "Le mot qui commence votre message n est pas reconnu par le systeme. Reenvoyez votre message en commencant par un mot cle valide."
 			return response
 		else:
 			#This contact is confirming the phone number of his supervisor

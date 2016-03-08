@@ -32,10 +32,10 @@ def check_number_of_values(args):
 	if(args['message_type']=='SELF_REGISTRATION'):
 		if len(args['text'].split(' ')) < 3:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) > 3:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) == 3:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
@@ -44,10 +44,10 @@ def check_number_of_values(args):
 		number_of_mandatory_values = number_of_common_values + number_of_active_products
 		if len(args['text'].split(' ')) < number_of_mandatory_values:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) > number_of_mandatory_values:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) == number_of_mandatory_values:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
@@ -56,20 +56,20 @@ def check_number_of_values(args):
 		number_of_mandatory_values = number_of_common_values + number_of_active_products
 		if len(args['text'].split(' ')) < number_of_mandatory_values:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) > number_of_mandatory_values:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) == number_of_mandatory_values:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='RUPTURE' or args['message_type']=='RUPTURE_M'):
 		if len(args['text'].split(' ')) < 3:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) > 3:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) == 3:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
@@ -78,20 +78,20 @@ def check_number_of_values(args):
 		number_of_mandatory_values = number_of_common_values + number_of_active_products
 		if len(args['text'].split(' ')) < number_of_mandatory_values:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) > number_of_mandatory_values:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) == number_of_mandatory_values:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='ADMISSION' or args['message_type']=='ADMISSION_M'):
 		if len(args['text'].split(' ')) < 8:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) > 8:
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		if len(args['text'].split(' ')) == 8:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
@@ -99,20 +99,20 @@ def check_number_of_values(args):
 		if args['facility'].facility_level == 'CDS':
 			if len(args['text'].split(' ')) < 7:
 				args['valide'] = False
-				args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+				args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			if len(args['text'].split(' ')) > 7:
 				args['valide'] = False
-				args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+				args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			if len(args['text'].split(' ')) == 7:
 				args['valide'] = True
 				args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 		else:
 			if len(args['text'].split(' ')) < 6:
 				args['valide'] = False
-				args['info_to_contact'] = "Vous avez envoye peu de valeurs. Veuillez reenvoyer le message corrige."
+				args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			if len(args['text'].split(' ')) > 6:
 				args['valide'] = False
-				args['info_to_contact'] = "Vous avez envoye beaucoup de valeurs. Veuillez reenvoyer le message corrige."
+				args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			if len(args['text'].split(' ')) == 6:
 				args['valide'] = True
 				args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
@@ -125,7 +125,7 @@ def check_if_is_reporter(args):
 	if len(concerned_reporter) < 1:
 		#This person is not in the list of reporters
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Vous ne vous etes pas enregistre pour pouvoir donner des rapports."
+		args['info_to_contact'] = "Erreur. Vous ne vous etes pas enregistre pour pouvoir donner des rapports. Veuillez vous enregistrer en envoyant un message commencant par REG."
 		return
 
 	one_concerned_reporter = concerned_reporter[0]
@@ -133,7 +133,7 @@ def check_if_is_reporter(args):
 	if not one_concerned_reporter.facility:
 		#The CDS of this reporter is not known
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Votre CDS n est pas connu dans le systeme."
+		args['info_to_contact'] = "Erreur. Votre site n est pas connu dans le systeme. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		return
 
 	args['the_sender'] =  one_concerned_reporter
@@ -163,7 +163,7 @@ def check_date_is_valid(args):
 	expression = r'^((0[1-9])|([1-2][0-9])|(3[01]))((0[1-9])|(1[0-2]))[0-9]{2}$'
 	if re.search(expression, given_date) is None:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide."
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		return
 
 
@@ -182,7 +182,7 @@ def check_date_is_valid(args):
 	if date_sent > datetime.datetime.now().date():
 		#The reporter can not report for a future date
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La date indiquee n est pas encore arrivee."
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas encore arrivee. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		return
 
 
@@ -235,7 +235,7 @@ def check_date_is_monday(args):
 		args['info_to_contact'] = "La date envoyee est pour lundi"
 	else:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La date envoyee n est pas pour lundi"
+		args['info_to_contact'] = "Erreur. La date envoyee n est pas pour lundi. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 
 def check_is_float(args):
 	''' This function checks if a given value is a float '''
@@ -246,7 +246,7 @@ def check_is_float(args):
 
 	if re.search(expression, value_to_check) is None:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide."
+		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 	else:
 		args['remaining_quantity'] = value_to_check
 		args['valide'] = True
@@ -267,7 +267,7 @@ def check_is_int(args):
 
 	if re.search(expression, value_to_check) is None:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide."
+		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "La valeur envoyee en position "+str(args['position'])+" est valide."
@@ -280,7 +280,7 @@ def check_facility_code_is_valid(args):
 	if len(facilities) < 1:
 		args['valide'] = False
 		#args['info_to_contact'] = "Erreur. Le code envoye en position "+str(args['position'])+" n est pas enregistre dans le systeme."
-		args['info_to_contact'] = "Erreur. Le code du site que vous venez d envoyer n est pas enregistre dans le systeme."
+		args['info_to_contact'] = "Erreur. Le code du site que vous venez d envoyer n est pas enregistre dans le systeme. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Le code envoye existe dans le systeme."
@@ -291,7 +291,7 @@ def check_facility_code_is_valid(args):
 		
 		if(args['facility'].id_facility == args['facility_code']):
 			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez mis le code de l etablissement sur lequel vous etes affectes."
+			args['info_to_contact'] = "Erreur. Vous avez mis le code de l etablissement sur lequel vous etes affectes. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		else:
 			args['valide'] = True
 			args['info_to_contact'] = "Le code mis est valide."
@@ -314,7 +314,7 @@ def check_is_product_name(args):
 
 	if sent_name not in product_names:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Le nom du produit envoye n est pas valide. Pour corriger, reenvoyer le message commencant par RUP"
+		args['info_to_contact'] = "Erreur. Le nom du produit envoye n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 	else:
 		args['sent_name'] = sent_name
 		args['valide'] = True
@@ -519,7 +519,7 @@ def check_products_reports_values_validity(args):
 		if(args['valide'] == False):
 			ok = False
 			args['valide'] = False
-			args['info_to_contact'] = "Erreur. La valeur envoyee pour le produit '"+product.designation+"' n est pas valide."
+			args['info_to_contact'] = "Erreur. La valeur envoyee pour le produit '"+product.designation+"' n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		
 		priority = priority + 1
 		indice = indice + 1
@@ -597,7 +597,7 @@ def check_has_already_session(args):
 def temporary_record_reporter(args):
 	'''This function is used to record temporary a reporter'''
 	
-
+	args['mot_cle'] = 'REG'
 
 	#Let's check if this contact has an existing session
 	check_has_already_session(args)
@@ -739,6 +739,9 @@ def complete_registration(args):
 #RECORD 
 def record_stock_received(args):
 	''' This function records a report about medicines received '''
+
+	args['mot_cle'] = 'SRC'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -798,6 +801,9 @@ def record_stock_received(args):
 #MODIFY
 def modify_stock_received(args):
 	''' This function modifies a report about medicines received '''
+
+	args['mot_cle'] = 'SRCM'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -822,7 +828,7 @@ def modify_stock_received(args):
 	the_same_reception = Reception.objects.filter(date_de_reception = args['sent_date'], report__facility = args['facility']).order_by('id').reverse()
 	if len(the_same_reception) < 1:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de reception des produits n a ete enregistre avec la date que vous venez d envoyer."
+		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de reception des produits n a ete enregistre avec la date que vous venez d envoyer. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		return
 
 	the_last_same_reception = the_same_reception[0]
@@ -879,6 +885,9 @@ def modify_stock_received(args):
 #RECORD
 def record_sent_stock(args):
 	''' This function records a report about medicines sent from one facility to an other '''
+	
+	args['mot_cle'] = 'SST'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -939,6 +948,9 @@ def record_sent_stock(args):
 #MODIFY
 def modify_sent_stock(args):
 	''' This function records a report about medicines sent from one facility to an other '''
+
+	args['mot_cle'] = 'SSTM'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -964,7 +976,7 @@ def modify_sent_stock(args):
 	the_same_out_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'], report__facility = args['facility']).order_by('id').reverse()
 	if len(the_same_out_report) < 1:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de sortie des produits n a ete enregistre avec la date et la destination que vous venez d envoyer."
+		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de sortie des produits n a ete enregistre avec la date et la destination que vous venez d envoyer. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 		return
 
 	the_last_same_out_report = the_same_out_report[0]
@@ -1020,6 +1032,9 @@ def modify_sent_stock(args):
 #RECORD
 def record_stock_out(args):
 	''' This function records a report about a stock out of a medicine '''
+
+	args['mot_cle'] = 'RUP'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -1060,7 +1075,10 @@ def record_stock_out(args):
 #MODIFY
 def modify_stock_out(args):
 	''' This function modifies a report about a stock out of a medicine '''
-		#Let's check if the message sent is composed by an expected number of values
+
+	args['mot_cle'] = 'RUPM'
+
+	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
@@ -1093,7 +1111,7 @@ def modify_stock_out(args):
 	the_same_stock_out_report = StockOutReport.objects.filter(report__facility = args['facility']).order_by('id').reverse()
 	if len(the_same_stock_out_report) < 1:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de rupture de stock n a ete enregistre par votre site."
+		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de rupture de stock n a ete enregistre par votre site.
 		return
 
 	the_last_same_stock_out_report = the_same_stock_out_report[0]
@@ -1121,6 +1139,9 @@ def modify_stock_out(args):
 #RECORD
 def record_current_stock(args):
 	''' This function records a report about current quantities of medicines '''
+
+	args['mot_cle'] = 'BAL'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -1144,7 +1165,7 @@ def record_current_stock(args):
 	the_existing_same_report = StockReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility = args['facility'])
 	if len(the_existing_same_report) > 0:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification."
+		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification commencant par le mot cle "+args['mot_cle']+"M"
 		return
 
 	#Let's save the report
@@ -1187,6 +1208,9 @@ def record_current_stock(args):
 #MODIFY
 def modify_current_stock(args):
 	''' This function modifies a report about current quantities of medicines '''
+
+	args['mot_cle'] = 'BALM'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -1265,6 +1289,9 @@ def modify_current_stock(args):
 #RECORD
 def record_patient_served(args):
 	''' This function records a report about number of patient served in a given week '''
+
+	args['mot_cle'] = 'ADM'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -1287,7 +1314,7 @@ def record_patient_served(args):
 	the_existing_same_report = IncomingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility = args['facility'])
 	if len(the_existing_same_report) > 0:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification."
+		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification commencant par le mot cle "+args['mot_cle']+"M"
 		return
 	
 	#Let's save the report
@@ -1302,6 +1329,9 @@ def record_patient_served(args):
 #MODIFY
 def modify_patient_served(args):
 	''' This function modifies a report about number of patient served in a given week '''
+
+	args['mot_cle'] = 'ADMM'
+
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
 	print(args['valide'])
@@ -1350,6 +1380,9 @@ def modify_patient_served(args):
 #RECORD
 def record_out_going_patients(args):
 	''' This function records a report about patients taken out of the program in a given week '''
+
+	args['mot_cle'] = 'SRT'
+
 	#Let's check if the person who send this message is a reporter
 	check_if_is_reporter(args)
 	print(args['valide'])
@@ -1374,7 +1407,7 @@ def record_out_going_patients(args):
 	the_existing_same_report = OutgoingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility = args['facility'])
 	if len(the_existing_same_report) > 0:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification."
+		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification commencant par le mot cle "+args['mot_cle']+"M"
 		return
 
 	#Let's save the report
@@ -1395,6 +1428,9 @@ def record_out_going_patients(args):
 #MODIFY
 def modify_out_going_patients(args):
 	''' This function modifies a report about patients taken out of the program in a given week '''
+
+	args['mot_cle'] = 'SRTM'
+
 	#Let's check if the person who send this message is a reporter
 	check_if_is_reporter(args)
 	print(args['valide'])
