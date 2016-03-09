@@ -18,7 +18,7 @@ def check_number_of_values(args):
 	active_products = Product.objects.filter(is_in_use = True)
 	if len(active_products) < 1:
 		args['valide'] = False
-		args['info_to_contact'] = "Exception. Aucun produit n est active dans le systeme. Contacter l administrateur de ce systeme."
+		args['info_to_contact'] = "Exception. Aucun produit n est active dans le systeme. Veuillez contacter l administrateur de ce systeme"
 		return
 
 	number_of_active_products = active_products.count()
@@ -105,7 +105,7 @@ def check_number_of_values(args):
 				args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			if len(args['text'].split(' ')) == 7:
 				args['valide'] = True
-				args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+				args['info_to_contact'] = "Le nombre de valeurs envoye est correct"
 		else:
 			if len(args['text'].split(' ')) < 6:
 				args['valide'] = False
@@ -115,7 +115,7 @@ def check_number_of_values(args):
 				args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			if len(args['text'].split(' ')) == 6:
 				args['valide'] = True
-				args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+				args['info_to_contact'] = "Le nombre de valeurs envoye est correct"
 
 
 
@@ -125,15 +125,15 @@ def check_if_is_reporter(args):
 	if len(concerned_reporter) < 1:
 		#This person is not in the list of reporters
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Vous ne vous etes pas enregistre pour pouvoir donner des rapports. Veuillez vous enregistrer en envoyant un message commencant par REG."
-		return
+		args['info_to_contact'] = "Erreur. Vous ne vous etes pas enregistre pour pouvoir donner des rapports. Veuillez vous enregistrer en envoyant le message d enregistrement commencant par REG"
+		return 
 
 	one_concerned_reporter = concerned_reporter[0]
 
 	if not one_concerned_reporter.facility:
 		#The CDS of this reporter is not known
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Votre site n est pas connu dans le systeme. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		args['info_to_contact'] = "Exception. Votre site n est pas enregistre dans le systeme. Veuillez contacter l administrateur du systeme"
 		return
 
 	args['the_sender'] =  one_concerned_reporter
@@ -163,7 +163,7 @@ def check_date_is_valid(args):
 	expression = r'^((0[1-9])|([1-2][0-9])|(3[01]))((0[1-9])|(1[0-2]))[0-9]{2}$'
 	if re.search(expression, given_date) is None:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Verifier si vous avez mis chaque valeur dans sa place. Pour corriger, reenvoyez un message commencant par "+args['mot_cle']
 		return
 
 
@@ -174,7 +174,7 @@ def check_date_is_valid(args):
 		date_sent = datetime.datetime.strptime(sent_date_without_dash, "%d%m%Y").date()
 	except:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide."
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Verifier si vous avez mis chaque valeur dans sa place. Pour corriger, reenvoyez un message commencant par "+args['mot_cle']
 		return
 
 	args['sent_date'] =  date_sent
@@ -225,7 +225,7 @@ def check_date_is_monday(args):
 		date_sent = datetime.datetime.strptime(sent_date_without_dash, "%d%m%Y").date()
 	except:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide."
+		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Verifier si vous avez mis chaque valeur dans sa place. Pour corriger, reenvoyez un message commencant par "+args['mot_cle']
 		return
 	
 	the_day = date_sent.weekday()
@@ -235,7 +235,7 @@ def check_date_is_monday(args):
 		args['info_to_contact'] = "La date envoyee est pour lundi"
 	else:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La date envoyee n est pas pour lundi. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		args['info_to_contact'] = "Erreur. La date envoyee n est pas pour lundi. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 
 def check_is_float(args):
 	''' This function checks if a given value is a float '''
@@ -246,7 +246,7 @@ def check_is_float(args):
 
 	if re.search(expression, value_to_check) is None:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide. Pour corriger,  reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 	else:
 		args['remaining_quantity'] = value_to_check
 		args['valide'] = True
@@ -267,7 +267,7 @@ def check_is_int(args):
 
 	if re.search(expression, value_to_check) is None:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		args['info_to_contact'] = "Erreur. La valeur envoyee en position "+str(args['position'])+" n est pas valide. Pour corriger,  reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "La valeur envoyee en position "+str(args['position'])+" est valide."
@@ -280,7 +280,7 @@ def check_facility_code_is_valid(args):
 	if len(facilities) < 1:
 		args['valide'] = False
 		#args['info_to_contact'] = "Erreur. Le code envoye en position "+str(args['position'])+" n est pas enregistre dans le systeme."
-		args['info_to_contact'] = "Erreur. Le code du site que vous venez d envoyer n est pas enregistre dans le systeme. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		args['info_to_contact'] = "Erreur. Le code du site que vous venez d envoyer n est pas enregistre dans le systeme. Pour corriger,  reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Le code envoye existe dans le systeme."
@@ -291,7 +291,7 @@ def check_facility_code_is_valid(args):
 		
 		if(args['facility'].id_facility == args['facility_code']):
 			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez mis le code de l etablissement sur lequel vous etes affectes. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+			args['info_to_contact'] = "Erreur. Vous avez mis le code de l etablissement sur lequel vous etes affectes. Pour corriger,  reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 		else:
 			args['valide'] = True
 			args['info_to_contact'] = "Le code mis est valide."
@@ -304,7 +304,7 @@ def check_is_product_name(args):
 
 	if len(products) < 1:
 		args['valide'] = False
-		args['info_to_contact'] = "Exception. Aucun produit n est enregistre dans le systeme. Consulter l administrateur du systeme."
+		args['info_to_contact'] = "Exception. Aucun produit n est enregistre dans le systeme. Veuillez contacter l administrateur du systeme"
 	else:
 		#Let's store all product names in a list. We put those names in capital letters
 		for product in products:
@@ -314,7 +314,7 @@ def check_is_product_name(args):
 
 	if sent_name not in product_names:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Le nom du produit envoye n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		args['info_to_contact'] = "Erreur. Le nom du produit envoye n est pas valide. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 	else:
 		args['sent_name'] = sent_name
 		args['valide'] = True
@@ -476,7 +476,7 @@ def check_products_reports_values_validity(args):
 		concerned_product = Product.objects.filter(is_in_use = True, priorite_dans_sms = priority)
 		if(len(concerned_product) < 1):
 			args['valide'] = False
-			args['info_to_contact'] = "Exception. Pas de produit de priorite '"+priority+"' active. Veuillez contacter l administrateur de ce systeme."
+			args['info_to_contact'] = "Exception. Pas de produit de priorite '"+priority+"' active. Veuillez contacter l administrateur de ce systeme"
 			ok = False
 		priority = priority + 1
 
@@ -519,7 +519,7 @@ def check_products_reports_values_validity(args):
 		if(args['valide'] == False):
 			ok = False
 			args['valide'] = False
-			args['info_to_contact'] = "Erreur. La valeur envoyee pour le produit '"+product.designation+"' n est pas valide. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+			args['info_to_contact'] = "Erreur. La valeur envoyee pour le produit '"+product.designation+"' n est pas valide. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 		
 		priority = priority + 1
 		indice = indice + 1
@@ -535,7 +535,7 @@ def check_facility(args):
 		args['info_to_contact'] = "Le code (STA ou SST ou ...) envoye est reconnu."
 	else:
 		args['valide'] = False
-		args['info_to_contact'] = "Le code envoye n est pas associe a un site. Verifier le code ou contacter l administrateur du systeme."
+		args['info_to_contact'] = "Erreur. Le code envoye n est pas associe a un site. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 
 def check_supervisor_phone_number(args):
 	''' This function checks if the phone number of the supervisor is well written '''
@@ -659,7 +659,7 @@ def complete_registration(args):
 			if len(check_duplication) > 0:
 				#Already registered and nothing to update
 				args['valide'] = False
-				args['info_to_contact'] = "Erreur. Vous etes deja enregistre sur ce code et avec le meme numero de telephone du superviseur. Envoyer votre rapport ou X pour sortir."
+				args['info_to_contact'] = "Erreur. Vous vous etes deja enregistre sur ce code et avec le meme numero de telephone du superviseur. Envoyer votre rapport ou X pour fermer la session"
 				the_one_existing_temp.delete()
 				return
 
@@ -674,7 +674,7 @@ def complete_registration(args):
 				check_duplication.facility = the_one_existing_temp.facility
 				check_duplication.save()
 				args['valide'] = True
-				args['info_to_contact'] = "Mise a jour du site d affectation reussie. Votre nouveau site d affectation est : "+the_one_existing_temp.facility.name
+				args['info_to_contact'] = "Modification reussie. Votre nouveau site d affectation est : "+the_one_existing_temp.facility.name
 				the_one_existing_temp.delete()
 				return
 
@@ -690,7 +690,7 @@ def complete_registration(args):
 				check_duplication.supervisor_phone_number = the_one_existing_temp.supervisor_phone_number
 				check_duplication.save()
 				args['valide'] = True
-				args['info_to_contact'] = "Mise a jour reussie. Le nouveau numero de telephone de votre superviseur est : "+the_one_existing_temp.supervisor_phone_number+". Merci."
+				args['info_to_contact'] = "Modification reussie. Le nouveau numero de telephone de votre superviseur est : "+the_one_existing_temp.supervisor_phone_number+". Merci."
 				the_one_existing_temp.delete()
 				return
 
@@ -707,7 +707,7 @@ def complete_registration(args):
 				check_duplication.supervisor_phone_number = the_one_existing_temp.supervisor_phone_number
 				check_duplication.save()
 				args['valide'] = True
-				args['info_to_contact'] = "Mise a jour reussie. Le nouveau numero de votre superviseur est : "+the_one_existing_temp.supervisor_phone_number+" et le nouveau centre d affectation est :"+the_one_existing_temp.facility.name
+				args['info_to_contact'] = "Modification reussie. Le nouveau numero de votre superviseur est : "+the_one_existing_temp.supervisor_phone_number+" et le nouveau site d affectation est :"+the_one_existing_temp.facility.name
 				the_one_existing_temp.delete()
 				return
 
@@ -720,8 +720,7 @@ def complete_registration(args):
 		else:
 			the_one_existing_temp.delete()
 			args['valide'] = False
-			args['info_to_contact'] = "Vous avez envoye le numero de telephone du superviseur de differentes manieres. Pour corriger, recommencer le processus d enregistrement. Merci."
-
+			args['info_to_contact'] = "Erreur. Vous avez envoye le numero de telephone du superviseur de differentes manieres. Pour corriger, veuillez reenvoyer le message commencant par le mot cle REG"
 
 
 #-----------------------------------------------------------------
@@ -770,7 +769,7 @@ def record_stock_received(args):
 
 	priority = 1
 
-	message_to_send = "Vous venez de rapporter le stock recu comme suit ("
+	message_to_send = "Enregistrement reussie. Vous venez de rapporter le stock recu comme suit "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
@@ -787,15 +786,17 @@ def record_stock_received(args):
 		the_concerned_product = concerned_product[0]
 
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
 
 		product_reception_record = ProductsReceptionReport.objects.create(reception = the_created_reception, produit = the_concerned_product, quantite_recue = value)
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+"). NB : Le mot cle pour corriger ce rapport est SRCM."
+	args['info_to_contact'] = message_to_send
+
+	second_msg_to_sent = "Si vous voulez corriger ce rapport du stock recu que vous venez d envoyer, envoyer un message corrige et commencant par SRCM"
 
 
 #MODIFY
@@ -846,7 +847,7 @@ def modify_stock_received(args):
 
 	priority = 1
 
-	message_to_send = "Mise a jour reussie. Vous venez de rapporter le stock recu comme suit ("
+	message_to_send = "Modification reussie. Vous venez de rapporter le stock recu comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
@@ -863,15 +864,15 @@ def modify_stock_received(args):
 		the_concerned_product = concerned_product[0]
 
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
 
 		product_reception_record = ProductsReceptionReport.objects.create(reception = the_created_reception, produit = the_concerned_product, quantite_recue = value)
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+")."
+	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
 
 
@@ -916,7 +917,7 @@ def record_sent_stock(args):
 
 	priority = 1
 
-	message_to_send = "Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"'. ces produits sont : ("
+	message_to_send = "Enregistrement reussie. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
 		#Let's record each product transfered
@@ -934,15 +935,17 @@ def record_sent_stock(args):
 		the_concerned_product = concerned_product[0]
 
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
 
 		product_out_record = ProductsTranferReport.objects.create(sortie = the_created_Sortie, produit = the_concerned_product, quantite_donnee = value)
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+"). NB : Le mot cle pour corriger ce rapport est SSTM."
+	args['info_to_contact'] = message_to_send
+
+	second_msg_to_sent = "Si vous voulez corriger ce rapport du stock sorti que vous venez d envoyer, envoyer un message corrige et commencant par SSTM"
 
 
 #MODIFY
@@ -994,7 +997,7 @@ def modify_sent_stock(args):
 
 	priority = 1
 
-	message_to_send = "Modification reussie. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : ("
+	message_to_send = "Modification reussie. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
 		#We record each beneficiary number
@@ -1011,15 +1014,15 @@ def modify_sent_stock(args):
 		the_concerned_product = concerned_product[0]
 
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
 
 		product_out_record = ProductsTranferReport.objects.create(sortie = the_created_Sortie, produit = the_concerned_product, quantite_donnee = value)
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+")"
+	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
 
 
@@ -1069,7 +1072,12 @@ def record_stock_out(args):
 
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
-	args['info_to_contact'] = "Une rupture de stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'. La quantite restante est "+args['remaining_quantity']+". NB : Le mot cle pour corriger ce rapport est RUPM."
+	args['info_to_contact'] = "Enregistrement reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']+"."
+	
+	#The below message message will be sent to the supervisor
+	args['info_to_supervisor'] = "Une rupture du stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'. La quantite restante est "+args['remaining_quantity']+"."
+
+	second_msg_to_sent = "Si vous voulez corriger ce rapport de rupture du stock que vous venez d envoyer, envoyer un message corrige et commencant par RUPM"
 
 
 #MODIFY
@@ -1126,7 +1134,9 @@ def modify_stock_out(args):
 
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
-	args['info_to_contact'] = "Une modification vient d etre faite comme suit : Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
+	args['info_to_contact'] = "Modification reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']+"."
+
+	args['info_to_supervisor'] = "Modification. Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
 #-------------------------------------------------------------------------------------
 
 
@@ -1177,7 +1187,7 @@ def record_current_stock(args):
 
 	priority = 1
 
-	message_to_send = "L etat du stock vient d etre enregistre comme suit ("
+	message_to_send = "Enregistrement reussie. Vous venez de rapporter l etat du stock comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
@@ -1202,7 +1212,9 @@ def record_current_stock(args):
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+"). NB : Le mot cle pour corriger ce rapport est BALM."
+	args['info_to_contact'] = message_to_send
+
+	second_msg_to_sent = "Si vous voulez corriger ce rapport de l etat du stock que vous venez d envoyer, envoyer un message corrige et commencant par BALM"
 
 
 #MODIFY
@@ -1251,7 +1263,7 @@ def modify_current_stock(args):
 
 	priority = 1
 
-	message_to_send = "Une modification vient d etre faite. Le message enregistre est ("
+	message_to_send = "Modification reussie. Vous venez de rapporter l etat du stock comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
@@ -1268,15 +1280,15 @@ def modify_current_stock(args):
 		the_concerned_product = concerned_product[0]
 
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
+			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
 
 		product_stock_record = ProductStockReport.objects.create(stock_report = the_created_stock_report, product = the_concerned_product, quantite_en_stock = value)
 
 		priority = priority + 1
 
-	args['info_to_contact'] = message_to_send+")."
+	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
 
 
@@ -1323,7 +1335,10 @@ def record_patient_served(args):
 
 	incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
 
-	args['info_to_contact'] = "Le message enregistre est (TDS : "+args['text'].split(' ')[2]+", PTB : "+args['text'].split(' ')[3]+", Oedemes : "+args['text'].split(' ')[4]+", Rechute : "+args['text'].split(' ')[5]+", Readmission : "+args['text'].split(' ')[6]+", TI : "+args['text'].split(' ')[7]+"). NB : Le mot cle pour corriger ce rapport est ADMM."
+	args['info_to_contact'] = "Enregistrement reussie. Vous venez de rapporter les admissions comme suit : TDS="+args['text'].split(' ')[2]+", PTB="+args['text'].split(' ')[3]+", Oedemes="+args['text'].split(' ')[4]+", Rechute="+args['text'].split(' ')[5]+", Readmission="+args['text'].split(' ')[6]+", TI="+args['text'].split(' ')[7]+""
+
+
+	second_msg_to_sent = "Si vous voulez corriger ce rapport des admissions que vous venez d envoyer, envoyer un message corrige et commencant par ADMM"
 
 
 #MODIFY
@@ -1368,7 +1383,9 @@ def modify_patient_served(args):
 
 	incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
 
-	args['info_to_contact'] = "Une modification vient d etre faite. Le message enregistre est (TDS : "+args['text'].split(' ')[2]+", PTB : "+args['text'].split(' ')[3]+", Oedemes : "+args['text'].split(' ')[4]+", Rechute : "+args['text'].split(' ')[5]+", Readmission : "+args['text'].split(' ')[6]+", TI : "+args['text'].split(' ')[7]+"). Merci."
+	args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les admissions comme suit : TDS="+args['text'].split(' ')[2]+", PTB="+args['text'].split(' ')[3]+", Oedemes="+args['text'].split(' ')[4]+", Rechute="+args['text'].split(' ')[5]+", Readmission="+args['text'].split(' ')[6]+", TI="+args['text'].split(' ')[7]+""
+
+
 #--------------------------------------------------------------------------------------
 
 
@@ -1417,11 +1434,14 @@ def record_out_going_patients(args):
 	if args['facility'].facility_level == 'CDS':
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
-		args['info_to_contact'] = "Le msg enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+", Transfert interne : "+args['text'].split(' ')[6]+"). NB : Le mot cle pour corriger ce rapport est SRTM"
+		args['info_to_contact'] = "Enregistrement reussie. Vous venez de rapporter les sorties des patients comme suit : Gueri="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]+", Transfert interne="+args['text'].split(' ')[6]
 	else:
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], date_of_first_week_day = args['sent_date'])
 
-		args['info_to_contact'] = "Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+"). NB : Le mot cle pour corriger ce rapport est SRTM"
+		args['info_to_contact'] = "Enregistrement reussie. Vous venez de rapporter les sorties des patients comme suit : TAS="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]
+
+
+	second_msg_to_sent = "Si vous voulez corriger ce rapport de sortie des patients que vous venez d envoyer, envoyer un message corrige et commencant par SRTM"
 
 
 
@@ -1471,9 +1491,9 @@ def modify_out_going_patients(args):
 	if args['facility'].facility_level == 'CDS':
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
-		args['info_to_contact'] = "Une modification vient d etre faite. Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+", Transfert interne : "+args['text'].split(' ')[6]+"). Merci."
+		args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les sorties des patients comme suit : Gueri="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]+", Transfert interne="+args['text'].split(' ')[6]
 	else:
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], date_of_first_week_day = args['sent_date'])
 
-		args['info_to_contact'] = "Une modification vient d etre faite. Le message enregistre est (Succes : "+args['text'].split(' ')[2]+", Deces : "+args['text'].split(' ')[3]+", Abandons : "+args['text'].split(' ')[4]+", Non repondant : "+args['text'].split(' ')[5]+"). Merci."
+		args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les sorties des patients comme suit : TAS="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]
 #--------------------------------------------------------------------------------------
