@@ -1341,6 +1341,61 @@ def record_patient_served(args):
 	second_msg_to_sent = "Si vous voulez corriger ce rapport des admissions que vous venez d envoyer, envoyer un message corrige et commencant par ADMM"
 
 
+	
+	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site. 
+
+	outgoing_patients_report_for_that_week = OutgoingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility =args['facility'])
+
+	if(len(outgoing_patients_report_for_that_week) > 0):
+		#It means that this site have given the outgoing patient report for that week
+		outgoing_patients_report_for_that_week = outgoing_patients_report_for_that_week[0]
+		
+		all_outgoing_patient_for_that_week = outgoing_patients_report_for_that_week.gueri+outgoing_patients_report_for_that_week.deces+outgoing_patients_report_for_that_week.abandon + outgoing_patients_report_for_that_week.non_repondant +outgoing_patients_report_for_that_week.transfert_interne
+
+
+		all_incoming_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5]) + float(args['text'].split(' ')[6]) + float(args['text'].split(' ')[7])
+
+		print("===============================")
+		print("OUT")
+		print(all_outgoing_patient_for_that_week)
+		print("IN")
+		print(all_incoming_patient_for_that_week)
+		print("===============================")
+
+
+		if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
+			#If the reported out going patients number is super to the reported incoming patient number for a given week, the
+			#system should alert the concerned persons
+			print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+			print("Message to the supervisor")
+			args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
+			print("Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+"")
+
+			print("Message to the contact")
+			args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects"
+			print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects")
+			print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
+
+
+
+			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
+			'''
+			url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
+			token = getattr(settings,'TOKEN','')
+
+			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+
+			data1 = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+
+			data2 = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+
+			response1 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
+
+			response2 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))'''
+			
+
 #MODIFY
 def modify_patient_served(args):
 	''' This function modifies a report about number of patient served in a given week '''
@@ -1385,6 +1440,62 @@ def modify_patient_served(args):
 
 	args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les admissions comme suit : TDS="+args['text'].split(' ')[2]+", PTB="+args['text'].split(' ')[3]+", Oedemes="+args['text'].split(' ')[4]+", Rechute="+args['text'].split(' ')[5]+", Readmission="+args['text'].split(' ')[6]+", TI="+args['text'].split(' ')[7]+""
 
+
+
+
+
+
+	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site. 
+
+	outgoing_patients_report_for_that_week = OutgoingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility =args['facility'])
+
+	if(len(outgoing_patients_report_for_that_week) > 0):
+		#It means that this site have given the outgoing patient report for that week
+		outgoing_patients_report_for_that_week = outgoing_patients_report_for_that_week[0]
+		
+		all_outgoing_patient_for_that_week = outgoing_patients_report_for_that_week.gueri+outgoing_patients_report_for_that_week.deces+outgoing_patients_report_for_that_week.abandon + outgoing_patients_report_for_that_week.non_repondant +outgoing_patients_report_for_that_week.transfert_interne
+
+
+		all_incoming_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5]) + float(args['text'].split(' ')[6]) + float(args['text'].split(' ')[7])
+
+		print("===============================")
+		print("OUT")
+		print(all_outgoing_patient_for_that_week)
+		print("IN")
+		print(all_incoming_patient_for_that_week)
+		print("===============================")
+
+
+		if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
+			#If the reported out going patients number is super to the reported incoming patient number for a given week, the
+			#system should alert the concerned persons
+			print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+			print("Message to the supervisor")
+			args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
+			print("Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+"")
+
+			print("Message to the contact")
+			args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects"
+			print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects")
+			print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
+
+
+			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
+			'''
+			url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
+			token = getattr(settings,'TOKEN','')
+
+			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+
+			data1 = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+
+			data2 = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+
+			response1 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
+
+			response2 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))'''
 
 #--------------------------------------------------------------------------------------
 
@@ -1445,6 +1556,54 @@ def record_out_going_patients(args):
 
 
 
+
+	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site. 
+
+	incoming_patients_report_for_that_week = IncomingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility =args['facility'])
+
+	if(len(incoming_patients_report_for_that_week) > 0):
+		#It means that this site have given the incoming patient report for that week
+		incoming_patients_report_for_that_week = incoming_patients_report_for_that_week[0]
+		
+		all_incoming_patient_for_that_week = incoming_patients_report_for_that_week.total_debut_semaine + incoming_patients_report_for_that_week.ptb + incoming_patients_report_for_that_week.oedemes + incoming_patients_report_for_that_week.rechute + incoming_patients_report_for_that_week.readmission + incoming_patients_report_for_that_week.transfert_interne
+
+
+		all_outgoing_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5])
+
+
+		if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
+			#If the reported out going patients number is super to the reported incoming patient number for a given week, the
+			#system should alert the concerned persons
+			print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+			print("Message to the supervisor")
+			args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
+			print("Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+"")
+
+			print("Message to the contact")
+			args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects"
+			print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects")
+			print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
+
+
+
+			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
+			'''
+			url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
+			token = getattr(settings,'TOKEN','')
+
+			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+
+			data1 = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+
+			data2 = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+
+			response1 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
+
+			response2 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))'''
+
+
 #MODIFY
 def modify_out_going_patients(args):
 	''' This function modifies a report about patients taken out of the program in a given week '''
@@ -1496,4 +1655,53 @@ def modify_out_going_patients(args):
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], date_of_first_week_day = args['sent_date'])
 
 		args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les sorties des patients comme suit : TAS="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]
+
+
+	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site. 
+
+	incoming_patients_report_for_that_week = IncomingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility =args['facility'])
+
+	if(len(incoming_patients_report_for_that_week) > 0):
+		#It means that this site have given the incoming patient report for that week
+		incoming_patients_report_for_that_week = incoming_patients_report_for_that_week[0]
+		
+		all_incoming_patient_for_that_week = incoming_patients_report_for_that_week.total_debut_semaine + incoming_patients_report_for_that_week.ptb + incoming_patients_report_for_that_week.oedemes + incoming_patients_report_for_that_week.rechute + incoming_patients_report_for_that_week.readmission + incoming_patients_report_for_that_week.transfert_interne
+
+
+		all_outgoing_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5])
+
+		
+		if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
+			#If the reported out going patients number is super to the reported incoming patient number for a given week, the
+			#system should alert the concerned persons
+			print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+			print("Message to the supervisor")
+			args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+args['sent_date']
+			print("Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+args['sent_date']+"")
+
+			print("Message to the contact")
+			args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+args['sent_date']+". Verfier si les chiffres envoyes sont corrects"
+			print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+args['sent_date']+". Verfier si les chiffres envoyes sont corrects")
+			print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
+
+
+
+			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
+			'''
+			url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
+			token = getattr(settings,'TOKEN','')
+
+			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+
+			data1 = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+
+			data2 = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+
+			response1 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
+
+			response2 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))'''
+
+			
 #--------------------------------------------------------------------------------------
