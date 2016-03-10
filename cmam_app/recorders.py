@@ -556,7 +556,7 @@ def check_supervisor_phone_number(args):
 	if re.search(expression, the_supervisor_phone_number_no_space) is None:
 		#The phone number is not well written
 		args['valide'] = False
-		args['info_to_contact'] = "Le numero de telephone du superviseur n est pas bien ecrit."
+		args['info_to_contact'] = "Erreur. Le numero de telephone du superviseur n est pas bien ecrit. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle REG"
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Le numero de telephone du superviseur est bien ecrit."
@@ -726,7 +726,7 @@ def complete_registration(args):
 			Reporter.objects.create(phone_number = the_one_existing_temp.phone_number,facility = the_one_existing_temp.facility, supervisor_phone_number = the_one_existing_temp.supervisor_phone_number)
 			the_one_existing_temp.delete()
 			args['valide'] = True
-			args['info_to_contact'] = "Merci. Vous vous etes enregistre correctement."
+			args['info_to_contact'] = "Enregistrement reussi. Si vous voulez modifier le code de votre site ou le numero de telephone de votre superviseur, veuillez recommencer l enregistrement"
 		else:
 			the_one_existing_temp.delete()
 			args['valide'] = False
@@ -1105,7 +1105,7 @@ def record_stock_out(args):
 
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
-	args['info_to_contact'] = "Enregistrement reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']+"."
+	args['info_to_contact'] = "Enregistrement reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est "+args['remaining_quantity']+"."
 	
 	#The below message message will be sent to the supervisor
 	args['info_to_supervisor'] = "Une rupture du stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'. La quantite restante est "+args['remaining_quantity']+"."
@@ -1179,7 +1179,7 @@ def modify_stock_out(args):
 
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
-	args['info_to_contact'] = "Modification reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']+"."
+	args['info_to_contact'] = "Modification reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est "+args['remaining_quantity']+"."
 
 	args['info_to_supervisor'] = "Modification. Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
 #-------------------------------------------------------------------------------------
