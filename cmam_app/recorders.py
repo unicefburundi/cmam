@@ -7,6 +7,15 @@ import json
 from django.conf import settings
 
 
+def send_sms_through_rapidpro(args):
+	url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
+	token = getattr(settings,'TOKEN','')
+
+	data = args['data']
+
+	response = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
+
+
 
 def check_number_of_values(args):
 	#This function checks if the message sent is composed by an expected number of values
@@ -1381,19 +1390,15 @@ def record_patient_served(args):
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 			'''
-			url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
-			token = getattr(settings,'TOKEN','')
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-
-			data1 = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-
-			data2 = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-
-			response1 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
-
-			response2 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))'''
+			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)'''
 			
 
 #MODIFY
@@ -1483,19 +1488,15 @@ def modify_patient_served(args):
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 			'''
-			url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
-			token = getattr(settings,'TOKEN','')
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-
-			data1 = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-
-			data2 = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-
-			response1 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
-
-			response2 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))'''
+			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)'''
 
 #--------------------------------------------------------------------------------------
 
@@ -1589,19 +1590,15 @@ def record_out_going_patients(args):
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 			'''
-			url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
-			token = getattr(settings,'TOKEN','')
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-
-			data1 = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-
-			data2 = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-
-			response1 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
-
-			response2 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))'''
+			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)'''
 
 
 #MODIFY
@@ -1689,19 +1686,15 @@ def modify_out_going_patients(args):
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 			'''
-			url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
-			token = getattr(settings,'TOKEN','')
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-
-			data1 = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-
-			data2 = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-
-			response1 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
-
-			response2 = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))'''
-
+			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)'''
+			
 			
 #--------------------------------------------------------------------------------------
