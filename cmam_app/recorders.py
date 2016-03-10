@@ -779,7 +779,7 @@ def record_stock_received(args):
 
 	priority = 1
 
-	message_to_send = "Enregistrement reussie. Vous venez de rapporter le stock recu comme suit "
+	message_to_send = "Enregistrement reussie. Vous venez de rapporter le stock recu comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
