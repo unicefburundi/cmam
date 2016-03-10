@@ -8,6 +8,7 @@ from django.conf import settings
 
 
 def send_sms_through_rapidpro(args):
+	''' This function sends messages through rapidpro. Contact(s) and the message to send to them must be in args['data'] '''
 	url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
 	token = getattr(settings,'TOKEN','')
 
@@ -808,6 +809,17 @@ def record_stock_received(args):
 	second_msg_to_sent = "Si vous voulez corriger ce rapport du stock recu que vous venez d envoyer, envoyer un message corrige et commencant par SRCM"
 
 
+	#The below code will be uncommented in order to send the second sms after the first one
+	'''
+	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	args['data'] = data
+	send_sms_through_rapidpro(args)
+
+	args['info_to_contact'] = second_msg_to_sent
+	'''
+
+
 #MODIFY
 def modify_stock_received(args):
 	''' This function modifies a report about medicines received '''
@@ -957,6 +969,18 @@ def record_sent_stock(args):
 	second_msg_to_sent = "Si vous voulez corriger ce rapport du stock sorti que vous venez d envoyer, envoyer un message corrige et commencant par SSTM"
 
 
+
+	#The below code will be uncommented in order to send the second sms after the first one
+	'''
+	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	args['data'] = data
+	send_sms_through_rapidpro(args)
+
+	args['info_to_contact'] = second_msg_to_sent
+	'''
+
+
 #MODIFY
 def modify_sent_stock(args):
 	''' This function records a report about medicines sent from one facility to an other '''
@@ -1087,6 +1111,18 @@ def record_stock_out(args):
 	args['info_to_supervisor'] = "Une rupture du stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'. La quantite restante est "+args['remaining_quantity']+"."
 
 	second_msg_to_sent = "Si vous voulez corriger ce rapport de rupture du stock que vous venez d envoyer, envoyer un message corrige et commencant par RUPM"
+
+
+
+	#The below code will be uncommented in order to send the second sms after the first one
+	'''
+	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	args['data'] = data
+	send_sms_through_rapidpro(args)
+
+	args['info_to_contact'] = second_msg_to_sent
+	'''
 
 
 #MODIFY
@@ -1226,6 +1262,17 @@ def record_current_stock(args):
 	second_msg_to_sent = "Si vous voulez corriger ce rapport de l etat du stock que vous venez d envoyer, envoyer un message corrige et commencant par BALM"
 
 
+	#The below code will be uncommented in order to send the second sms after the first one
+	'''
+	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	args['data'] = data
+	send_sms_through_rapidpro(args)
+
+	args['info_to_contact'] = second_msg_to_sent
+	'''
+
+
 #MODIFY
 def modify_current_stock(args):
 	''' This function modifies a report about current quantities of medicines '''
@@ -1348,6 +1395,19 @@ def record_patient_served(args):
 
 
 	second_msg_to_sent = "Si vous voulez corriger ce rapport des admissions que vous venez d envoyer, envoyer un message corrige et commencant par ADMM"
+
+
+
+	#The below code will be uncommented in order to send the second sms after the first one
+	'''
+	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	args['data'] = data
+	send_sms_through_rapidpro(args)
+
+	args['info_to_contact'] = second_msg_to_sent
+	'''
+
 
 
 	
@@ -1555,6 +1615,18 @@ def record_out_going_patients(args):
 
 	second_msg_to_sent = "Si vous voulez corriger ce rapport de sortie des patients que vous venez d envoyer, envoyer un message corrige et commencant par SRTM"
 
+
+
+
+	#The below code will be uncommented in order to send the second sms after the first one
+	'''
+	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	args['data'] = data
+	send_sms_through_rapidpro(args)
+
+	args['info_to_contact'] = second_msg_to_sent
+	'''
 
 
 
