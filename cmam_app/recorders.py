@@ -819,6 +819,16 @@ def record_stock_received(args):
 	if not args['valide']:
 		return
 
+
+	#Let's check if this site have not already send this report. They must send in muximum one per day
+	already_existing_recption = Reception.objects.filter(date_de_reception = args['sent_date'], report__facility = args['facility'])
+	if(len(already_existing_recption) > 0):
+		#We can not register an other reception report of this site and for this date
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Vous avez deja donne un rapport de reception pour '"+str(args['sent_date'])+"'. Si vous voulez le modifier, envoyer un message commencant par SRCM"
+		return
+	
+
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'STOCK_RECU')
 
