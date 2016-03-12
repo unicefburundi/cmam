@@ -25,7 +25,7 @@ def check_number_of_values(args):
 	print(args['text'].split(' '))
 
 	#Let's identify the number of active products
-	active_products = Product.objects.filter(is_in_use = True)
+	'''active_products = Product.objects.filter(is_in_use = True)
 	if len(active_products) < 1:
 		args['valide'] = False
 		args['info_to_contact'] = "Exception. Aucun produit n est active dans le systeme. Veuillez contacter l administrateur de ce systeme"
@@ -34,12 +34,12 @@ def check_number_of_values(args):
 	number_of_active_products = active_products.count()
 
 	args['number_of_active_products'] = number_of_active_products
-
+'''
 
 	#Each message category starts with some mandatory values which are same for all sites
 	number_of_common_values = 0	
 
-	if(args['message_type']=='SELF_REGISTRATION'):
+	if(args['message_type']=='SELF_REGISTRATION' or args['message_type']=='SELF_REGISTRATION_M'):
 		if len(args['text'].split(' ')) < 3:
 			args['valide'] = False
 			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
@@ -446,9 +446,9 @@ def check_values_validity(args):
 			check_is_int(args)
 		
 
-
+'''
 def check_products_reports_values_validity(args):
-	''' This function checks if values sent for products quantities are valid '''
+	#This function checks if values sent for products quantities are valid
 
 	
 	#The value at the indice 1 is always a date. Let's check if it is valide
@@ -534,7 +534,7 @@ def check_products_reports_values_validity(args):
 		priority = priority + 1
 		indice = indice + 1
 #======================reporters self registration==================================
-
+'''
 
 def check_facility(args):
 	''' This function checks if the facility code sent by the reporter exists '''
@@ -589,7 +589,7 @@ def save_temporary_the_reporter(args):
 
 			Temporary.objects.create(phone_number = the_phone_number, facility = the_concerned_facility, supervisor_phone_number = the_supervisor_phone_number_no_space)
 			args['valide'] = True
-			args['info_to_contact'] = "Merci. Veuillez confirmer le numero de telephone du superviseur s il vous plait."
+			args['info_to_contact'] = "Veuillez reenvoyer seulement le numero de telephone de votre superviseur s il vous plait."
 
 
 def check_has_already_session(args):
@@ -607,7 +607,18 @@ def check_has_already_session(args):
 def temporary_record_reporter(args):
 	'''This function is used to record temporary a reporter'''
 	
-	args['mot_cle'] = 'REG'
+	if(args['text'].split(' ')[0].upper() == 'REG'):
+		args['mot_cle'] = 'REG'
+		
+		#Because REG is used to do the self registration and not the update, if the phone user sends a message starting with REG and 			#he/she is already a reporter, we don't allow him/her to continue
+		check_if_is_reporter(args)
+		if(args['valide'] == True):
+			#This contact is already a reporter and can't do the registration the second time
+			args['info_to_contact'] = "Erreur. Vous vous etes deja enregistre. Si vous voulez modifier votre site d affectation ou le numero de telephone de votre superviseur, envoyer le message commencant par le mot cle 'REGM'"
+			return
+	
+	if(args['text'].split(' ')[0].upper() == 'REGM'):
+		args['mot_cle'] = 'REGM'
 
 	#Let's check if this contact has an existing session
 	check_has_already_session(args)
@@ -669,7 +680,7 @@ def complete_registration(args):
 			if len(check_duplication) > 0:
 				#Already registered and nothing to update
 				args['valide'] = False
-				args['info_to_contact'] = "Erreur. Vous vous etes deja enregistre sur ce code et avec le meme numero de telephone du superviseur. Envoyer votre rapport ou X pour fermer la session"
+				args['info_to_contact'] = "Erreur. Vous vous etes deja enregistre sur ce site et avec ce numero de telephone du superviseur. Envoyer un message bien ecrit et commencant par un mot cle valide ou X pour fermer la session"
 				the_one_existing_temp.delete()
 				return
 
@@ -700,7 +711,7 @@ def complete_registration(args):
 				check_duplication.supervisor_phone_number = the_one_existing_temp.supervisor_phone_number
 				check_duplication.save()
 				args['valide'] = True
-				args['info_to_contact'] = "Modification reussie. Le nouveau numero de telephone de votre superviseur est : "+the_one_existing_temp.supervisor_phone_number+". Merci."
+				args['info_to_contact'] = "Modification reussie. Le nouveau numero de telephone de votre superviseur est : "+the_one_existing_temp.supervisor_phone_number+""
 				the_one_existing_temp.delete()
 				return
 
@@ -717,7 +728,7 @@ def complete_registration(args):
 				check_duplication.supervisor_phone_number = the_one_existing_temp.supervisor_phone_number
 				check_duplication.save()
 				args['valide'] = True
-				args['info_to_contact'] = "Modification reussie. Le nouveau numero de votre superviseur est : "+the_one_existing_temp.supervisor_phone_number+" et le nouveau site d affectation est :"+the_one_existing_temp.facility.name
+				args['info_to_contact'] = "Modification reussie. Le nouveau numero de telephone de votre superviseur est '"+the_one_existing_temp.supervisor_phone_number+"' et votre nouveau site d affectation est '"+the_one_existing_temp.facility.name+"'"
 				the_one_existing_temp.delete()
 				return
 
@@ -726,11 +737,11 @@ def complete_registration(args):
 			Reporter.objects.create(phone_number = the_one_existing_temp.phone_number,facility = the_one_existing_temp.facility, supervisor_phone_number = the_one_existing_temp.supervisor_phone_number)
 			the_one_existing_temp.delete()
 			args['valide'] = True
-			args['info_to_contact'] = "Enregistrement reussi. Si vous voulez modifier le code de votre site ou le numero de telephone de votre superviseur, veuillez recommencer l enregistrement"
+			args['info_to_contact'] = "Enregistrement reussi. Si vous voulez modifier le code de votre site d affectation ou le numero de telephone de votre superviseur, veuillez utiliser le mot cle REGM"
 		else:
 			the_one_existing_temp.delete()
 			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye le numero de telephone du superviseur de differentes manieres. Pour corriger, veuillez reenvoyer le message commencant par le mot cle REG"
+			args['info_to_contact'] = "Erreur. Vous avez envoye le numero de telephone de votre superviseur de differentes manieres. Pour corriger, veuillez reenvoyer le message commencant par le mot cle REG"
 
 
 #-----------------------------------------------------------------
@@ -743,11 +754,11 @@ def complete_registration(args):
 
 
 
-
+'''
 #-----------------------------STOCK RECEIVED------------------------------------
-#RECORD 
+#RECORD
 def record_stock_received(args):
-	''' This function records a report about medicines received '''
+	This function records a report about medicines received
 
 	args['mot_cle'] = 'SRC'
 
@@ -810,19 +821,20 @@ def record_stock_received(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	'''
-	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
-	args['data'] = data
-	send_sms_through_rapidpro(args)
+	
+	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	#args['data'] = data
+	#send_sms_through_rapidpro(args)
 
-	args['info_to_contact'] = second_msg_to_sent
-	'''
+	#args['info_to_contact'] = second_msg_to_sent
 
+'''
 
+'''
 #MODIFY
 def modify_stock_received(args):
-	''' This function modifies a report about medicines received '''
+	#This function modifies a report about medicines received
 
 	args['mot_cle'] = 'SRCM'
 
@@ -895,18 +907,18 @@ def modify_stock_received(args):
 
 	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
+'''
 
 
 
 
 
 
-
-
+'''
 #------------------------------SENT STOCK---------------------------------------
 #RECORD
 def record_sent_stock(args):
-	''' This function records a report about medicines sent from one facility to an other '''
+	#This function records a report about medicines sent from one facility to an other
 	
 	args['mot_cle'] = 'SST'
 
@@ -971,19 +983,20 @@ def record_sent_stock(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	'''
-	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
-	args['data'] = data
-	send_sms_through_rapidpro(args)
+	
+	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	#args['data'] = data
+	#send_sms_through_rapidpro(args)
 
-	args['info_to_contact'] = second_msg_to_sent
-	'''
+	#args['info_to_contact'] = second_msg_to_sent
+	
+'''
 
-
+'''
 #MODIFY
 def modify_sent_stock(args):
-	''' This function records a report about medicines sent from one facility to an other '''
+	#This function records a report about medicines sent from one facility to an other
 
 	args['mot_cle'] = 'SSTM'
 
@@ -1057,17 +1070,17 @@ def modify_sent_stock(args):
 
 	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
+'''
 
 
 
 
 
-
-
+'''
 #-------------------------------A STOCK OUT------------------------------------
 #RECORD
 def record_stock_out(args):
-	''' This function records a report about a stock out of a medicine '''
+	#This function records a report about a stock out of a medicine
 
 	args['mot_cle'] = 'RUP'
 
@@ -1115,19 +1128,19 @@ def record_stock_out(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	'''
-	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
-	args['data'] = data
-	send_sms_through_rapidpro(args)
+	
+	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	#args['data'] = data
+	#send_sms_through_rapidpro(args)
 
-	args['info_to_contact'] = second_msg_to_sent
-	'''
+	#args['info_to_contact'] = second_msg_to_sent
+'''	
 
-
+'''
 #MODIFY
 def modify_stock_out(args):
-	''' This function modifies a report about a stock out of a medicine '''
+	#This function modifies a report about a stock out of a medicine
 
 	args['mot_cle'] = 'RUPM'
 
@@ -1183,17 +1196,17 @@ def modify_stock_out(args):
 
 	args['info_to_supervisor'] = "Modification. Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
 #-------------------------------------------------------------------------------------
+'''
 
 
 
 
 
-
-
+'''
 #--------------------------------CURRENT STOCK----------------------------------
 #RECORD
 def record_current_stock(args):
-	''' This function records a report about current quantities of medicines '''
+	#This function records a report about current quantities of medicines
 
 	args['mot_cle'] = 'BAL'
 
@@ -1263,19 +1276,19 @@ def record_current_stock(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	'''
-	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
-	args['data'] = data
-	send_sms_through_rapidpro(args)
+	
+	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	#args['data'] = data
+	#send_sms_through_rapidpro(args)
 
-	args['info_to_contact'] = second_msg_to_sent
-	'''
+	#args['info_to_contact'] = second_msg_to_sent
+'''
 
-
+'''
 #MODIFY
 def modify_current_stock(args):
-	''' This function modifies a report about current quantities of medicines '''
+	#This function modifies a report about current quantities of medicines
 
 	args['mot_cle'] = 'BALM'
 
@@ -1346,17 +1359,17 @@ def modify_current_stock(args):
 
 	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
+'''
 
 
 
 
 
-
-
+'''
 #---------------------------------NUMBERS OF PATIENTS SERVED--------------------
 #RECORD
 def record_patient_served(args):
-	''' This function records a report about number of patient served in a given week '''
+	#This function records a report about number of patient served in a given week
 
 	args['mot_cle'] = 'ADM'
 
@@ -1399,14 +1412,14 @@ def record_patient_served(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	'''
-	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
-	args['data'] = data
-	send_sms_through_rapidpro(args)
+	
+	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	#args['data'] = data
+	#send_sms_through_rapidpro(args)
 
-	args['info_to_contact'] = second_msg_to_sent
-	'''
+	#args['info_to_contact'] = second_msg_to_sent
+	
 
 
 
@@ -1449,21 +1462,22 @@ def record_patient_served(args):
 
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
-			'''
-			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-			args['data'] = data
-			send_sms_through_rapidpro(args)
-
-			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-			args['data'] = data
-			send_sms_through_rapidpro(args)'''
 			
+			#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			#data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			#args['data'] = data
+			#send_sms_through_rapidpro(args)
 
+			#the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			#data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			#args['data'] = data
+			#send_sms_through_rapidpro(args)
+'''
+			
+'''
 #MODIFY
 def modify_patient_served(args):
-	''' This function modifies a report about number of patient served in a given week '''
+	#This function modifies a report about number of patient served in a given week
 
 	args['mot_cle'] = 'ADMM'
 
@@ -1547,28 +1561,28 @@ def modify_patient_served(args):
 
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
-			'''
-			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-			args['data'] = data
-			send_sms_through_rapidpro(args)
+			
+			#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			#data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			#args['data'] = data
+			#send_sms_through_rapidpro(args)
 
-			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-			args['data'] = data
-			send_sms_through_rapidpro(args)'''
+			#the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			#data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			#args['data'] = data
+			#send_sms_through_rapidpro(args)
 
 #--------------------------------------------------------------------------------------
+'''
 
 
 
 
-
-
+'''
 #--------------------------------OUT GOING PATIENTS-----------------------------
 #RECORD
 def record_out_going_patients(args):
-	''' This function records a report about patients taken out of the program in a given week '''
+	#This function records a report about patients taken out of the program in a given week
 
 	args['mot_cle'] = 'SRT'
 
@@ -1619,14 +1633,14 @@ def record_out_going_patients(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	'''
-	the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-	data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
-	args['data'] = data
-	send_sms_through_rapidpro(args)
+	
+	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
+	#args['data'] = data
+	#send_sms_through_rapidpro(args)
 
-	args['info_to_contact'] = second_msg_to_sent
-	'''
+	#args['info_to_contact'] = second_msg_to_sent
+	
 
 
 
@@ -1661,7 +1675,7 @@ def record_out_going_patients(args):
 
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
-			'''
+			
 			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
 			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
 			args['data'] = data
@@ -1670,12 +1684,14 @@ def record_out_going_patients(args):
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
 			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
 			args['data'] = data
-			send_sms_through_rapidpro(args)'''
+			send_sms_through_rapidpro(args)
 
+'''
 
+'''
 #MODIFY
 def modify_out_going_patients(args):
-	''' This function modifies a report about patients taken out of the program in a given week '''
+	#This function modifies a report about patients taken out of the program in a given week
 
 	args['mot_cle'] = 'SRTM'
 
@@ -1757,16 +1773,17 @@ def modify_out_going_patients(args):
 
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
-			'''
-			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-			args['data'] = data
-			send_sms_through_rapidpro(args)
+			
+			#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			#data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			#args['data'] = data
+			#send_sms_through_rapidpro(args)
 
-			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-			args['data'] = data
-			send_sms_through_rapidpro(args)'''
+			#the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			#data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			#args['data'] = data
+			#send_sms_through_rapidpro(args)
+'''
 			
 			
 #--------------------------------------------------------------------------------------

@@ -97,7 +97,7 @@ def handel_rapidpro_request(request):
 
 
 
-	if(incoming_data['message_type']=='SELF_REGISTRATION'):
+	if(incoming_data['message_type']=='SELF_REGISTRATION' or incoming_data['message_type']=='SELF_REGISTRATION_M'):
 		#The contact who sent the current message is doing self registration  in the group of reporters
 		temporary_record_reporter(incoming_data)
 	if(incoming_data['message_type']=='STOCK_RECU'):

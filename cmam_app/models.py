@@ -2,16 +2,19 @@ from django.db import models
 
 # Create your models here.
 
+class FacilityType(models.Model):
+	''' In this model we will store sites types '''
+	name = models.CharField(max_length=40)
+	
+	def __unicode__(self):
+		return self.name
 
 class Product(models.Model):
 	''' This model will be used to store products (provided in CMAM project) informations '''
 	designation = models.CharField(max_length=40)
-	unite_de_mesure_au_rapportage = models.CharField(max_length=40)
+	general_measuring_unit = models.CharField(max_length=40)
 	dose_par_semaine = models.FloatField(default=0.0)
-	priorite_dans_sms = models.IntegerField(unique=True)
 	quantite_en_stock_central = models.FloatField(default=0.0)
-	can_be_fractioned = models.BooleanField()
-	is_in_use = models.BooleanField()
 
 	def __unicode__(self):
 		return self.designation
@@ -19,12 +22,26 @@ class Product(models.Model):
 	class Meta:
 		ordering = ('designation',)
 
+class FacilityTypeProduct(models.Model):
+	''' With this model, we will specify which products are used at a given facility level '''
+	facility_type = models.ForeignKey(FacilityType)
+	product = models.ForeignKey(Product)
+	site_measuring_unit = models.CharField(max_length=40)
+	priority_in_sms = models.IntegerField()
+	can_be_fractioned = models.BooleanField()
+
+	class Meta:
+		unique_together = ('facility_type', 'product', 'priority_in_sms',)
+		ordering = ('priority_in_sms',)
+
+	def __unicode__(self):
+		return "{0}".format(self.priority_in_sms)
 
 class Facility(models.Model):
 	''' A facility can be a STA, SST, etc '''
 	id_facility = models.CharField(primary_key=True, max_length=10)
 	name = models.CharField(max_length=50)
-	facility_level = models.CharField(max_length=20)
+	facility_level = models.ForeignKey(FacilityType)
 
 	def __unicode__(self):
 		return self.name
