@@ -33,8 +33,8 @@ def check_number_of_values(args):
 
 	number_of_active_products = active_products.count()
 
-	args['number_of_active_products'] = number_of_active_products
-'''
+	args['number_of_active_products'] = number_of_active_products'''
+
 
 	#Each message category starts with some mandatory values which are same for all sites
 	number_of_common_values = 0	
@@ -49,52 +49,7 @@ def check_number_of_values(args):
 		if len(args['text'].split(' ')) == 3:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
-	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M'):
-		number_of_common_values = 2
-		number_of_mandatory_values = number_of_common_values + number_of_active_products
-		if len(args['text'].split(' ')) < number_of_mandatory_values:
-			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
-		if len(args['text'].split(' ')) > number_of_mandatory_values:
-			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
-		if len(args['text'].split(' ')) == number_of_mandatory_values:
-			args['valide'] = True
-			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
-	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
-		number_of_common_values = 3
-		number_of_mandatory_values = number_of_common_values + number_of_active_products
-		if len(args['text'].split(' ')) < number_of_mandatory_values:
-			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
-		if len(args['text'].split(' ')) > number_of_mandatory_values:
-			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
-		if len(args['text'].split(' ')) == number_of_mandatory_values:
-			args['valide'] = True
-			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
-	if(args['message_type']=='RUPTURE' or args['message_type']=='RUPTURE_M'):
-		if len(args['text'].split(' ')) < 3:
-			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
-		if len(args['text'].split(' ')) > 3:
-			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
-		if len(args['text'].split(' ')) == 3:
-			args['valide'] = True
-			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
-	if(args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
-		number_of_common_values = 2
-		number_of_mandatory_values = number_of_common_values + number_of_active_products
-		if len(args['text'].split(' ')) < number_of_mandatory_values:
-			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
-		if len(args['text'].split(' ')) > number_of_mandatory_values:
-			args['valide'] = False
-			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
-		if len(args['text'].split(' ')) == number_of_mandatory_values:
-			args['valide'] = True
-			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+		return
 	if(args['message_type']=='ADMISSION' or args['message_type']=='ADMISSION_M'):
 		if len(args['text'].split(' ')) < 8:
 			args['valide'] = False
@@ -105,6 +60,7 @@ def check_number_of_values(args):
 		if len(args['text'].split(' ')) == 8:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+		return
 	if(args['message_type']=='SORTI' or args['message_type']=='SORTI_M'):
 		if args['facility'].facility_level == 'CDS':
 			if len(args['text'].split(' ')) < 7:
@@ -126,8 +82,88 @@ def check_number_of_values(args):
 			if len(args['text'].split(' ')) == 6:
 				args['valide'] = True
 				args['info_to_contact'] = "Le nombre de valeurs envoye est correct"
+		return
 
 
+
+
+	#We know the expected number of values by checking the number of products which are defined in the current facility type
+	the_current_facility = args['facility']
+	if not the_current_facility:
+		#We don't have the facility.
+		args['valide'] = False
+		args['info_to_contact'] = "Exception. Le nom du site pas trouve"
+		return
+
+	the_current_facility_level = the_current_facility.facility_level
+	if not the_current_facility_level:
+		#We don't have the facility level.
+		args['valide'] = False
+		args['info_to_contact'] = "Exception. Le type du site pas trouve"
+		return
+	
+	#Let's identify products which attached
+	attached_products = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_level)
+	if(len(attached_products) < 1):
+		#No product attached to this facility type
+		args['valide'] = False
+		args['info_to_contact'] = "Exception. Aucun produit n est attache au niveau '"+the_current_facility_level.name+"'"
+		return
+
+	
+	number_of_attached_products = attached_products.count()
+	
+
+	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M'):
+		number_of_common_values = 2
+		number_of_mandatory_values = number_of_common_values + number_of_attached_products
+		if len(args['text'].split(' ')) < number_of_mandatory_values:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		if len(args['text'].split(' ')) > number_of_mandatory_values:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		if len(args['text'].split(' ')) == number_of_mandatory_values:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
+		number_of_common_values = 3
+		number_of_mandatory_values = number_of_common_values + number_of_attached_products
+		if len(args['text'].split(' ')) < number_of_mandatory_values:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		if len(args['text'].split(' ')) > number_of_mandatory_values:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		if len(args['text'].split(' ')) == number_of_mandatory_values:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	if(args['message_type']=='RUPTURE' or args['message_type']=='RUPTURE_M'):
+		if len(args['text'].split(' ')) < 3:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		if len(args['text'].split(' ')) > 3:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		if len(args['text'].split(' ')) == 3:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	if(args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
+		number_of_common_values = 2
+		number_of_mandatory_values = number_of_common_values + number_of_attached_products
+		if len(args['text'].split(' ')) < number_of_mandatory_values:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		if len(args['text'].split(' ')) > number_of_mandatory_values:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. Vous avez envoye beaucoup de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+		if len(args['text'].split(' ')) == number_of_mandatory_values:
+			args['valide'] = True
+			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
+	
+
+	args['the_current_facility_level'] = the_current_facility_level
+	args['attached_products'] = attached_products
 
 def check_if_is_reporter(args):
 	''' This function checks if the contact who sent the current message is a reporter '''
@@ -446,7 +482,7 @@ def check_values_validity(args):
 			check_is_int(args)
 		
 
-'''
+
 def check_products_reports_values_validity(args):
 	#This function checks if values sent for products quantities are valid
 
@@ -474,19 +510,23 @@ def check_products_reports_values_validity(args):
 			return
 
 
-	number_of_active_products = args['number_of_active_products']
+
+	the_current_facility_level = args['the_current_facility_level']
+	attached_products = args['attached_products']
+	number_of_attached_products = attached_products.count()
 
 	
+
 	#Let's check if products priorities starts from 1 to the end without skip any number
 	#If we identify a value which is not correct, we will put false in ok variable
 	ok = True
 	priority = 1
 
-	while(priority <= number_of_active_products and ok == True):
-		concerned_product = Product.objects.filter(is_in_use = True, priorite_dans_sms = priority)
-		if(len(concerned_product) < 1):
+	while(priority <= number_of_attached_products and ok == True):
+		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_level, priority_in_sms = priority)
+		if(len(one_attached_product) < 1):
 			args['valide'] = False
-			args['info_to_contact'] = "Exception. Pas de produit de priorite '"+priority+"' active. Veuillez contacter l administrateur de ce systeme"
+			args['info_to_contact'] = "Exception. Pas de produit de priorite '"+priority+"' attache au site de type '"+the_current_facility_level.name+"'. Veuillez contacter l administrateur de ce systeme"
 			ok = False
 		priority = priority + 1
 
@@ -495,7 +535,7 @@ def check_products_reports_values_validity(args):
 
 
 	
-	#Let's identify if numbers are correct
+	#Let's check if numbers are correct
 	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M' or args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
 		#Products values starts at the indice 2
 		print("#Products values starts at the indice 2")
@@ -510,16 +550,16 @@ def check_products_reports_values_validity(args):
 	priority = 1
 	indice = first_product_indice
 
-	while(priority <= number_of_active_products and ok == True):
+	while(priority <= number_of_attached_products and ok == True):
 		args['value_to_check'] =  args['text'].split(' ')[indice]
 		args['position'] = indice
 
 		print("------------INDICE----------")
 		print(indice)
 		
-		product = Product.objects.filter(is_in_use = True, priorite_dans_sms = priority)[0]
+		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_level, priority_in_sms = priority)[0]
 		
-		if(product.can_be_fractioned == True):
+		if(one_attached_product.can_be_fractioned == True):
 			#This value can be fractioned
 			check_is_float(args)
 		else:
@@ -529,12 +569,12 @@ def check_products_reports_values_validity(args):
 		if(args['valide'] == False):
 			ok = False
 			args['valide'] = False
-			args['info_to_contact'] = "Erreur. La valeur envoyee pour le produit '"+product.designation+"' n est pas valide. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
+			args['info_to_contact'] = "Erreur. La valeur envoyee pour le produit '"+one_attached_product.product.designation+"' n est pas valide. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 		
 		priority = priority + 1
 		indice = indice + 1
 #======================reporters self registration==================================
-'''
+
 
 def check_facility(args):
 	''' This function checks if the facility code sent by the reporter exists '''
@@ -753,23 +793,21 @@ def complete_registration(args):
 
 
 
-
-'''
 #-----------------------------STOCK RECEIVED------------------------------------
 #RECORD
 def record_stock_received(args):
-	This function records a report about medicines received
+	'''This function records a report about medicines received'''
 
 	args['mot_cle'] = 'SRC'
 
-	#Let's check if the message sent is composed by an expected number of values
-	check_number_of_values(args)
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -793,23 +831,23 @@ def record_stock_received(args):
 	message_to_send = "Enregistrement reussie. Vous venez de rapporter le stock recu comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
-		#We record each beneficiary number
+		#We record 
 		value = args['text'].split(' ')[priority+1]
 		value = value.replace(",",".")
 
-		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = args['the_current_facility_level'], priority_in_sms = priority)[0]
 
-		if len(concerned_product) < 1:
+		the_concerned_product = one_attached_product.product
+
+		if not one_attached_product:
 			priority = 0
 			args['valide'] = False
 			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
 
-		the_concerned_product = concerned_product[0]
-
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+""+one_attached_product.product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+", "+one_attached_product.product.designation+"="+value
 
 		product_reception_record = ProductsReceptionReport.objects.create(reception = the_created_reception, produit = the_concerned_product, quantite_recue = value)
 
@@ -817,7 +855,7 @@ def record_stock_received(args):
 
 	args['info_to_contact'] = message_to_send
 
-	second_msg_to_sent = "Si vous voulez corriger ce rapport du stock recu que vous venez d envoyer, envoyer un message corrige et commencant par SRCM"
+	#second_msg_to_sent = "Si vous voulez corriger ce rapport du stock recu que vous venez d envoyer, envoyer un message corrige et 	commencant par SRCM"
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
@@ -829,7 +867,8 @@ def record_stock_received(args):
 
 	#args['info_to_contact'] = second_msg_to_sent
 
-'''
+
+
 
 '''
 #MODIFY

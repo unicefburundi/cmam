@@ -13,7 +13,7 @@ class Product(models.Model):
 	''' This model will be used to store products (provided in CMAM project) informations '''
 	designation = models.CharField(max_length=40)
 	general_measuring_unit = models.CharField(max_length=40)
-	dose_par_semaine = models.FloatField(default=0.0)
+	dose_par_semaine = models.FloatField()
 	quantite_en_stock_central = models.FloatField(default=0.0)
 
 	def __unicode__(self):
@@ -31,7 +31,7 @@ class FacilityTypeProduct(models.Model):
 	can_be_fractioned = models.BooleanField()
 
 	class Meta:
-		unique_together = ('facility_type', 'product', 'priority_in_sms',)
+		unique_together = ('facility_type', 'priority_in_sms',)
 		ordering = ('priority_in_sms',)
 
 	def __unicode__(self):
