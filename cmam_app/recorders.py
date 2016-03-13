@@ -880,21 +880,20 @@ def record_stock_received(args):
 
 
 
-'''
 #MODIFY
 def modify_stock_received(args):
 	#This function modifies a report about medicines received
 
 	args['mot_cle'] = 'SRCM'
 
-	#Let's check if the message sent is composed by an expected number of values
-	check_number_of_values(args)
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -905,6 +904,7 @@ def modify_stock_received(args):
 	print(args['valide'])
 	if not args['valide']:
 		return
+
 
 	#======================================>
 	#Let's check if this facility sent this kind of report at this date and delete it if there is one
@@ -932,23 +932,23 @@ def modify_stock_received(args):
 	message_to_send = "Modification reussie. Vous venez de rapporter le stock recu comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
-		#We record each beneficiary number
+		#We record 
 		value = args['text'].split(' ')[priority+1]
 		value = value.replace(",",".")
 
-		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = args['the_current_facility_level'], priority_in_sms = priority)[0]
 
-		if len(concerned_product) < 1:
+		the_concerned_product = one_attached_product.product
+
+		if not one_attached_product:
 			priority = 0
 			args['valide'] = False
 			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
 
-		the_concerned_product = concerned_product[0]
-
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+""+one_attached_product.product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+", "+one_attached_product.product.designation+"="+value
 
 		product_reception_record = ProductsReceptionReport.objects.create(reception = the_created_reception, produit = the_concerned_product, quantite_recue = value)
 
@@ -956,29 +956,28 @@ def modify_stock_received(args):
 
 	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
-'''
 
 
 
 
 
 
-'''
+
 #------------------------------SENT STOCK---------------------------------------
 #RECORD
 def record_sent_stock(args):
 	#This function records a report about medicines sent from one facility to an other
 	
-	args['mot_cle'] = 'SST'
+	args['mot_cle'] = 'SSR'
 
-	#Let's check if the message sent is composed by an expected number of values
-	check_number_of_values(args)
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -1040,7 +1039,7 @@ def record_sent_stock(args):
 
 	#args['info_to_contact'] = second_msg_to_sent
 	
-'''
+
 
 '''
 #MODIFY
