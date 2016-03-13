@@ -1286,7 +1286,7 @@ def modify_stock_out(args):
 
 
 
-'''
+
 #--------------------------------CURRENT STOCK----------------------------------
 #RECORD
 def record_current_stock(args):
@@ -1294,14 +1294,14 @@ def record_current_stock(args):
 
 	args['mot_cle'] = 'BAL'
 
-	#Let's check if the message sent is composed by an expected number of values
-	check_number_of_values(args)
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -1336,14 +1336,13 @@ def record_current_stock(args):
 		value = args['text'].split(' ')[priority+1]
 		value = value.replace(",",".")
 
-		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = args['the_current_facility_level'], priority_in_sms = priority)[0]
+		the_concerned_product = one_attached_product.product
 
-		if len(concerned_product) < 1:
+		if not the_concerned_product:
 			priority = 0
 			args['valide'] = False
 			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
-
-		the_concerned_product = concerned_product[0]
 
 		if priority == 1:
 			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
@@ -1356,7 +1355,7 @@ def record_current_stock(args):
 
 	args['info_to_contact'] = message_to_send
 
-	second_msg_to_sent = "Si vous voulez corriger ce rapport de l etat du stock que vous venez d envoyer, envoyer un message corrige et commencant par BALM"
+	#second_msg_to_sent = "Si vous voulez corriger ce rapport de l etat du stock que vous venez d envoyer, envoyer un message corrige et commencant par BALM"
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
@@ -1367,23 +1366,23 @@ def record_current_stock(args):
 	#send_sms_through_rapidpro(args)
 
 	#args['info_to_contact'] = second_msg_to_sent
-'''
 
-'''
+
+
 #MODIFY
 def modify_current_stock(args):
 	#This function modifies a report about current quantities of medicines
 
 	args['mot_cle'] = 'BALM'
 
-	#Let's check if the message sent is composed by an expected number of values
-	check_number_of_values(args)
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -1407,6 +1406,7 @@ def modify_current_stock(args):
 	the_related_report = the_one_existing_same_report.report
 	the_related_report.delete()
 
+
 	#Let's save the new report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'BALANCE')
 
@@ -1423,19 +1423,18 @@ def modify_current_stock(args):
 		value = args['text'].split(' ')[priority+1]
 		value = value.replace(",",".")
 
-		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = args['the_current_facility_level'], priority_in_sms = priority)[0]
+		the_concerned_product = one_attached_product.product
 
-		if len(concerned_product) < 1:
+		if not the_concerned_product:
 			priority = 0
 			args['valide'] = False
 			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
 
-		the_concerned_product = concerned_product[0]
-
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+""+the_concerned_product.designation+" : "+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+", "+the_concerned_product.designation+" : "+value
 
 		product_stock_record = ProductStockReport.objects.create(stock_report = the_created_stock_report, product = the_concerned_product, quantite_en_stock = value)
 
@@ -1443,7 +1442,7 @@ def modify_current_stock(args):
 
 	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
-'''
+
 
 
 
