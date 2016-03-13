@@ -1172,10 +1172,6 @@ def record_stock_out(args):
 	if not args['valide']:
 		return
 
-	#Let's save the report
-	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'RUPTURE')
-
-
 	#Let's identify the concerned product
 	the_concerned_product = Product.objects.filter(designation = args['sent_name'])
 
@@ -1186,14 +1182,28 @@ def record_stock_out(args):
 
 	the_concerned_product = the_concerned_product[0]
 
+
+	#We can not accept two stock out reports for a same product from one facility
+	existing_same_stock_out_report = StockOutReport.objects.filter(produit = the_concerned_product, report__facility = args['facility'], report__reporting_date = datetime.datetime.now().date())
+	if(len(existing_same_stock_out_report) > 0):
+		args['valide'] = False
+		args['info_to_contact'] ="Erreur. Vous avez deja rapporte une rupture de stock pour '"+the_concerned_product.designation+"' aujourd'hui. Si vous voulez changer la quantite restante, envoyer un message commencant par RUPM"
+		return
+
+
+	#Let's save the report
+	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'RUPTURE')
+
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
-	args['info_to_contact'] = "Enregistrement reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est "+args['remaining_quantity']+"."
+	args['info_to_contact'] = "Enregistrement reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est "+args['remaining_quantity']+""
 	
 	#The below message message will be sent to the supervisor
 	args['info_to_supervisor'] = "Une rupture du stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'. La quantite restante est "+args['remaining_quantity']+"."
 
-	second_msg_to_sent = "Si vous voulez corriger ce rapport de rupture du stock que vous venez d envoyer, envoyer un message corrige et commencant par RUPM"
+	
+
+	#second_msg_to_sent = "Si vous voulez corriger ce rapport de rupture du stock que vous venez d envoyer, envoyer un message corrige et commencant par RUPM"
 
 
 
@@ -1205,23 +1215,23 @@ def record_stock_out(args):
 	#send_sms_through_rapidpro(args)
 
 	#args['info_to_contact'] = second_msg_to_sent
-'''	
 
-'''
+
+
 #MODIFY
 def modify_stock_out(args):
 	#This function modifies a report about a stock out of a medicine
 
 	args['mot_cle'] = 'RUPM'
 
-	#Let's check if the message sent is composed by an expected number of values
-	check_number_of_values(args)
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -1242,16 +1252,20 @@ def modify_stock_out(args):
 
 	the_concerned_product = the_concerned_product[0]
 
-	#======================================>
-	#Let's check if this facility sent this kind of report at this date and delete it if there is one
-	the_same_stock_out_report = StockOutReport.objects.filter(report__facility = args['facility']).order_by('id').reverse()
-	if len(the_same_stock_out_report) < 1:
+
+	#We can not aupdate an none existing report
+	existing_same_stock_out_report = StockOutReport.objects.filter(produit = the_concerned_product, report__facility = args['facility'], report__reporting_date = datetime.datetime.now().date())
+	if(len(existing_same_stock_out_report) < 1):
+		#They never give a such report
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de rupture de stock n a ete enregistre par votre site."
+		args['info_to_contact'] ="Erreur. Aucune modification faite car aucun rapport de rupture de stock de '"+the_concerned_product.designation+"' (rapport commencant par 'RUP') n a ete enregistre par votre site aujourd hui" 
 		return
 
-	the_last_same_stock_out_report = the_same_stock_out_report[0]
-	the_related_report = the_last_same_stock_out_report.report
+	#We delete it if there one
+	
+
+	the_one_same_stock_out_report = existing_same_stock_out_report[0]
+	the_related_report = the_one_same_stock_out_report.report
 	the_related_report.delete()
 	#======================================>
 
@@ -1266,7 +1280,7 @@ def modify_stock_out(args):
 
 	args['info_to_supervisor'] = "Modification. Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
 #-------------------------------------------------------------------------------------
-'''
+
 
 
 

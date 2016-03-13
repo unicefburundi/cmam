@@ -128,7 +128,7 @@ class StockOutReport(models.Model):
 	quantite_restante = models.FloatField(default=0.0)
 	
 	def __unicode__(self):
-		return "{0} => Quantite restante : {1} {2}".format(self.produit.designation, self.quantite_restante, self.produit.unite_de_mesure_au_rapportage)
+		return "{0} => Quantite restante : {1}".format(self.produit.designation, self.quantite_restante)
 
 class ProductsReceptionReport(models.Model):
 	''' If there is products reception report, we store in this model quantity received of each product '''
