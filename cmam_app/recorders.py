@@ -970,10 +970,17 @@ def record_sent_stock(args):
 	
 	args['mot_cle'] = 'SSR'
 
+
 	#Let's check if the person who send this message is a reporter
 	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
+		return
+
+	#A send products report can not be sent from the CDS level
+	if(args['facility'].facility_level.name=='CDS' or args['facility'].facility_level.name=='STA'):
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport de trenfert des produits ne peux pas etre donne au niveau du STA. Envoyer un autre rapport ou X pour fermer la session"
 		return
 
 	#Let's check if the message sent is composed by an expected number of values
@@ -989,11 +996,21 @@ def record_sent_stock(args):
 	if not args['valide']:
 		return
 
+	
+	#Let's check if this site have not already send this report. They must send in muximum one per day
+	already_existing_send_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'])
+	if(len(already_existing_send_report) > 0):
+		#We can not register an other products send report with same destination and same date from one site
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Vous avez deja donne un rapport de l operation d envoie des produits au site '"+args['destination_facility'].name+"' fait a la date suivante : "+str(args['sent_date'])+". Si vous voulez le modifier, envoyer un message commencant par SSRM"
+		return
+
+
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'STOCK_SORTI')
 
 
-	the_created_Sortie = Sortie.objects.create(report = the_created_report, date_de_sortie = args['sent_date'], destination = args['destination_facility'])
+	the_created_out_report = Sortie.objects.create(report = the_created_report, date_de_sortie = args['sent_date'], destination = args['destination_facility'])
 
 
 	priority = 1
@@ -1001,34 +1018,33 @@ def record_sent_stock(args):
 	message_to_send = "Enregistrement reussie. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
-		#Let's record each product transfered
+		#We record 
 		value = args['text'].split(' ')[priority+2]
 		value = value.replace(",",".")
 
-		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = args['the_current_facility_level'], priority_in_sms = priority)[0]
 
-		if len(concerned_product) < 1:
+		the_concerned_product = one_attached_product.product
+
+		if not one_attached_product:
 			priority = 0
 			args['valide'] = False
 			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
-			return
-
-		the_concerned_product = concerned_product[0]
 
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+""+one_attached_product.product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+", "+one_attached_product.product.designation+"="+value
 
-		product_out_record = ProductsTranferReport.objects.create(sortie = the_created_Sortie, produit = the_concerned_product, quantite_donnee = value)
+		product_out_record = ProductsTranferReport.objects.create(sortie = the_created_out_report, produit = the_concerned_product, quantite_donnee = value)
 
 		priority = priority + 1
 
 	args['info_to_contact'] = message_to_send
 
-	second_msg_to_sent = "Si vous voulez corriger ce rapport du stock sorti que vous venez d envoyer, envoyer un message corrige et commencant par SSTM"
 
 
+	#second_msg_to_sent = "Si vous voulez corriger ce rapport du stock sorti que vous venez d envoyer, envoyer un message corrige et commencant par SSTM"
 
 	#The below code will be uncommented in order to send the second sms after the first one
 	
@@ -1041,21 +1057,27 @@ def record_sent_stock(args):
 	
 
 
-'''
+
 #MODIFY
 def modify_sent_stock(args):
 	#This function records a report about medicines sent from one facility to an other
 
-	args['mot_cle'] = 'SSTM'
+	args['mot_cle'] = 'SSRM'
 
-	#Let's check if the message sent is composed by an expected number of values
-	check_number_of_values(args)
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
+	#A send products report can not be sent from the CDS level
+	if(args['facility'].facility_level.name=='CDS' or args['facility'].facility_level.name=='STA'):
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport de trenfert des produits ne peux pas etre donne au niveau du STA"
+		return
+
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
@@ -1070,7 +1092,7 @@ def modify_sent_stock(args):
 
 	#======================================>
 	#Let's check if this facility sent this kind of report at this date and delete it if there is one
-	the_same_out_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'], report__facility = args['facility']).order_by('id').reverse()
+	the_same_out_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'], report__facility = args['facility'])
 	if len(the_same_out_report) < 1:
 		args['valide'] = False
 		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport de sortie des produits n a ete enregistre avec la date et la destination que vous venez d envoyer. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
@@ -1086,7 +1108,7 @@ def modify_sent_stock(args):
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'STOCK_SORTI')
 
 
-	the_created_Sortie = Sortie.objects.create(report = the_created_report, date_de_sortie = args['sent_date'], destination = args['destination_facility'])
+	the_created_out_report = Sortie.objects.create(report = the_created_report, date_de_sortie = args['sent_date'], destination = args['destination_facility'])
 
 
 	priority = 1
@@ -1094,37 +1116,37 @@ def modify_sent_stock(args):
 	message_to_send = "Modification reussie. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
-		#We record each beneficiary number
+		#We record 
 		value = args['text'].split(' ')[priority+2]
 		value = value.replace(",",".")
 
-		concerned_product = Product.objects.filter(priorite_dans_sms = priority)
+		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = args['the_current_facility_level'], priority_in_sms = priority)[0]
 
-		if len(concerned_product) < 1:
+		the_concerned_product = one_attached_product.product
+
+		if not one_attached_product:
 			priority = 0
 			args['valide'] = False
 			args['info_to_contact'] = "Exception. Un produit d une priorite donnee n a pas ete trouve. Veuiller informer l administrateur du systeme."
 
-		the_concerned_product = concerned_product[0]
-
 		if priority == 1:
-			message_to_send = message_to_send+""+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+""+one_attached_product.product.designation+"="+value
 		else:
-			message_to_send = message_to_send+", "+the_concerned_product.designation+"="+value
+			message_to_send = message_to_send+", "+one_attached_product.product.designation+"="+value
 
-		product_out_record = ProductsTranferReport.objects.create(sortie = the_created_Sortie, produit = the_concerned_product, quantite_donnee = value)
+		product_out_record = ProductsTranferReport.objects.create(sortie = the_created_out_report, produit = the_concerned_product, quantite_donnee = value)
 
 		priority = priority + 1
 
 	args['info_to_contact'] = message_to_send
 #--------------------------------------------------------------------------------------
-'''
 
 
 
 
 
-'''
+
+
 #-------------------------------A STOCK OUT------------------------------------
 #RECORD
 def record_stock_out(args):
@@ -1132,14 +1154,14 @@ def record_stock_out(args):
 
 	args['mot_cle'] = 'RUP'
 
-	#Let's check if the message sent is composed by an expected number of values
-	check_number_of_values(args)
+	#Let's check if the person who send this message is a reporter
+	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
 
-	#Let's check if the person who send this message is a reporter
-	check_if_is_reporter(args)
+	#Let's check if the message sent is composed by an expected number of values
+	check_number_of_values(args)
 	print(args['valide'])
 	if not args['valide']:
 		return
