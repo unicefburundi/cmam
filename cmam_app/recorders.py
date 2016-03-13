@@ -1183,6 +1183,16 @@ def record_stock_out(args):
 	the_concerned_product = the_concerned_product[0]
 
 
+	#Let s check if this product is supposed to be reported from a such facility
+	the_current_facility_type = args['facility'].facility_level
+	corresponding_facility_type_product = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_type, product = the_concerned_product)
+	if(len(corresponding_facility_type_product) < 1):
+		#This facility type is not supposed to report for this product
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un site de type '"+the_current_facility_type.name+"' comme le votre ne peux pas rapporter sur le produit '"+the_concerned_product.designation+"'. Pour corriger, reenvoyez un message commencant par RUP et contenant un nom du produit suivi a votre niveau"
+		return
+
+
 	#We can not accept two stock out reports for a same product from one facility
 	existing_same_stock_out_report = StockOutReport.objects.filter(produit = the_concerned_product, report__facility = args['facility'], report__reporting_date = datetime.datetime.now().date())
 	if(len(existing_same_stock_out_report) > 0):
@@ -1253,7 +1263,16 @@ def modify_stock_out(args):
 	the_concerned_product = the_concerned_product[0]
 
 
-	#We can not aupdate an none existing report
+	#Let s check if this product is supposed to be reported from a such facility
+	the_current_facility_type = args['facility'].facility_level
+	corresponding_facility_type_product = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_type, product = the_concerned_product)
+	if(len(corresponding_facility_type_product) < 1):
+		#This facility type is not supposed to report for this product
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un site de type '"+the_current_facility_type.name+"' comme le votre ne peux pas rapporter sur le produit '"+the_concerned_product.designation+"'. Pour corriger, reenvoyez un message commencant par RUP et contenant un nom du produit suivi a votre niveau"
+		return
+
+	#We can not update an none existing report
 	existing_same_stock_out_report = StockOutReport.objects.filter(produit = the_concerned_product, report__facility = args['facility'], report__reporting_date = datetime.datetime.now().date())
 	if(len(existing_same_stock_out_report) < 1):
 		#They never give a such report
@@ -1448,7 +1467,7 @@ def modify_current_stock(args):
 
 
 
-'''
+
 #---------------------------------NUMBERS OF PATIENTS SERVED--------------------
 #RECORD
 def record_patient_served(args):
@@ -1555,9 +1574,9 @@ def record_patient_served(args):
 			#data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
 			#args['data'] = data
 			#send_sms_through_rapidpro(args)
-'''
+
 			
-'''
+
 #MODIFY
 def modify_patient_served(args):
 	#This function modifies a report about number of patient served in a given week
@@ -1656,12 +1675,10 @@ def modify_patient_served(args):
 			#send_sms_through_rapidpro(args)
 
 #--------------------------------------------------------------------------------------
-'''
 
 
 
 
-'''
 #--------------------------------OUT GOING PATIENTS-----------------------------
 #RECORD
 def record_out_going_patients(args):
@@ -1769,9 +1786,9 @@ def record_out_going_patients(args):
 			args['data'] = data
 			send_sms_through_rapidpro(args)
 
-'''
 
-'''
+
+
 #MODIFY
 def modify_out_going_patients(args):
 	#This function modifies a report about patients taken out of the program in a given week
@@ -1866,7 +1883,6 @@ def modify_out_going_patients(args):
 			#data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
 			#args['data'] = data
 			#send_sms_through_rapidpro(args)
-'''
 			
 			
 #--------------------------------------------------------------------------------------
