@@ -17,6 +17,17 @@ def send_sms_through_rapidpro(args):
 	response = requests.post(url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data))
 
 
+def check_supervisor_phone_number_not_for_this_contact(args):
+	'''This function checks if the contact didn't send his/her phone number in the place of the supervisor phone number'''
+	print(args['text'].split(' ')[2])
+	#if args['phone'] == args['text'].split(' ')[2] or args['phone'][4:] == args['text'].split(' ')[2]:
+	if args['text'].split(' ')[2] in args['phone']:
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Vous avez envoye votre numero de telephone a la place de celui de votre superviseur. Pour corriger, veuillez reenvoyer le message commencant par REG et contenant le vrai numero de ton superviseur"
+	else:
+		args['valide'] = True
+		args['info_to_contact'] = "Le numero de telephone du superviseur est bien note."
+
 
 def check_number_of_values(args):
 	#This function checks if the message sent is composed by an expected number of values
@@ -689,9 +700,9 @@ def temporary_record_reporter(args):
 
 	#La ligne ci dessous ne peut pas fonctionner sur les instance Anonimise de RapidPro
 	#Let's check if the contact didn't send his/her number in the place of the supervisor number
-	#check_supervisor_phone_number_not_for_this_contact(args)
-	#if not args['valide']:
-		#return
+	check_supervisor_phone_number_not_for_this_contact(args)
+	if not args['valide']:
+		return
 
 	#Let's temporary save the reporter
 	save_temporary_the_reporter(args)
