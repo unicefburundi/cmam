@@ -1581,15 +1581,15 @@ def record_patient_served(args):
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 			
-			#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-			#data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-			#args['data'] = data
-			#send_sms_through_rapidpro(args)
+			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
-			#the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			#data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-			#args['data'] = data
-			#send_sms_through_rapidpro(args)
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
 			
 
@@ -1680,15 +1680,15 @@ def modify_patient_served(args):
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 			
-			#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-			#data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-			#args['data'] = data
-			#send_sms_through_rapidpro(args)
+			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
-			#the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			#data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-			#args['data'] = data
-			#send_sms_through_rapidpro(args)
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
 #--------------------------------------------------------------------------------------
 
@@ -1792,12 +1792,12 @@ def record_out_going_patients(args):
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 			
-			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
 			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
 			args['data'] = data
 			send_sms_through_rapidpro(args)
 
-			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
 			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
 			args['data'] = data
 			send_sms_through_rapidpro(args)
@@ -1892,15 +1892,15 @@ def modify_out_going_patients(args):
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 			
-			#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
-			#data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
-			#args['data'] = data
-			#send_sms_through_rapidpro(args)
+			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
+			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 
-			#the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
-			#data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
-			#args['data'] = data
-			#send_sms_through_rapidpro(args)
+			the_contact_phone_number = "tel:"+args['the_sender'].phone_number
+			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
+			args['data'] = data
+			send_sms_through_rapidpro(args)
 			
 			
 #--------------------------------------------------------------------------------------
