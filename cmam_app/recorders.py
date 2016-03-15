@@ -1876,13 +1876,15 @@ def modify_out_going_patients(args):
 			#If the reported out going patients number is super to the reported incoming patient number for a given week, the
 			#system should alert the concerned persons
 			print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
 			print("Message to the supervisor")
-			args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+args['sent_date']
-			print("Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+args['sent_date']+"")
+			args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
+			print("Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+"")
 
 			print("Message to the contact")
-			args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+args['sent_date']+". Verfier si les chiffres envoyes sont corrects"
-			print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+args['sent_date']+". Verfier si les chiffres envoyes sont corrects")
+			args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects"
+			print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects")
+
 			print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 
 
