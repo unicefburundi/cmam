@@ -620,7 +620,7 @@ def save_temporary_the_reporter(args):
 		same_existing_temp = same_existing_temp[0]
 		same_existing_temp.delete()
 		args['valide'] = False
-		args['info_to_contact'] = "Vous devriez envoyer le numero de telephone de votre superviseur seulement. Recommencer par RG ..."
+		args['info_to_contact'] = "Vous devriez envoyer le numero de telephone de votre superviseur seulement. Pour corriger, reenvoyer le message commencant par REG"
 	else:
 		the_phone_number = args['phone']
 
@@ -650,7 +650,7 @@ def check_has_already_session(args):
 		same_existing_temp = same_existing_temp[0]
 		same_existing_temp.delete()
 		args['valide'] = False
-		args['info_to_contact'] = "Vous devriez envoyer le numero de telephone de votre superviseur seulement."
+		args['info_to_contact'] = "Vous devriez envoyer le numero de telephone de votre superviseur seulement. Pour corriger, reenvoyer le message commencant par REG"
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Ok."
