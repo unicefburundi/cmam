@@ -19,7 +19,6 @@ def send_sms_through_rapidpro(args):
 
 def check_supervisor_phone_number_not_for_this_contact(args):
 	'''This function checks if the contact didn't send his/her phone number in the place of the supervisor phone number'''
-	print(args['text'].split(' ')[2])
 	#if args['phone'] == args['text'].split(' ')[2] or args['phone'][4:] == args['text'].split(' ')[2]:
 	if args['text'].split(' ')[2] in args['phone']:
 		args['valide'] = False
@@ -666,6 +665,7 @@ def temporary_record_reporter(args):
 		check_if_is_reporter(args)
 		if(args['valide'] == True):
 			#This contact is already a reporter and can't do the registration the second time
+			args['valide'] = False
 			args['info_to_contact'] = "Erreur. Vous vous etes deja enregistre. Si vous voulez modifier votre site d affectation ou le numero de telephone de votre superviseur, envoyer le message commencant par le mot cle 'REGM'"
 			return
 	
@@ -1525,7 +1525,7 @@ def record_patient_served(args):
 	args['info_to_contact'] = "Enregistrement reussi. Vous venez de rapporter les admissions comme suit : TDS="+args['text'].split(' ')[2]+", PTB="+args['text'].split(' ')[3]+", Oedemes="+args['text'].split(' ')[4]+", Rechute="+args['text'].split(' ')[5]+", Readmission="+args['text'].split(' ')[6]+", TI="+args['text'].split(' ')[7]+""
 
 
-	second_msg_to_sent = "Si vous voulez corriger ce rapport des admissions que vous venez d envoyer, envoyer un message corrige et commencant par ADMM"
+	#second_msg_to_sent = "Si vous voulez corriger ce rapport des admissions que vous venez d envoyer, envoyer un message corrige et commencant par ADMM"
 
 
 
@@ -1743,7 +1743,7 @@ def record_out_going_patients(args):
 		args['info_to_contact'] = "Enregistrement reussi. Vous venez de rapporter les sorties des patients comme suit : TAS="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]
 
 
-	second_msg_to_sent = "Si vous voulez corriger ce rapport de sortie des patients que vous venez d envoyer, envoyer un message corrige et commencant par SRTM"
+	#second_msg_to_sent = "Si vous voulez corriger ce rapport de sortie des patients que vous venez d envoyer, envoyer un message corrige et commencant par SRTM"
 
 
 
