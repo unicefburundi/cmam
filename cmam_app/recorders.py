@@ -333,7 +333,7 @@ def check_is_int(args):
 
 def check_facility_code_is_valid(args):
 	''' This function checks if the value contained in args['facility_code'] is a facility code and not the facility of the reporter'''
-	facilities = Facility.objects.filter(id_facility = args['facility_code'])
+	facilities = Facility.objects.filter(id_facility__iexact = args['facility_code'])
 	if len(facilities) < 1:
 		args['valide'] = False
 		#args['info_to_contact'] = "Erreur. Le code envoye en position "+str(args['position'])+" n est pas enregistre dans le systeme."
@@ -349,6 +349,7 @@ def check_facility_code_is_valid(args):
 		if(args['facility'].id_facility == args['facility_code']):
 			args['valide'] = False
 			args['info_to_contact'] = "Erreur. Vous avez mis le code de l etablissement sur lequel vous etes affectes. Pour corriger,  reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
+			return
 		else:
 			args['valide'] = True
 			args['info_to_contact'] = "Le code mis est valide."
@@ -520,7 +521,24 @@ def check_products_reports_values_validity(args):
 		if not args['valide']:
 			return
 
+		#STA and SST can send products only to beneficiaries. So, the destination code should be 'ben' to mean benefiaries.
+		#Other levels can not send products to 'ben'
+		the_current_facility_level_name = args['the_current_facility_level'].name.upper()
+		if(the_current_facility_level_name == 'CDS' or the_current_facility_level_name == 'HOPITAL' or the_current_facility_level_name == 'STA' or the_current_facility_level_name == 'SST'):
+			#They can only send ben in the place of destination
+			if(args['facility_code'].upper() != 'BEN'):
+				args['valide'] = False
+				args['info_to_contact'] = "Erreur. Votre site d affectation ne peut pas envoyer des produits a un autre site. Si vous voulez rapporter les produits donnes aux beneficiaires, mettez le mot 'ben' a la place de '"+args['text'].split(' ')[2]+"'"
+				return
 
+
+		if(the_current_facility_level_name != 'CDS' and the_current_facility_level_name != 'HOPITAL' and the_current_facility_level_name != 'STA' and the_current_facility_level_name != 'SST'):
+			#They can not send ben in the place of destination
+			if(args['facility_code'].upper() == 'BEN'):
+				args['valide'] = False
+				args['info_to_contact'] = "Erreur. Votre site d affectation ne peut pas envoyer des produits avec le mot '"+args['text'].split(' ')[2]+"'. Si vous voulez rapporter les produits envoyes a un site, mettez le code de ce site a la place de "+args['text'].split(' ')[2]
+				return
+ 
 
 	the_current_facility_level = args['the_current_facility_level']
 	attached_products = args['attached_products']
@@ -990,10 +1008,10 @@ def record_sent_stock(args):
 		return
 
 	#A send products report can not be sent from the CDS level
-	if(args['facility'].facility_level.name=='CDS' or args['facility'].facility_level.name=='STA'):
-		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Un rapport de trenfert des produits ne peux pas etre donne au niveau du STA. Envoyer un autre rapport ou X pour fermer la session"
-		return
+	#if(args['facility'].facility_level.name=='CDS' or args['facility'].facility_level.name=='STA'):
+		#args['valide'] = False
+		#args['info_to_contact'] = "Erreur. Un rapport de trensfert des produits ne peux pas etre donne au niveau du STA. Envoyer un autre rapport ou X pour fermer la session"
+		#return
 
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
@@ -1083,10 +1101,10 @@ def modify_sent_stock(args):
 		return
 
 	#A send products report can not be sent from the CDS level
-	if(args['facility'].facility_level.name=='CDS' or args['facility'].facility_level.name=='STA'):
-		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Un rapport de trenfert des produits ne peux pas etre donne au niveau du STA"
-		return
+	#if(args['facility'].facility_level.name=='CDS' or args['facility'].facility_level.name=='STA'):
+		#args['valide'] = False
+		#args['info_to_contact'] = "Erreur. Un rapport de trensfert des produits ne peux pas etre donne au niveau du STA"
+		#return
 
 	#Let's check if the message sent is composed by an expected number of values
 	check_number_of_values(args)
