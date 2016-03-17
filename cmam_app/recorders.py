@@ -1030,7 +1030,8 @@ def record_sent_stock(args):
 
 	
 	#Let's check if this site have not already send this report. They must send in muximum one per day
-	already_existing_send_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'])
+	#already_existing_send_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'])
+	already_existing_send_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'], report__facility = args['facility'])
 	if(len(already_existing_send_report) > 0):
 		#We can not register an other products send report with same destination and same date from one site
 		args['valide'] = False
