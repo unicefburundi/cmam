@@ -7,6 +7,9 @@ import json
 from django.conf import settings
 
 
+CDS_SYNONYMS = ['CDS', 'STA']
+HOSPITAL_SYNONYMS = ['HOSPITAL', 'HOPITAL', 'SST']
+
 def send_sms_through_rapidpro(args):
 	''' This function sends messages through rapidpro. Contact(s) and the message to send to them must be in args['data'] '''
 	url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
@@ -72,7 +75,7 @@ def check_number_of_values(args):
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 		return
 	if(args['message_type']=='SORTI' or args['message_type']=='SORTI_M'):
-		if args['facility'].facility_level == 'CDS':
+		if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS):
 			if len(args['text'].split(' ')) < 7:
 				args['valide'] = False
 				args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
@@ -487,7 +490,7 @@ def check_values_validity(args):
 		if not args['valide']:
 			return
 
-		if args['facility'].facility_level == 'CDS':
+		if args['facility'].facility_level.name.upper() in CDS_SYNONYMS:
 			#Let's check if the value in the position number 6 is an int
 			args['value_to_check'] =  args['text'].split(' ')[6]
 			args['position'] = 6
@@ -524,7 +527,8 @@ def check_products_reports_values_validity(args):
 		#STA and SST can send products only to beneficiaries. So, the destination code should be 'ben' to mean benefiaries.
 		#Other levels can not send products to 'ben'
 		the_current_facility_level_name = args['the_current_facility_level'].name.upper()
-		if(the_current_facility_level_name == 'CDS' or the_current_facility_level_name == 'HOPITAL' or the_current_facility_level_name == 'STA' or the_current_facility_level_name == 'SST'):
+		#if(the_current_facility_level_name == 'CDS' or the_current_facility_level_name == 'HOSPITAL' or the_current_facility_level_name == 'STA' or the_current_facility_level_name == 'SST'):
+		if (the_current_facility_level_name in CDS_SYNONYMS or the_current_facility_level_name in HOSPITAL_SYNONYMS):
 			#They can only send ben in the place of destination
 			if(args['facility_code'].upper() != 'BEN'):
 				args['valide'] = False
@@ -532,7 +536,8 @@ def check_products_reports_values_validity(args):
 				return
 
 
-		if(the_current_facility_level_name != 'CDS' and the_current_facility_level_name != 'HOPITAL' and the_current_facility_level_name != 'STA' and the_current_facility_level_name != 'SST'):
+		#if(the_current_facility_level_name != 'CDS' and the_current_facility_level_name != 'HOSPITAL' and the_current_facility_level_name != 'STA' and the_current_facility_level_name != 'SST'):
+		if (the_current_facility_level_name not in CDS_SYNONYMS and the_current_facility_level_name not in HOSPITAL_SYNONYMS):
 			#They can not send ben in the place of destination
 			if(args['facility_code'].upper() == 'BEN'):
 				args['valide'] = False
@@ -1751,7 +1756,7 @@ def record_out_going_patients(args):
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'SORTI')
 
 
-	if args['facility'].facility_level == 'CDS':
+	if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS):
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
 		args['info_to_contact'] = "Enregistrement reussi. Vous venez de rapporter les sorties des patients comme suit : Gueri="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]+", Transfert interne="+args['text'].split(' ')[6]
@@ -1866,7 +1871,7 @@ def modify_out_going_patients(args):
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'SORTI')
 
 
-	if args['facility'].facility_level == 'CDS':
+	if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS):
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
 		args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les sorties des patients comme suit : Gueri="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]+", Transfert interne="+args['text'].split(' ')[6]
