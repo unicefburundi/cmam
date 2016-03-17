@@ -621,7 +621,8 @@ def check_supervisor_phone_number(args):
 	''' This function checks if the phone number of the supervisor is well written '''
 	the_supervisor_phone_number = args['text'].split(' ')[2]
 	the_supervisor_phone_number_no_space = the_supervisor_phone_number.replace(" ", "")
-	expression = r'^(\+?(257)?)((62)|(79)|(71)|(76))([0-9]{6})$'
+	#expression = r'^(\+?(257)?)((62)|(79)|(71)|(76))([0-9]{6})$'
+	expression = r'^(\+?(257)?)((61)|(62)|(68)|(69)|(71)|(72)|(75)|(76)|(79))([0-9]{6})$'
 	print(the_supervisor_phone_number_no_space)
 	if re.search(expression, the_supervisor_phone_number_no_space) is None:
 		#The phone number is not well written
@@ -869,7 +870,7 @@ def record_stock_received(args):
 
 	priority = 1
 
-	message_to_send = "Enregistrement reussi. Vous venez de rapporter le stock recu comme suit : "
+	message_to_send = "Rapport bien recu. Vous venez de rapporter le stock recu comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record 
@@ -1050,7 +1051,7 @@ def record_sent_stock(args):
 	else:
 		first_values = 2
 
-	message_to_send = "Enregistrement reussi. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
+	message_to_send = "Rapport bien recu. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - first_values)) and (priority > 0)):
 		#We record 
@@ -1253,7 +1254,7 @@ def record_stock_out(args):
 
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
-	args['info_to_contact'] = "Enregistrement reussi. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est "+args['remaining_quantity']+""
+	args['info_to_contact'] = "Rapport bien recu. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est "+args['remaining_quantity']+""
 	
 	#The below message message will be sent to the supervisor
 	args['info_to_supervisor'] = "Une rupture du stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'. La quantite restante est "+args['remaining_quantity']+"."
@@ -1399,7 +1400,7 @@ def record_current_stock(args):
 
 	priority = 1
 
-	message_to_send = "Enregistrement reussi. Vous venez de rapporter l etat du stock comme suit : "
+	message_to_send = "Rapport bien recu. Vous venez de rapporter l etat du stock comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
 		#We record each beneficiary number
@@ -1557,7 +1558,7 @@ def record_patient_served(args):
 
 	incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
 
-	args['info_to_contact'] = "Enregistrement reussi. Vous venez de rapporter les admissions comme suit : TDS="+args['text'].split(' ')[2]+", PTB="+args['text'].split(' ')[3]+", Oedemes="+args['text'].split(' ')[4]+", Rechute="+args['text'].split(' ')[5]+", Readmission="+args['text'].split(' ')[6]+", TI="+args['text'].split(' ')[7]+""
+	args['info_to_contact'] = "Rapport bien recu. Vous venez de rapporter les admissions comme suit : TDS="+args['text'].split(' ')[2]+", PTB="+args['text'].split(' ')[3]+", Oedemes="+args['text'].split(' ')[4]+", Rechute="+args['text'].split(' ')[5]+", Readmission="+args['text'].split(' ')[6]+", TI="+args['text'].split(' ')[7]+""
 
 
 	#second_msg_to_sent = "Si vous voulez corriger ce rapport des admissions que vous venez d envoyer, envoyer un message corrige et commencant par ADMM"
@@ -1771,11 +1772,11 @@ def record_out_going_patients(args):
 	if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS):
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
-		args['info_to_contact'] = "Enregistrement reussi. Vous venez de rapporter les sorties des patients comme suit : Gueri="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]+", Transfert interne="+args['text'].split(' ')[6]
+		args['info_to_contact'] = "Rapport bien recu. Vous venez de rapporter les sorties des patients comme suit : Gueri="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]+", Transfert interne="+args['text'].split(' ')[6]
 	else:
 		out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], date_of_first_week_day = args['sent_date'])
 
-		args['info_to_contact'] = "Enregistrement reussi. Vous venez de rapporter les sorties des patients comme suit : TAS="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]
+		args['info_to_contact'] = "Rapport bien recu. Vous venez de rapporter les sorties des patients comme suit : TAS="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]
 
 
 	#second_msg_to_sent = "Si vous voulez corriger ce rapport de sortie des patients que vous venez d envoyer, envoyer un message corrige et commencant par SRTM"
