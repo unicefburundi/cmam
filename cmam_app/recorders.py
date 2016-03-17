@@ -76,7 +76,7 @@ def check_number_of_values(args):
 		return
 	if(args['message_type']=='SORTI' or args['message_type']=='SORTI_M'):
 		if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS):
-			if len(args['text'].split(' ')) < 7:
+			if len(args['text'].split(' ')) < 7: 
 				args['valide'] = False
 				args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			if len(args['text'].split(' ')) > 7:
@@ -140,7 +140,10 @@ def check_number_of_values(args):
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
 	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
-		number_of_common_values = 3
+		if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS or args['facility'].facility_level.name.upper() in HOSPITAL_SYNONYMS):
+			number_of_common_values = 2
+		else:
+			number_of_common_values = 3
 		number_of_mandatory_values = number_of_common_values + number_of_attached_products
 		if len(args['text'].split(' ')) < number_of_mandatory_values:
 			args['valide'] = False
@@ -517,33 +520,20 @@ def check_products_reports_values_validity(args):
 				return
 
 	#For the stock sent from one site to an other, let's check if the given site code is valide
-	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
-		args['facility_code'] =  args['text'].split(' ')[2]
-		args['position'] = 2		
-		check_facility_code_is_valid(args)
-		if not args['valide']:
-			return
-
-		#STA and SST can send products only to beneficiaries. So, the destination code should be 'ben' to mean benefiaries.
-		#Other levels can not send products to 'ben'
-		the_current_facility_level_name = args['the_current_facility_level'].name.upper()
-		#if(the_current_facility_level_name == 'CDS' or the_current_facility_level_name == 'HOSPITAL' or the_current_facility_level_name == 'STA' or the_current_facility_level_name == 'SST'):
-		if (the_current_facility_level_name in CDS_SYNONYMS or the_current_facility_level_name in HOSPITAL_SYNONYMS):
-			#They can only send ben in the place of destination
-			if(args['facility_code'].upper() != 'BEN'):
-				args['valide'] = False
-				args['info_to_contact'] = "Erreur. Votre site d affectation ne peut pas envoyer des produits a un autre site. Si vous voulez rapporter les produits donnes aux beneficiaires, mettez le mot 'ben' a la place de '"+args['text'].split(' ')[2]+"'"
+	
+	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):		
+		if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+			print("aaaa")
+			args['facility_code'] =  args['text'].split(' ')[2]
+			args['position'] = 2
+			check_facility_code_is_valid(args)
+			if not args['valide']:
 				return
+		else:
+			print("0000")
+			facility_type, created = FacilityType.objects.get_or_create(name='None')
+			args['destination_facility'], created = Facility.objects.get_or_create(id_facility = 'ben', name = 'Beneficiaires', facility_level = facility_type)
 
-
-		#if(the_current_facility_level_name != 'CDS' and the_current_facility_level_name != 'HOSPITAL' and the_current_facility_level_name != 'STA' and the_current_facility_level_name != 'SST'):
-		if (the_current_facility_level_name not in CDS_SYNONYMS and the_current_facility_level_name not in HOSPITAL_SYNONYMS):
-			#They can not send ben in the place of destination
-			if(args['facility_code'].upper() == 'BEN'):
-				args['valide'] = False
-				args['info_to_contact'] = "Erreur. Votre site d affectation ne peut pas envoyer des produits avec le mot '"+args['text'].split(' ')[2]+"'. Si vous voulez rapporter les produits envoyes a un site, mettez le code de ce site a la place de "+args['text'].split(' ')[2]
-				return
- 
 
 	the_current_facility_level = args['the_current_facility_level']
 	attached_products = args['attached_products']
@@ -577,19 +567,25 @@ def check_products_reports_values_validity(args):
 
 	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
 		#Products values starts at the indice 3
-		print("#Products values starts at the indice 3")
-		first_product_indice = 3
+		if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+			print("#Products values starts at the indice 3")
+			first_product_indice = 3
+		else:
+			print("#Products values starts at the indice 2")
+			first_product_indice = 2
 
 	ok = True
 	priority = 1
 	indice = first_product_indice
 
 	while(priority <= number_of_attached_products and ok == True):
-		args['value_to_check'] =  args['text'].split(' ')[indice]
-		args['position'] = indice
-
+		print("======priority=======")
+		print(priority)
 		print("------------INDICE----------")
 		print(indice)
+
+		args['value_to_check'] =  args['text'].split(' ')[indice]
+		args['position'] = indice
 		
 		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_level, priority_in_sms = priority)[0]
 		
@@ -1037,7 +1033,7 @@ def record_sent_stock(args):
 	if(len(already_existing_send_report) > 0):
 		#We can not register an other products send report with same destination and same date from one site
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Vous avez deja donne un rapport de l operation d envoie des produits au site '"+args['destination_facility'].name+"' fait a la date suivante : "+str(args['sent_date'])+". Si vous voulez le modifier, envoyer un message commencant par SSRM"
+		args['info_to_contact'] = "Erreur. Vous avez deja donne un rapport de l operation d envoie des produits vers '"+args['destination_facility'].name+"' fait a la date suivante : "+str(args['sent_date'])+". Si vous voulez le modifier, envoyer un message commencant par SSRM"
 		return
 
 
@@ -1049,12 +1045,19 @@ def record_sent_stock(args):
 
 
 	priority = 1
+	if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+		first_values = 3
+	else:
+		first_values = 2
 
 	message_to_send = "Enregistrement reussi. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
-	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
+	while ((priority <= (len(args['text'].split(' ')) - first_values)) and (priority > 0)):
 		#We record 
-		value = args['text'].split(' ')[priority+2]
+		if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+			value = args['text'].split(' ')[priority+2]
+		else:
+			value = args['text'].split(' ')[priority+1]
 		value = value.replace(",",".")
 
 		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = args['the_current_facility_level'], priority_in_sms = priority)[0]
@@ -1148,11 +1151,20 @@ def modify_sent_stock(args):
 
 	priority = 1
 
+	if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+		first_values = 3 
+	else:
+		first_values = 2
+
 	message_to_send = "Modification reussie. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
-	while ((priority <= (len(args['text'].split(' ')) - 3)) and (priority > 0)):
+	while ((priority <= (len(args['text'].split(' ')) - first_values)) and (priority > 0)):
 		#We record 
-		value = args['text'].split(' ')[priority+2]
+		if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+			value = args['text'].split(' ')[priority+2]
+		else:
+			value = args['text'].split(' ')[priority+1]
+
 		value = value.replace(",",".")
 
 		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = args['the_current_facility_level'], priority_in_sms = priority)[0]
