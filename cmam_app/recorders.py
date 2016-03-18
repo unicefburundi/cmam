@@ -1540,6 +1540,12 @@ def record_patient_served(args):
 	if not args['valide']:
 		return
 
+	#A facility not a CDS or a Hospital can not send this report
+	if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport commencant par '"+args['mot_cle']+"' ne peut etre envoye que par les STA et les SST"
+		return
+
 	#Let's check if the values sent are valid
 	check_values_validity(args)
 	print(args['valide'])
@@ -1648,6 +1654,12 @@ def modify_patient_served(args):
 	if not args['valide']:
 		return
 
+	#A facility not a CDS or a Hospital can not send this report
+	if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport commencant par '"+args['mot_cle']+"' ne peut etre envoye que par les STA et les SST"
+		return
+
 	#Let's check if the values sent are valid
 	check_values_validity(args)
 	print(args['valide'])
@@ -1752,6 +1764,11 @@ def record_out_going_patients(args):
 	if not args['valide']:
 		return
 
+	#A facility not a CDS or a Hospital can not send this report
+	if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport commencant par '"+args['mot_cle']+"' ne peut etre envoye que par les STA et les SST"
+		return
 
 	#Let's check if the values sent are valid
 	check_values_validity(args)
@@ -1861,6 +1878,11 @@ def modify_out_going_patients(args):
 	if not args['valide']:
 		return
 
+	#A facility not a CDS or a Hospital can not send this report
+	if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
+		args['valide'] = False
+		args['info_to_contact'] = "Erreur. Un rapport commencant par '"+args['mot_cle']+"' ne peut etre envoye que par les STA et les SST"
+		return
 
 	#Let's check if the values sent are valid
 	check_values_validity(args)
