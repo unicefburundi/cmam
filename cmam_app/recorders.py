@@ -400,6 +400,8 @@ def check_values_validity(args):
 		args['position'] = 2
 		check_is_float(args)
 		if not args['valide']:
+			args['valide'] = False
+			args['info_to_contact'] = "Erreur. La quantite restante envoyee n est pas valide. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
  
 	
