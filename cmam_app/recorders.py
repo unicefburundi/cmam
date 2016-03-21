@@ -424,36 +424,42 @@ def check_values_validity(args):
 		args['position'] = 2		
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'TDS' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 		#Let's check if the value in the position number 3 is an int
 		args['value_to_check'] =  args['text'].split(' ')[3]
 		args['position'] = 3
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'PTB' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 		#Let's check if the value in the position number 4 is an int
 		args['value_to_check'] =  args['text'].split(' ')[4]
 		args['position'] = 4
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'OEDEMES' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 		#Let's check if the value in the position number 5 is an int
 		args['value_to_check'] =  args['text'].split(' ')[5]
 		args['position'] = 5
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'RECHUTE' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 		#Let's check if the value in the position number 6 is an int
 		args['value_to_check'] =  args['text'].split(' ')[6]
 		args['position'] = 6
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'RAA' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 		#Let's check if the value in the position number 6 is an int
 		args['value_to_check'] =  args['text'].split(' ')[7]
 		args['position'] = 7
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'TI' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 
 
@@ -475,24 +481,28 @@ def check_values_validity(args):
 		args['position'] = 2		
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'Guiri/TAS' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 		#Let's check if the value in the position number 3 is an int
 		args['value_to_check'] =  args['text'].split(' ')[3]
 		args['position'] = 3
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'DECES' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 		#Let's check if the value in the position number 4 is an int
 		args['value_to_check'] =  args['text'].split(' ')[4]
 		args['position'] = 4
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'ABANDONS' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 		#Let's check if the value in the position number 5 is an int
 		args['value_to_check'] =  args['text'].split(' ')[5]
 		args['position'] = 5
 		check_is_int(args)
 		if not args['valide']:
+			args['info_to_contact'] = "Erreur. La valeur envoye pour 'Non repondant' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
 
 		if args['facility'].facility_level.name.upper() in CDS_SYNONYMS:
@@ -500,6 +510,9 @@ def check_values_validity(args):
 			args['value_to_check'] =  args['text'].split(' ')[6]
 			args['position'] = 6
 			check_is_int(args)
+			if not args['valide']:
+				args['info_to_contact'] = "Erreur. La valeur envoye pour 'Trensfert interne' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
+				return
 		
 
 
