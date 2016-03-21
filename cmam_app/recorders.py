@@ -1353,6 +1353,12 @@ def modify_stock_out(args):
 	args['info_to_contact'] = "Modification reussie. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est "+args['remaining_quantity']+"."
 
 	args['info_to_supervisor'] = "Modification. Une rupture de stock est signalee au site '"+args['facility'].name+"' pour le produit "+the_concerned_product.designation+". La quantite restante est "+args['remaining_quantity']
+
+
+	the_contact_phone_number = "tel:"+args['supervisor_phone_number']
+	data = {"urns": [the_contact_phone_number],"text": args['info_to_supervisor']}
+	args['data'] = data
+	send_sms_through_rapidpro(args)
 #-------------------------------------------------------------------------------------
 
 
