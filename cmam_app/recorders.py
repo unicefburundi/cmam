@@ -25,7 +25,7 @@ def check_supervisor_phone_number_not_for_this_contact(args):
 	#if args['phone'] == args['text'].split(' ')[2] or args['phone'][4:] == args['text'].split(' ')[2]:
 	if args['text'].split(' ')[2] in args['phone']:
 		args['valide'] = False
-		args['info_to_contact'] = "Erreur. Vous avez envoye votre numero de telephone a la place de celui de votre superviseur. Pour corriger, veuillez reenvoyer le message commencant par REG et contenant le vrai numero de ton superviseur"
+		args['info_to_contact'] = "Erreur. Vous avez envoye votre numero de telephone a la place de celui de votre superviseur. Pour corriger, veuillez reenvoyer le message commencant par '"+args['mot_cle']+"' et contenant le vrai numero de ton superviseur"
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Le numero de telephone du superviseur est bien note."
