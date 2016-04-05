@@ -1,4 +1,4 @@
-SMME
+CMAM
 ========================
 App to monitor the Community-based Management of Acute Malnutrition with SMS in Burundi.
 
