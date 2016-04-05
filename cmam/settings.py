@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'cmam_app'
+    'cmam_app'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -63,9 +63,13 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.core.context_processors.request',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -114,23 +118,6 @@ STATIC_ROOT = os.path.join(PROJECT_PATH,  'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'staticfiles'),
 )
-
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.template.context_processors.debug',
-    'django.template.context_processors.i18n',
-    'django.template.context_processors.media',
-    'django.core.context_processors.request',
-    'django.template.context_processors.static',
-    'django.template.context_processors.tz',
-    'django.contrib.messages.context_processors.messages',
-    'ssme.context_processor.myfacility',
-    )
-
-#TEMPLATE_DIRS = (
-#    os.path.join(BASE_DIR, 'templates'),
-#)
 
 
 KNOWN_PREFIXES = {
