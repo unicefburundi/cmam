@@ -48,12 +48,24 @@ class ReporterAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('facility', 'phone_number', 'supervisor_phone_number')
     list_filter = ( 'facility__facility_level__name',)
 
+class ReportAdminResource(resources.ModelResource):
+    class Meta:
+        model = Report
+        fields = ('facility', 'reporting_date', 'text', 'category')
+
+class ReportAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = ReportAdminResource
+    list_display = ('facility', 'reporting_date', 'text', 'category')
+    search_fields = ('facility', 'reporting_date', 'text', 'category')
+    list_filter = ( 'category',)
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Facility, FacilityAdmin)
 admin.site.register(Stock, StockAdmin)
 admin.site.register(Reporter, ReporterAdmin)
 admin.site.register(User)
-admin.site.register(Report)
+admin.site.register(Report, ReportAdmin)
 admin.site.register(Sortie)
 admin.site.register(Reception)
 admin.site.register(StockOutReport)

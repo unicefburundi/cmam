@@ -1,0 +1,53 @@
+{% extends "home.html"  %}
+{% load render_table from django_tables2 %}
+{% block page_title %}
+Communes
+{% endblock page_title %}
+
+{% block contents %}
+{% if object_list %}
+    <div class="col-md-8">
+    <table id="list_cds" class="table table-bordered" data-toggle="table" data-search="true" data-show-export="true" data-export-types=['csv','excel']>
+        <thead>
+              <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Commune</th>
+                <th>Province</th>
+              </tr>
+            </thead>
+        {% for colline in object_list %}
+            <tr>
+                {% with colline.id as code  %}
+                        <td><a href="#" class="btn btn_link">{{ colline.name }}</a></td>
+                    <td>{{ colline.code}}</td>
+                    <td>{{ colline.commune}}</td>
+                    <td>{{ colline.commune.province}}</td>
+                {% endwith %}
+            </tr>
+        {% endfor %}
+    </table>
+    {# .... **Now the pagination section** .... #}
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    </div>
+    <div class="col-md-4"></div>
+
+{% else %}
+    <p>No District found!!! :(</p>
+{% endif %}
+
+{% endblock contents %}

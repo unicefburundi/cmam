@@ -1,0 +1,26 @@
+{% extends "umuco/group_submit.html" %}
+{% load i18n %}
+{% block contentright %}
+<ul class="nav nav-tabs">
+    <li {% block activegroup %}{% endblock activegroup %} ><a href="#group"   data-toggle="tab">{% trans "Group" %}</a></li>
+    <li {% block activeprovince %}class="active"{% endblock activeprovince %} ><a href="#province"   data-toggle="tab">Province</a></li>
+    <li {% block activecommune %}{% endblock activecommune %} ><a href="#commune"   data-toggle="tab">Commune</a></li>
+    <li {% block activecolline %}{% endblock activecolline %} ><a href="#colline"   data-toggle="tab">Colline</a></li>
+    <li {% block activetelephone %}{% endblock activetelephone %} ><a href="#telephone"   data-toggle="tab">{% trans "Telephone" %}</a></li>
+    </ul>
+{% endblock contentright  %}
+{% block activeprovince1 %}active{% endblock activeprovince1 %}
+
+{% block province %}
+
+{% if form %}
+    <form action="" method="POST" class="form-inline">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" name="intervalsubmit" class="btn btn-primary">Create</button>
+</form>
+{% else %}
+    No form
+{% endif %}
+</div>
+{% endblock province %}
