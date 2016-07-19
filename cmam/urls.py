@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
+from django.contrib.auth import views
 
 
 #urlpatterns = [
@@ -24,7 +25,11 @@ from django.contrib import admin
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^cmam/', include('cmam_app.urls')),
-	url(r'^test/$', 'cmam_app.views.test'),
-	url(r'^$', 'cmam_app.views.landing'),
+    url(r'^test/$', 'cmam_app.views.test'),
+    url(r'^home/$', 'cmam_app.views.home', name='home'),
+    url(r'^dashboard/$', 'cmam_app.views.dashboard', name='dashboard'),
+    url(r'^login/$', views.login, {'template_name': 'login.html'}, name="login"),
+    url(r'^logout/$', views.login, {'template_name': 'login.html'}, name="logout"),
+    url(r'^$', 'cmam_app.views.landing'),
     )
 
