@@ -2,6 +2,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from rest_framework import viewsets
+from cmam_app.models import Product
+from cmam_app.serializers import ProductSerializer
+
 
 
 def test(request):
@@ -21,3 +25,10 @@ def home(request):
 @login_required(login_url="login/")
 def dashboard(request):
     return render(request, "landing_page.html")
+
+class ProductViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to view or edit products.
+    """
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer

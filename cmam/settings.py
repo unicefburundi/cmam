@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'import_export',
+    'rest_framework',
     'bdiadmin',
     'cmam_app'
 )
@@ -142,6 +143,11 @@ KNOWN_PREFIXES = {
 }
 
 LOGIN_REDIRECT_URL = reverse_lazy("home")
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGE_SIZE': 10
+}
 
 try:
     from localsettings import *
