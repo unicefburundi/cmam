@@ -5,7 +5,7 @@ from django.db import models
 class FacilityType(models.Model):
 	''' In this model we will store sites types '''
 	name = models.CharField(max_length=40)
-	
+
 	def __unicode__(self):
 		return self.name
 
@@ -63,7 +63,7 @@ class Reporter(models.Model):
 	facility = models.ForeignKey(Facility)
 	phone_number = models.CharField(max_length=20)
 	supervisor_phone_number = models.CharField(max_length=20)
-	
+
 	def __unicode__(self):
 		return self.phone_number
 
@@ -98,7 +98,7 @@ class Report(models.Model):
 		ordering = ('reporting_date',)
 
 class Sortie(models.Model):
-	''' If there is a report of products sent from one facility to an other, we store in this model the date 
+	''' If there is a report of products sent from one facility to an other, we store in this model the date
 	of that operation and the destination '''
 	report = models.ForeignKey(Report)
 	date_de_sortie = models.DateField()
@@ -126,7 +126,7 @@ class StockOutReport(models.Model):
 	report = models.ForeignKey(Report)
 	produit = models.ForeignKey(Product)
 	quantite_restante = models.FloatField(default=0.0)
-	
+
 	def __unicode__(self):
 		return "{0} => Quantite restante : {1}".format(self.produit.designation, self.quantite_restante)
 
@@ -158,7 +158,7 @@ class IncomingPatientsReport(models.Model):
 	readmission = models.IntegerField()
 	transfert_interne = models.IntegerField()
 	date_of_first_week_day = models.DateField()
-	
+
 	def __unicode__(self):
 		return "{0} | {1} | ...".format(self.total_debut_semaine, self.ptb)
 
@@ -174,7 +174,7 @@ class OutgoingPatientsReport(models.Model):
 
 	def __unicode__(self):
 		return "{0} | {1} | ...".format(self.gueri, self.deces)
-	
+
 class StockReport(models.Model):
 	''' In this model, we record any stock report. Different quantities of different products are stored in the ProductStockReport model'''
 	report = models.ForeignKey(Report)

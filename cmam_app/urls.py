@@ -10,4 +10,5 @@ router.register(r'products', ProductViewSet)
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
     url(r'external_request', handel_rapidpro_request, name="handel_request"),
+    url(r'^sorties/$', SortiesView.as_view(), name="sorties"),
 )

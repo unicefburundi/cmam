@@ -56,7 +56,29 @@ class ProfileUserAdmin(ExportMixin, admin.ModelAdmin):
     def email(self, obj):
         return obj.user.email
 
+class DistrictResource(resources.ModelResource):
+    class Meta:
+        model = District
+        fields = ('name', 'code', 'province')
+
+class DistrictAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = DistrictResource
+    search_fields = ('name', 'code')
+    list_display = ('name', 'code', 'province')
+
+class CDSResource(resources.ModelResource):
+    class Meta:
+        model = CDS
+        fields = ('name', 'code', 'district')
+
+class CDSAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = CDSResource
+    search_fields = ('name', 'code')
+    list_display = ('name', 'code', 'district')
+
 admin.site.register(Province, ProvinceAdmin)
 admin.site.register(Commune, CommuneAdmin)
 admin.site.register(Colline, CollineAdmin)
 admin.site.register(ProfileUser, ProfileUserAdmin)
+admin.site.register(District, DistrictAdmin)
+admin.site.register(CDS, CDSAdmin)

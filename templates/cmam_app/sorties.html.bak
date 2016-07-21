@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title>Les sorties </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+      crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+      crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
+    <script type="text/javascript">
+    	angular.module('djangular-demo', ['djng.forms']);
+		</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h3> Search</h3>
+        <div class="col-md-7">
+          <form class="form-inline">
+            <div class="form-group"> <label for="debut">A partir de </label> <input
+                class="form-control" id="debut" placeholder="10-07-2016" type="text">
+            </div>
+            <div class="form-group"> <label for="fin">Au</label> <input class="form-control"
+                id="fin" placeholder=" present" type="text"> </div>
+            <button type="submit" class="btn btn-primary">OK</button> </form>
+        </div>
+        <div class="col-md-5">
+          <div class="col-md-6">Unites</div>
+          <div class="col-md-6">Cartons ouverts ou pas Ouverts</div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3">
+          <form method="post" action="." validate>
+              {% csrf_token %}
+              {{ form.as_div }}
+              <button type="submit" class="btn btn-primary">OK</button>
+          </form>
+          <p class="bg-danger">Les sorties de CAMEBU sont superieures aux
+            entrees des Districts</p>
+        </div>
+        <div class="col-md-4">
+          <div class="row">
+            <h5> Stocks au niveau de la CAMEBU</h5>
+            <table id="datatable1" class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Entree</th>
+                  <th>Sorties</th>
+                  <th>Stock Restant</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>45</th>
+                  <td>3</td>
+                  <td>36</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <h5> Stocks au niveau du district</h5>
+            <table id="datatable2" class="table table-bordered">
+              <thead>
+                <tr>
+                  <th><br>
+                  </th>
+                  <th>Entree</th>
+                  <th>Sorties</th>
+                  <th>Stock Restant</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Kiremba</th>
+                  <th>4</th>
+                  <td>1</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <th>Buye</th>
+                  <th>20</th>
+                  <td>3</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <th>Ngozi</th>
+                  <th>4</th>
+                  <td>6</td>
+                  <td>11</td>
+                </tr>
+                <tr>
+                  <th>Rema</th>
+                  <th>0</th>
+                  <td>10</td>
+                  <td>3</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <h5> Stocks au niveau des CDS</h5>
+          <table id="datatable2" class="table table-bordered">
+            <thead>
+              <tr>
+                <th><br>
+                </th>
+                <th>Entree</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Nyamarobe</th>
+                <th>1</th>
+                <td>1</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <th>Musasa</th>
+                <th>20</th>
+                <td>3</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <th>Gakere</th>
+                <th>0</th>
+                <td>6</td>
+                <td>11</td>
+              </tr>
+              <tr>
+                <th>Murehe</th>
+                <th>2</th>
+                <td>10</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <th>Kiremba</th>
+                <th>1</th>
+                <td>1</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <th>Gisha</th>
+                <th>0</th>
+                <td>3</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <th>Kananira</th>
+                <th>0</th>
+                <td>6</td>
+                <td>11</td>
+              </tr>
+              <tr>
+                <th>Bisiga</th>
+                <th>3</th>
+                <td>10</td>
+                <td>3</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <script>
+      /*  jQuery ready function. Specify a function to execute when the DOM is fully loaded.  */
+      $(document).ready(
+
+        /* This is the function that will get executed after the DOM is fully loaded */
+        function () {
+          $( "#debut" ).datepicker({
+            changeMonth: true,//this option for allowing user to select month
+            changeYear: true //this option for allowing user to select from year range
+          });
+          $( "#fin" ).datepicker({
+            changeMonth: true,//this option for allowing user to select month
+            changeYear: true //this option for allowing user to select from year range
+          });
+        }
+
+      );
+    </script>
+  </body>
+</html>

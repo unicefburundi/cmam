@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from cmam_app.models import Product
 from cmam_app.serializers import ProductSerializer
+from django.views.generic.edit import FormView
+from cmam_app.forms import SortiesForm
 
 
 
@@ -32,3 +34,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+class SortiesView(FormView):
+    template_name = 'cmam_app/sorties.html'
+    form_class = SortiesForm
+

@@ -1,10 +1,12 @@
+-f file:///home/stock/.pip-wheelhouse
 Django==1.8.4
 argparse==1.2.1
 diff-match-patch==20110725.1
+django-angular==0.8.2
 django-import-export==0.4.4
 django-jsonview==0.5.0
+djangorestframework==3.0.5
 psycopg2==2.6.1
 requests==2.9.1
 tablib==0.11.2
 wsgiref==0.1.2
-djangorestframework==3.0.5
