@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -5,6 +6,7 @@
     <title>Les sorties </title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Latest compiled and minified CSS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
       integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
       crossorigin="anonymous">
@@ -16,9 +18,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 crossorigin="anonymous"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/data.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
     <script type="text/javascript">
     	angular.module('djangular-demo', ['djng.forms']);
@@ -30,31 +29,35 @@ crossorigin="anonymous"></script>
         <h3> Search</h3>
         <div class="col-md-7">
           <form class="form-inline">
-            <div class="form-group"> <label for="debut">A partir de </label> <input
-                class="form-control" id="debut" placeholder="10-07-2016" type="text">
+            <div class="form-group">
+              <label for="debut">A partir de </label>
+              <input class="form-control" id="debut" placeholder="10-07-2016" type="text">
             </div>
-            <div class="form-group"> <label for="fin">Au</label> <input class="form-control"
-                id="fin" placeholder=" present" type="text"> </div>
-            <button type="submit" class="btn btn-primary">OK</button> </form>
+            <div class="form-group">
+              <label for="fin">Au</label>
+              <input class="form-control" id="fin" placeholder=" present" type="text">
+            </div>
+            <button type="submit" class="btn btn-primary">OK</button>
+          </form>
         </div>
         <div class="col-md-5">
-          <div class="col-md-6">Unites</div>
-          <div class="col-md-6">Cartons ouverts ou pas Ouverts</div>
+          <div class="col-md-3" >Unites en</div>
+          <div class="col-md-2 bg-danger" id="unites"></div>
+          <div class="col-md-7" ></div>
         </div>
       </div>
       <hr>
       <div class="row">
         <div class="col-md-3">
-          <form name="{{ form.form_name }}" method="post" action="." novalidate>
-              {% csrf_token %}
-              {{ form.as_div }}
-              <button type="submit" ng-disabled="{{ form.form_name }}.$invalid" class="btn btn-primary">Ok</button>
+          <form name="{{ form.form_name }}" method="post" action="." novalidate="">
+            {% csrf_token %} {{ form.as_div }} <button type="submit" ng-disabled="{{ form.form_name }}.$invalid"
+              class="btn btn-primary">Search</button>
           </form>
           <p class="bg-danger">Les sorties de CAMEBU sont superieures aux
             entrees des Districts</p>
         </div>
         <div class="col-md-4">
-          <div class="row">
+          <div class="row camebu">
             <h5> Stocks au niveau de la CAMEBU</h5>
             <table id="datatable1" class="table table-bordered">
               <thead>
@@ -73,7 +76,7 @@ crossorigin="anonymous"></script>
               </tbody>
             </table>
           </div>
-          <div class="row">
+          <div class="row district">
             <h5> Stocks au niveau du district</h5>
             <table id="datatable2" class="table table-bordered">
               <thead>
@@ -114,7 +117,7 @@ crossorigin="anonymous"></script>
             </table>
           </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 cds">
           <h5> Stocks au niveau des CDS</h5>
           <table id="datatable2" class="table table-bordered">
             <thead>
@@ -181,6 +184,7 @@ crossorigin="anonymous"></script>
       </div>
     </div>
     <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <script src="{% static "js/cmam.js" %}"></script>
     <script>
       /*  jQuery ready function. Specify a function to execute when the DOM is fully loaded.  */
       $(document).ready(

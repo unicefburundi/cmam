@@ -25,6 +25,7 @@ from django.contrib.auth import views
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^cmam/', include('cmam_app.urls')),
+    url(r'^bdiadmin/', include('bdiadmin.urls', namespace='bdiadmin', app_name='bdiadmin')),
     url(r'^test/$', 'cmam_app.views.test'),
     url(r'^home/$', 'cmam_app.views.home', name='home'),
     url(r'^dashboard/$', 'cmam_app.views.dashboard', name='dashboard'),

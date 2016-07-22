@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'import_export',
     'rest_framework',
+    'django_extensions',
     'djng',
     'bdiadmin',
     'cmam_app'
