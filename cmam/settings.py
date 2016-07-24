@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'import_export',
     'rest_framework',
     'django_extensions',
+    'django_tables2',
     'djng',
     'bdiadmin',
     'cmam_app'

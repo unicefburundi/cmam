@@ -1,8 +1,8 @@
-{% load staticfiles %}
-<!DOCTYPE html>
 <html>
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  </head>
+  <body>{% load staticfiles %}
     <title>Les sorties </title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Latest compiled and minified CSS -->
@@ -22,28 +22,22 @@ crossorigin="anonymous"></script>
     <script type="text/javascript">
     	angular.module('djangular-demo', ['djng.forms']);
 		</script>
-  </head>
-  <body>
     <div class="container">
       <div class="row">
         <h3> Search</h3>
         <div class="col-md-7">
           <form class="form-inline">
-            <div class="form-group">
-              <label for="debut">A partir de </label>
-              <input class="form-control" id="debut" placeholder="10-07-2016" type="text">
+            <div class="form-group"> <label for="debut">A partir de </label> <input
+                class="form-control" id="debut" placeholder="10-07-2016" type="text">
             </div>
-            <div class="form-group">
-              <label for="fin">Au</label>
-              <input class="form-control" id="fin" placeholder=" present" type="text">
-            </div>
-            <button type="submit" class="btn btn-primary">OK</button>
-          </form>
+            <div class="form-group"> <label for="fin">Au</label> <input class="form-control"
+                id="fin" placeholder=" present" type="text"> </div>
+            <button type="submit" class="btn btn-primary">OK</button> </form>
         </div>
         <div class="col-md-5">
-          <div class="col-md-3" >Unites en</div>
+          <div class="col-md-3">Unités en</div>
           <div class="col-md-2 bg-danger" id="unites"></div>
-          <div class="col-md-7" ></div>
+          <div class="col-md-7"></div>
         </div>
       </div>
       <hr>
@@ -51,39 +45,38 @@ crossorigin="anonymous"></script>
         <div class="col-md-3">
           <form name="{{ form.form_name }}" method="post" action="." novalidate="">
             {% csrf_token %} {{ form.as_div }} <button type="submit" ng-disabled="{{ form.form_name }}.$invalid"
-              class="btn btn-primary">Search</button>
-          </form>
+              class="btn btn-primary">Search</button> </form>
           <p class="bg-danger">Les sorties de CAMEBU sont superieures aux
             entrees des Districts</p>
         </div>
         <div class="col-md-4">
           <div class="row camebu">
-            <h5> Stocks au niveau de la CAMEBU</h5>
+            <h5> Stocks au <b>niveau central</b>.</h5>
             <table id="datatable1" class="table table-bordered">
               <thead>
                 <tr>
-                  <th>Entree</th>
+                  <th>Entrée</th>
                   <th>Sorties</th>
                   <th>Stock Restant</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <th>45</th>
-                  <td>3</td>
-                  <td>36</td>
+                  <td class="entrees">45</td>
+                  <td class="sorties">25</td>
+                  <td class="restant">20</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="row district">
-            <h5> Stocks au niveau du district</h5>
+            <h5> Stocks au <b>niveau du district</b>.</h5>
             <table id="datatable2" class="table table-bordered">
               <thead>
                 <tr>
                   <th><br>
                   </th>
-                  <th>Entree</th>
+                  <th>Entrée</th>
                   <th>Sorties</th>
                   <th>Stock Restant</th>
                 </tr>
@@ -91,25 +84,25 @@ crossorigin="anonymous"></script>
               <tbody>
                 <tr>
                   <th>Kiremba</th>
-                  <th>4</th>
+                  <td>4</td>
                   <td>1</td>
                   <td>6</td>
                 </tr>
                 <tr>
                   <th>Buye</th>
-                  <th>20</th>
+                  <td>20</td>
                   <td>3</td>
                   <td>2</td>
                 </tr>
                 <tr>
                   <th>Ngozi</th>
-                  <th>4</th>
+                  <td>4</td>
                   <td>6</td>
                   <td>11</td>
                 </tr>
                 <tr>
                   <th>Rema</th>
-                  <th>0</th>
+                  <td>0</td>
                   <td>10</td>
                   <td>3</td>
                 </tr>
@@ -118,13 +111,13 @@ crossorigin="anonymous"></script>
           </div>
         </div>
         <div class="col-md-5 cds">
-          <h5> Stocks au niveau des CDS</h5>
+          <h5> Stocks au <strong>niveau des CDS</strong>.</h5>
           <table id="datatable2" class="table table-bordered">
             <thead>
               <tr>
                 <th><br>
                 </th>
-                <th>Entree</th>
+                <th>Entrée</th>
                 <th>Sorties</th>
                 <th>Stock Restant</th>
               </tr>
@@ -132,48 +125,48 @@ crossorigin="anonymous"></script>
             <tbody>
               <tr>
                 <th>Nyamarobe</th>
-                <th>1</th>
+                <td>1</td>
                 <td>1</td>
                 <td>6</td>
               </tr>
               <tr>
                 <th>Musasa</th>
-                <th>20</th>
+                <td>20</td>
                 <td>3</td>
                 <td>2</td>
               </tr>
               <tr>
                 <th>Gakere</th>
-                <th>0</th>
+                <td>0</td>
                 <td>6</td>
                 <td>11</td>
               </tr>
               <tr>
                 <th>Murehe</th>
-                <th>2</th>
+                <td>2</td>
                 <td>10</td>
                 <td>3</td>
               </tr>
               <tr>
                 <th>Kiremba</th>
-                <th>1</th>
+                <td>1</td>
                 <td>1</td>
                 <td>6</td>
               </tr>
               <tr>
                 <th>Gisha</th>
-                <th>0</th>
+                <td>0</td>
                 <td>3</td>
                 <td>2</td>
               </tr>
               <tr>
                 <th>Kananira</th>
-                <th>0</th>
+                <td>0</td>
                 <td>6</td>
                 <td>11</td>
               </tr>
               <tr>
-                <th>Bisiga</th>
+                <td>Bisiga</td>
                 <th>3</th>
                 <td>10</td>
                 <td>3</td>
@@ -184,7 +177,7 @@ crossorigin="anonymous"></script>
       </div>
     </div>
     <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-    <script src="{% static "js/cmam.js" %}"></script>
+    <script src="%7B%%20static%20" js="" cmam.js"="" %}"=""></script>
     <script>
       /*  jQuery ready function. Specify a function to execute when the DOM is fully loaded.  */
       $(document).ready(

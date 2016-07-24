@@ -14,3 +14,4 @@ static/
 fixtures/
 staticfiles/img/
 *.mo
+*.bak

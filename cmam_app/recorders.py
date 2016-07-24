@@ -50,7 +50,7 @@ def check_number_of_values(args):
 
 
 	#Each message category starts with some mandatory values which are same for all sites
-	number_of_common_values = 0	
+	number_of_common_values = 0
 
 	if(args['message_type']=='SELF_REGISTRATION' or args['message_type']=='SELF_REGISTRATION_M'):
 		if len(args['text'].split(' ')) < 3:
@@ -76,7 +76,7 @@ def check_number_of_values(args):
 		return
 	if(args['message_type']=='SORTI' or args['message_type']=='SORTI_M'):
 		if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS):
-			if len(args['text'].split(' ')) < 7: 
+			if len(args['text'].split(' ')) < 7:
 				args['valide'] = False
 				args['info_to_contact'] = "Erreur. Vous avez envoye peu de valeurs. Pour corriger, veuillez reenvoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 			if len(args['text'].split(' ')) > 7:
@@ -114,7 +114,7 @@ def check_number_of_values(args):
 		args['valide'] = False
 		args['info_to_contact'] = "Exception. Le type du site pas trouve"
 		return
-	
+
 	#Let's identify products which attached
 	attached_products = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_level)
 	if(len(attached_products) < 1):
@@ -123,9 +123,9 @@ def check_number_of_values(args):
 		args['info_to_contact'] = "Exception. Aucun produit n est attache au niveau '"+the_current_facility_level.name+"'"
 		return
 
-	
+
 	number_of_attached_products = attached_products.count()
-	
+	# import ipdb; ipdb.set_trace()
 
 	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M'):
 		number_of_common_values = 2
@@ -176,7 +176,7 @@ def check_number_of_values(args):
 		if len(args['text'].split(' ')) == number_of_mandatory_values:
 			args['valide'] = True
 			args['info_to_contact'] = "Le nombre de valeurs envoye est correct."
-	
+
 
 	args['the_current_facility_level'] = the_current_facility_level
 	args['attached_products'] = attached_products
@@ -188,7 +188,7 @@ def check_if_is_reporter(args):
 		#This person is not in the list of reporters
 		args['valide'] = False
 		args['info_to_contact'] = "Erreur. Vous ne vous etes pas enregistre pour pouvoir donner des rapports. Veuillez vous enregistrer en envoyant le message d enregistrement commencant par REG"
-		return 
+		return
 
 	one_concerned_reporter = concerned_reporter[0]
 
@@ -216,7 +216,7 @@ def check_date_is_valid(args):
 
 	print("------------------given_date-------------------")
 	print(given_date)
- 
+
 	if not given_date:
 		args['valide'] = False
 		args['info_to_contact'] = "Exception. Pas de date trouvee pour la verification."
@@ -254,7 +254,7 @@ def check_date_is_monday(args):
 	given_date = ""
 
 	#Let's put the value to check in 'given_date' variable
-		
+
 	if(args['message_type']=='STOCK_RECU'):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='STOCK_SORTI'):
@@ -273,7 +273,7 @@ def check_date_is_monday(args):
 		given_date = args['text'].split(' ')[1]
 	if(args['message_type']=='SORTI_M'):
 		given_date = args['text'].split(' ')[1]
- 
+
 	if not given_date:
 		args['valide'] = False
 		args['info_to_contact'] = "Exception. Pas de date trouvee pour la verification."
@@ -290,7 +290,7 @@ def check_date_is_monday(args):
 		args['valide'] = False
 		args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Verifier si vous avez mis chaque valeur dans sa place. Pour corriger, reenvoyez un message commencant par "+args['mot_cle']
 		return
-	
+
 	the_day = date_sent.weekday()
 
 	if the_day == 0:
@@ -315,8 +315,8 @@ def check_is_float(args):
 		args['valide'] = True
 		args['info_to_contact'] = "La valeur envoyee en position "+str(args['position'])+" est valide."
 
-	
-	
+
+
 
 
 
@@ -325,7 +325,7 @@ def check_is_int(args):
 	''' This function checks if a given value is an int '''
 
 	expression = r'^[0-9]+$'
-	
+
 	value_to_check = args['value_to_check']
 
 	if re.search(expression, value_to_check) is None:
@@ -334,7 +334,7 @@ def check_is_int(args):
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "La valeur envoyee en position "+str(args['position'])+" est valide."
-	 
+
 
 
 def check_facility_code_is_valid(args):
@@ -347,11 +347,11 @@ def check_facility_code_is_valid(args):
 	else:
 		args['valide'] = True
 		args['info_to_contact'] = "Le code envoye existe dans le systeme."
-		
+
 		args['destination_facility'] = facilities[0]
 
 		#Let's check if the facility code is not the code of the facility of the contact who is reporting
-		
+
 		if(args['facility'].id_facility == args['facility_code']):
 			args['valide'] = False
 			args['info_to_contact'] = "Erreur. Vous avez mis le code de l etablissement sur lequel vous etes affectes. Pour corriger,  reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
@@ -386,7 +386,7 @@ def check_is_product_name(args):
 
 def check_values_validity(args):
 	''' This function checks if values sent are valid '''
-	
+
 
 	if(args['message_type']=='RUPTURE' or args['message_type']=='RUPTURE_M'):
 		#Let's check if the value in the position number 1 is a product name
@@ -403,8 +403,8 @@ def check_values_validity(args):
 			args['valide'] = False
 			args['info_to_contact'] = "Erreur. La quantite restante envoyee n est pas valide. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
 			return
- 
-	
+
+
 
 	if(args['message_type']=='ADMISSION' or args['message_type']=='ADMISSION_M'):
 		#Let's check if the value in the position number 1 is a date
@@ -421,7 +421,7 @@ def check_values_validity(args):
 			return
 		#Let's check if the value in the position number 2 is an int
 		args['value_to_check'] =  args['text'].split(' ')[2]
-		args['position'] = 2		
+		args['position'] = 2
 		check_is_int(args)
 		if not args['valide']:
 			args['info_to_contact'] = "Erreur. La valeur envoye pour 'TDS' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
@@ -478,7 +478,7 @@ def check_values_validity(args):
 			return
 		#Let's check if the value in the position number 2 is an int
 		args['value_to_check'] =  args['text'].split(' ')[2]
-		args['position'] = 2		
+		args['position'] = 2
 		check_is_int(args)
 		if not args['valide']:
 			args['info_to_contact'] = "Erreur. La valeur envoye pour 'Guiri/TAS' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
@@ -513,13 +513,13 @@ def check_values_validity(args):
 			if not args['valide']:
 				args['info_to_contact'] = "Erreur. La valeur envoye pour 'Trensfert interne' n est pas valide. Pour corriger, envoyer un message corrige et commencant par le mot cle "+args['mot_cle']
 				return
-		
+
 
 
 def check_products_reports_values_validity(args):
 	#This function checks if values sent for products quantities are valid
 
-	
+
 	#The value at the indice 1 is always a date. Let's check if it is valide
 	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M' or args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M' or args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
 		#Let's check if the value in the position number 1 is a date
@@ -535,8 +535,8 @@ def check_products_reports_values_validity(args):
 				return
 
 	#For the stock sent from one site to an other, let's check if the given site code is valide
-	
-	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):		
+
+	if(args['message_type']=='STOCK_SORTI' or args['message_type']=='STOCK_SORTI_M'):
 		if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
 			print("aaaa")
 			args['facility_code'] =  args['text'].split(' ')[2]
@@ -554,7 +554,7 @@ def check_products_reports_values_validity(args):
 	attached_products = args['attached_products']
 	number_of_attached_products = attached_products.count()
 
-	
+
 
 	#Let's check if products priorities starts from 1 to the end without skip any number
 	#If we identify a value which is not correct, we will put false in ok variable
@@ -573,7 +573,7 @@ def check_products_reports_values_validity(args):
 		return
 
 
-	
+
 	#Let's check if numbers are correct
 	if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M' or args['message_type']=='BALANCE' or args['message_type']=='BALANCE_M'):
 		#Products values starts at the indice 2
@@ -601,9 +601,9 @@ def check_products_reports_values_validity(args):
 
 		args['value_to_check'] =  args['text'].split(' ')[indice]
 		args['position'] = indice
-		
+
 		one_attached_product = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_level, priority_in_sms = priority)[0]
-		
+
 		if(one_attached_product.can_be_fractioned == True):
 			#This value can be fractioned
 			check_is_float(args)
@@ -615,7 +615,7 @@ def check_products_reports_values_validity(args):
 			ok = False
 			args['valide'] = False
 			args['info_to_contact'] = "Erreur. La valeur envoyee pour le produit '"+one_attached_product.product.designation+"' n est pas valide. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
-		
+
 		priority = priority + 1
 		indice = indice + 1
 #======================reporters self registration==================================
@@ -692,10 +692,10 @@ def check_has_already_session(args):
 
 def temporary_record_reporter(args):
 	'''This function is used to record temporary a reporter'''
-	
+
 	if(args['text'].split(' ')[0].upper() == 'REG'):
 		args['mot_cle'] = 'REG'
-		
+
 		#Because REG is used to do the self registration and not the update, if the phone user sends a message starting with REG and 			#he/she is already a reporter, we don't allow him/her to continue
 		check_if_is_reporter(args)
 		if(args['valide'] == True):
@@ -703,7 +703,7 @@ def temporary_record_reporter(args):
 			args['valide'] = False
 			args['info_to_contact'] = "Erreur. Vous vous etes deja enregistre. Si vous voulez modifier votre site d affectation ou le numero de telephone de votre superviseur, envoyer le message commencant par le mot cle 'REGM'"
 			return
-	
+
 	if(args['text'].split(' ')[0].upper() == 'REGM'):
 		args['mot_cle'] = 'REGM'
 
@@ -874,7 +874,7 @@ def record_stock_received(args):
 		args['valide'] = False
 		args['info_to_contact'] = "Erreur. Vous avez deja donne un rapport de reception pour '"+str(args['sent_date'])+"'. Si vous voulez le modifier, envoyer un message commencant par SRCM"
 		return
-	
+
 
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'STOCK_RECU')
@@ -888,7 +888,7 @@ def record_stock_received(args):
 	message_to_send = "Rapport bien recu. Vous venez de rapporter le stock recu comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
-		#We record 
+		#We record
 		value = args['text'].split(' ')[priority+1]
 		value = value.replace(",",".")
 
@@ -916,7 +916,7 @@ def record_stock_received(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	
+
 	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
 	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
 	#args['data'] = data
@@ -979,7 +979,7 @@ def modify_stock_received(args):
 	message_to_send = "Modification reussie. Vous venez de rapporter le stock recu comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - 2)) and (priority > 0)):
-		#We record 
+		#We record
 		value = args['text'].split(' ')[priority+1]
 		value = value.replace(",",".")
 
@@ -1014,7 +1014,7 @@ def modify_stock_received(args):
 #RECORD
 def record_sent_stock(args):
 	#This function records a report about medicines sent from one facility to an other
-	
+
 	args['mot_cle'] = 'SSR'
 
 
@@ -1043,7 +1043,7 @@ def record_sent_stock(args):
 	if not args['valide']:
 		return
 
-	
+
 	#Let's check if this site have not already send this report. They must send in muximum one per day
 	#already_existing_send_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'])
 	already_existing_send_report = Sortie.objects.filter(date_de_sortie = args['sent_date'], destination = args['destination_facility'], report__facility = args['facility'])
@@ -1070,7 +1070,7 @@ def record_sent_stock(args):
 	message_to_send = "Rapport bien recu. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - first_values)) and (priority > 0)):
-		#We record 
+		#We record
 		if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
 			value = args['text'].split(' ')[priority+2]
 		else:
@@ -1102,14 +1102,14 @@ def record_sent_stock(args):
 	#second_msg_to_sent = "Si vous voulez corriger ce rapport du stock sorti que vous venez d envoyer, envoyer un message corrige et commencant par SSTM"
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	
+
 	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
 	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
 	#args['data'] = data
 	#send_sms_through_rapidpro(args)
 
 	#args['info_to_contact'] = second_msg_to_sent
-	
+
 
 
 
@@ -1169,14 +1169,14 @@ def modify_sent_stock(args):
 	priority = 1
 
 	if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
-		first_values = 3 
+		first_values = 3
 	else:
 		first_values = 2
 
 	message_to_send = "Modification reussie. Vous venez de rapporter la sortie des produits vers '"+args['destination_facility'].name+"' comme suit : "
 
 	while ((priority <= (len(args['text'].split(' ')) - first_values)) and (priority > 0)):
-		#We record 
+		#We record
 		if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
 			value = args['text'].split(' ')[priority+2]
 		else:
@@ -1271,18 +1271,18 @@ def record_stock_out(args):
 	product_out_of_stock = StockOutReport.objects.create(report = the_created_report, produit = the_concerned_product, quantite_restante = args['remaining_quantity'])
 
 	args['info_to_contact'] = "Rapport bien recu. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est "+args['remaining_quantity']+""
-	
+
 	#The below message message will be sent to the supervisor
 	args['info_to_supervisor'] = "Une rupture du stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'. La quantite restante est "+args['remaining_quantity']+"."
 
-	
+
 
 	#second_msg_to_sent = "Si vous voulez corriger ce rapport de rupture du stock que vous venez d envoyer, envoyer un message corrige et commencant par RUPM"
 
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	
+
 	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
 	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
 	#args['data'] = data
@@ -1345,11 +1345,11 @@ def modify_stock_out(args):
 	if(len(existing_same_stock_out_report) < 1):
 		#They never give a such report
 		args['valide'] = False
-		args['info_to_contact'] ="Erreur. Aucune modification faite car aucun rapport de rupture de stock de '"+the_concerned_product.designation+"' (rapport commencant par 'RUP') n a ete enregistre par votre site aujourd hui" 
+		args['info_to_contact'] ="Erreur. Aucune modification faite car aucun rapport de rupture de stock de '"+the_concerned_product.designation+"' (rapport commencant par 'RUP') n a ete enregistre par votre site aujourd hui"
 		return
 
 	#We delete it if there one
-	
+
 
 	the_one_same_stock_out_report = existing_same_stock_out_report[0]
 	the_related_report = the_one_same_stock_out_report.report
@@ -1452,7 +1452,7 @@ def record_current_stock(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	
+
 	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
 	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
 	#args['data'] = data
@@ -1579,7 +1579,7 @@ def record_patient_served(args):
 		args['valide'] = False
 		args['info_to_contact'] = "Erreur. Un rapport pour cette semaine avez ete enregistre. Pour le modifier, veuillez envoyer un message de modification commencant par le mot cle "+args['mot_cle']+"M"
 		return
-	
+
 	#Let's save the report
 	the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'ADMISSION')
 
@@ -1594,26 +1594,26 @@ def record_patient_served(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	
+
 	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
 	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
 	#args['data'] = data
 	#send_sms_through_rapidpro(args)
 
 	#args['info_to_contact'] = second_msg_to_sent
-	
 
 
 
-	
-	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site. 
+
+
+	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site.
 
 	outgoing_patients_report_for_that_week = OutgoingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility =args['facility'])
 
 	if(len(outgoing_patients_report_for_that_week) > 0):
 		#It means that this site have given the outgoing patient report for that week
 		outgoing_patients_report_for_that_week = outgoing_patients_report_for_that_week[0]
-		
+
 		all_outgoing_patient_for_that_week = outgoing_patients_report_for_that_week.gueri+outgoing_patients_report_for_that_week.deces+outgoing_patients_report_for_that_week.abandon + outgoing_patients_report_for_that_week.non_repondant +outgoing_patients_report_for_that_week.transfert_interne
 
 
@@ -1644,7 +1644,7 @@ def record_patient_served(args):
 
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
-			
+
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
 			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
 			args['data'] = data
@@ -1655,7 +1655,7 @@ def record_patient_served(args):
 			args['data'] = data
 			send_sms_through_rapidpro(args)
 
-			
+
 
 #MODIFY
 def modify_patient_served(args):
@@ -1693,7 +1693,7 @@ def modify_patient_served(args):
 		args['valide'] = False
 		args['info_to_contact'] = "Erreur. Aucune modification faite car aucun rapport commencant par le mot cle 'ADM' n avez ete donne par votre site avec la date que vous venez d envoyer."
 		return
-	
+
 	#If this site have finished to gie this report, let's delete it and create the new one
 	the_one_existing_same_report = the_existing_same_report[0]
 	the_related_report = the_one_existing_same_report.report
@@ -1712,14 +1712,14 @@ def modify_patient_served(args):
 
 
 
-	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site. 
+	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site.
 
 	outgoing_patients_report_for_that_week = OutgoingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility =args['facility'])
 
 	if(len(outgoing_patients_report_for_that_week) > 0):
 		#It means that this site have given the outgoing patient report for that week
 		outgoing_patients_report_for_that_week = outgoing_patients_report_for_that_week[0]
-		
+
 		all_outgoing_patient_for_that_week = outgoing_patients_report_for_that_week.gueri+outgoing_patients_report_for_that_week.deces+outgoing_patients_report_for_that_week.abandon + outgoing_patients_report_for_that_week.non_repondant +outgoing_patients_report_for_that_week.transfert_interne
 
 
@@ -1749,7 +1749,7 @@ def modify_patient_served(args):
 
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
-			
+
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
 			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
 			args['data'] = data
@@ -1776,7 +1776,7 @@ def record_out_going_patients(args):
 	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
-		return	
+		return
 
 
 	#Let's check if the message sent is composed by an expected number of values
@@ -1824,25 +1824,25 @@ def record_out_going_patients(args):
 
 
 	#The below code will be uncommented in order to send the second sms after the first one
-	
+
 	#the_contact_phone_number = "tel:"+args['the_sender'].phone_number
 	#data = {"urns": [the_contact_phone_number],"text": args['info_to_contact']}
 	#args['data'] = data
 	#send_sms_through_rapidpro(args)
 
 	#args['info_to_contact'] = second_msg_to_sent
-	
 
 
 
-	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site. 
+
+	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site.
 
 	incoming_patients_report_for_that_week = IncomingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility =args['facility'])
 
 	if(len(incoming_patients_report_for_that_week) > 0):
 		#It means that this site have given the incoming patient report for that week
 		incoming_patients_report_for_that_week = incoming_patients_report_for_that_week[0]
-		
+
 		all_incoming_patient_for_that_week = incoming_patients_report_for_that_week.total_debut_semaine + incoming_patients_report_for_that_week.ptb + incoming_patients_report_for_that_week.oedemes + incoming_patients_report_for_that_week.rechute + incoming_patients_report_for_that_week.readmission + incoming_patients_report_for_that_week.transfert_interne
 
 
@@ -1866,7 +1866,7 @@ def record_out_going_patients(args):
 
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
-			
+
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
 			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
 			args['data'] = data
@@ -1890,7 +1890,7 @@ def modify_out_going_patients(args):
 	check_if_is_reporter(args)
 	print(args['valide'])
 	if not args['valide']:
-		return	
+		return
 
 
 	#Let's check if the message sent is composed by an expected number of values
@@ -1938,20 +1938,20 @@ def modify_out_going_patients(args):
 		args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les sorties des patients comme suit : TAS="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]
 
 
-	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site. 
+	#Let's check if the reported number of outgoing patient is not inferior to the reported number of patients who were in that site.
 
 	incoming_patients_report_for_that_week = IncomingPatientsReport.objects.filter(date_of_first_week_day = args['sent_date'], report__facility =args['facility'])
 
 	if(len(incoming_patients_report_for_that_week) > 0):
 		#It means that this site have given the incoming patient report for that week
 		incoming_patients_report_for_that_week = incoming_patients_report_for_that_week[0]
-		
+
 		all_incoming_patient_for_that_week = incoming_patients_report_for_that_week.total_debut_semaine + incoming_patients_report_for_that_week.ptb + incoming_patients_report_for_that_week.oedemes + incoming_patients_report_for_that_week.rechute + incoming_patients_report_for_that_week.readmission + incoming_patients_report_for_that_week.transfert_interne
 
 
 		all_outgoing_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5])
 
-		
+
 		if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
 			#If the reported out going patients number is super to the reported incoming patient number for a given week, the
 			#system should alert the concerned persons
@@ -1971,7 +1971,7 @@ def modify_out_going_patients(args):
 
 
 			#The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
-			
+
 			the_supervisor_phone_number = "tel:"+args['the_sender'].supervisor_phone_number
 			data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
 			args['data'] = data
@@ -1981,6 +1981,6 @@ def modify_out_going_patients(args):
 			data = {"urns": [the_contact_phone_number],"text": args['an_alert_message_to_contact']}
 			args['data'] = data
 			send_sms_through_rapidpro(args)
-			
-			
+
+
 #--------------------------------------------------------------------------------------
