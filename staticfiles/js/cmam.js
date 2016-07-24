@@ -1,4 +1,4 @@
-$(document).ready(function(){
+    $(document).ready(function(){
     $('.camebu').hide();
     $('.district').hide();
     $('.cds').hide();
@@ -34,12 +34,18 @@ $(document).ready(function(){
                 });
                 }
                 else {
-                $('.cds').hide();
+                    $('.cds').hide();
+                    $('.district').hide();
                 $('select[name=district]').html('<option value="" selected="selected">---------</option>'); // remove the value from the input
-            } //<---- move it here
+            }
         });
             $('select[id=id_district]').change(function(){
-                $('.cds').show();
+                district_id = $(this).val();
+                if (district_id) {
+                    $('.cds').show();
+                } else {
+                    $('.cds').hide();
+                }
             });
         } else {
             $('.camebu').hide();
@@ -48,4 +54,4 @@ $(document).ready(function(){
         }
 
     });
-});
+    });
