@@ -5,7 +5,6 @@
   <body>{% load staticfiles %}
     <title>Les sorties </title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="{% static "js/cmam.js" %}"></script>
     <!-- Latest compiled and minified CSS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -16,9 +15,6 @@
       integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
       crossorigin="anonymous">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
-    <script type="text/javascript">
-    	angular.module('djangular-demo', ['djng.forms']);
-  </script>
     <div class="container">
       <div class="row">
         <h3> Search</h3>
@@ -43,11 +39,7 @@
       <hr>
       <div class="row">
         <div class="col-md-3">
-          <form name="{{ form.form_name }}" method="post" action="." novalidate="">
-            {% csrf_token %}
-            {{ form.as_div }}
-            <button type="submit" ng-disabled="{{form.form_name}}.$invalid" class="btn btn-primary">Search</button>
-          </form>
+          Formulaire
           <p class="bg-danger">
           Les sorties de CAMEBU sont superieures aux entrees des Districts</p>
         </div>
@@ -92,25 +84,7 @@
                   <td>1</td>
                   <td>6</td>
                 </tr>
-                <tr>
-                  <th>Buye</th>
-                  <td>20</td>
-                  <td>3</td>
-                  <td>2</td>
-                </tr>
-                <tr>
-                  <th>Ngozi</th>
-                  <td>4</td>
-                  <td>6</td>
-                  <td>11</td>
-                </tr>
-                <tr>
-                  <th>Rema</th>
-                  <td>0</td>
-                  <td>10</td>
-                  <td>3</td>
-                </tr>
-              </tbody>
+            </tbody>
             </table>
           </div>
         </div>
@@ -132,48 +106,6 @@
                 <td>1</td>
                 <td>1</td>
                 <td>6</td>
-              </tr>
-              <tr>
-                <th>Musasa</th>
-                <td>20</td>
-                <td>3</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th>Gakere</th>
-                <td>0</td>
-                <td>6</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <th>Murehe</th>
-                <td>2</td>
-                <td>10</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <th>Kiremba</th>
-                <td>1</td>
-                <td>1</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <th>Gisha</th>
-                <td>0</td>
-                <td>3</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th>Kananira</th>
-                <td>0</td>
-                <td>6</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <td>Bisiga</td>
-                <th>3</th>
-                <td>10</td>
-                <td>3</td>
               </tr>
             </tbody>
           </table>
@@ -200,13 +132,6 @@
         }
 
       );
-    </script>
-    <script type="text/javascript">
-      var app = angular.module('myApp', []);
-      app.controller('customersCtrl', function($scope, $http) {
-          $http.get("http://www.w3schools.com/angular/customers.php")
-          .then(function (response) {$scope.names = response.data.records;});
-      });
     </script>
   </body>
 </html>
