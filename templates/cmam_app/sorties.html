@@ -15,7 +15,7 @@
       integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
       crossorigin="anonymous">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
-    <div class="container">
+    <div class="container" ng-app="myApp">
       <div class="row">
         <h3> Search</h3>
         <div class="col-md-7">
@@ -38,20 +38,18 @@
       </div>
       <hr>
       <div class="row">
-        <div class="col-md-3" ng-app="myApp" ng-controller="myCtrl">
+        <div class="col-md-3"  ng-controller="myCtrl">
           <form>
-            <!-- NAME -->
+            <!-- Product -->
             <div id="product-group" class="form-group">
               <label>Products</label>
-              <select class="form-control"  ng-model="selectedCar" ng-options="x.model for x in cars"></select>
-              <span class="help-block"></span>
+              <select class="form-control"  ng-model="sorties.products" ng-options="x.designation for x in cars" ng-change="update()"></select>
             </div>
 
-            <!-- SUPERHERO NAME -->
-            <div id="superhero-group" class="form-group">
-              <label>Superhero Alias</label>
-              <input type="text" name="superheroAlias" class="form-control" placeholder="Caped Crusader" ng-model="formData.superheroAlias">
-              <span class="help-block"></span>
+            <!-- Province -->
+            <div id="province-group" class="form-group">
+              <label>Province</label>
+              <select class="form-control"  ng-model="sorties.province" ng-options="x.designation for x in cars"></select>
             </div>
 
             <!-- SUBMIT BUTTON -->
@@ -62,14 +60,14 @@
 
           <!-- SHOW DATA FROM INPUTS AS THEY ARE BEING TYPED -->
           <pre>
-              {{ formData }}
+              {{ selectedCar }}
           </pre>
 
           <p class="bg-danger">
           Les sorties de CAMEBU sont superieures aux entrees des Districts</p>
         </div>
         <div class="col-md-4">
-          <div class="row camebu" ng-app="myApp" ng-controller="customersCtrl">
+          <div class="row camebu"  ng-controller="myCtrl">
             <h5> Stocks au <b>niveau central</b>.</h5>
             <table id="datatable1" class="table table-bordered">
               <thead>
@@ -80,10 +78,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="x in names">
-                  <td>45</td>
-                  <td>20</td>
-                  <td >25</td>
+                <tr >
+                  <td id="cen-entrees">45</td>
+                  <td id="cen-sorties">20</td>
+                  <td id="cen-restant">25</td>
                 </tr>
               </tbody>
             </table>
@@ -158,13 +156,21 @@
     </script>
     <script>
         var app = angular.module('myApp', []);
-        app.controller('myCtrl', function($scope) {
-            $scope.cars = [
-              {model : "Ford Mustang", color : "red"},
-              {model : "Fiat 500", color : "white"},
-              {model : "Volvo XC90", color : "black"}
-          ];
-        });
+        app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+          $http.get("/cmam/products/")
+          .then(function (response) {
+                  $scope.cars = response.data;
+              });
+          $scope.update = function () {
+            var unit = $scope.sorties.products;
+            console.log(unit);
+            $('#unites').html('<strong >' + unit.general_measuring_unit +'</strong>');
+            $('#cen-entrees').html('<strong >' + unit.quantite_en_stock_central +'</strong>');
+             $('#cen-sorties').html('<strong >' + unit.sortie +'</strong>');
+             var reste = unit.quantite_en_stock_central - unit.sortie;
+             $('#cen-restant').html('<strong >' + reste +'</strong>');
+          };
+ }]);
       </script>
   </body>
 </html>
