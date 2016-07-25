@@ -38,8 +38,33 @@
       </div>
       <hr>
       <div class="row">
-        <div class="col-md-3">
-          Formulaire
+        <div class="col-md-3" ng-app="myApp" ng-controller="myCtrl">
+          <form>
+            <!-- NAME -->
+            <div id="product-group" class="form-group">
+              <label>Products</label>
+              <select class="form-control"  ng-model="selectedCar" ng-options="x.model for x in cars"></select>
+              <span class="help-block"></span>
+            </div>
+
+            <!-- SUPERHERO NAME -->
+            <div id="superhero-group" class="form-group">
+              <label>Superhero Alias</label>
+              <input type="text" name="superheroAlias" class="form-control" placeholder="Caped Crusader" ng-model="formData.superheroAlias">
+              <span class="help-block"></span>
+            </div>
+
+            <!-- SUBMIT BUTTON -->
+            <button type="submit" class="btn btn-success btn-lg btn-block">
+              <span class="glyphicon glyphicon-flash"></span> Submit!
+            </button>
+          </form>
+
+          <!-- SHOW DATA FROM INPUTS AS THEY ARE BEING TYPED -->
+          <pre>
+              {{ formData }}
+          </pre>
+
           <p class="bg-danger">
           Les sorties de CAMEBU sont superieures aux entrees des Districts</p>
         </div>
@@ -55,13 +80,11 @@
                 </tr>
               </thead>
               <tbody>
-                {% verbatim %}
                 <tr ng-repeat="x in names">
-                  <td>{{ x.Name }}</td>
-                  <td>{{ x.Country }}</td>
-                  <td class="entrees">45</td>
+                  <td>45</td>
+                  <td>20</td>
+                  <td >25</td>
                 </tr>
-                {% endverbatim %}
               </tbody>
             </table>
           </div>
@@ -133,5 +156,15 @@
 
       );
     </script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            $scope.cars = [
+              {model : "Ford Mustang", color : "red"},
+              {model : "Fiat 500", color : "white"},
+              {model : "Volvo XC90", color : "black"}
+          ];
+        });
+      </script>
   </body>
 </html>
