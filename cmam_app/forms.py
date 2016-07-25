@@ -12,4 +12,6 @@ class SortieSimpleForm(Bootstrap3Form):
 class SortiesForm(NgFormValidationMixin, SortieSimpleForm):
     # Apart from an additional mixin class, the Form declaration from the
     # 'Classic Subscription' view, has been reused here.
-    pass
+    field_css_classes = {
+        'product' : ["ng-click : raba()"],
+        }

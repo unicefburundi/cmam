@@ -18,17 +18,20 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
     <script type="text/javascript">
     	angular.module('djangular-demo', ['djng.forms']);
-		</script>
+  </script>
     <div class="container">
       <div class="row">
         <h3> Search</h3>
         <div class="col-md-7">
           <form class="form-inline">
-            <div class="form-group"> <label for="debut">A partir de </label> <input
-                class="form-control" id="debut" placeholder="10-07-2016" type="text">
+            <div class="form-group">
+              <label for="debut">A partir de </label>
+              <input class="form-control" id="debut" placeholder="10-07-2016" type="text">
             </div>
-            <div class="form-group"> <label for="fin">Au</label> <input class="form-control"
-                id="fin" placeholder=" present" type="text"> </div>
+            <div class="form-group">
+              <label for="fin">Au</label>
+              <input class="form-control" id="fin" placeholder=" present" type="text">
+            </div>
             <button type="submit" class="btn btn-primary">OK</button> </form>
         </div>
         <div class="col-md-5">
@@ -41,13 +44,15 @@
       <div class="row">
         <div class="col-md-3">
           <form name="{{ form.form_name }}" method="post" action="." novalidate="">
-            {% csrf_token %} {{ form.as_div }} <button type="submit" ng-disabled="{{ form.form_name }}.$invalid"
-              class="btn btn-primary">Search</button> </form>
-          <p class="bg-danger">Les sorties de CAMEBU sont superieures aux
-            entrees des Districts</p>
+            {% csrf_token %}
+            {{ form.as_div }}
+            <button type="submit" ng-disabled="{{form.form_name}}.$invalid" class="btn btn-primary">Search</button>
+          </form>
+          <p class="bg-danger">
+          Les sorties de CAMEBU sont superieures aux entrees des Districts</p>
         </div>
         <div class="col-md-4">
-          <div class="row camebu">
+          <div class="row camebu" ng-app="myApp" ng-controller="customersCtrl">
             <h5> Stocks au <b>niveau central</b>.</h5>
             <table id="datatable1" class="table table-bordered">
               <thead>
@@ -58,11 +63,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                {% verbatim %}
+                <tr ng-repeat="x in names">
+                  <td>{{ x.Name }}</td>
+                  <td>{{ x.Country }}</td>
                   <td class="entrees">45</td>
-                  <td class="sorties">25</td>
-                  <td class="restant">20</td>
                 </tr>
+                {% endverbatim %}
               </tbody>
             </table>
           </div>
@@ -193,6 +200,13 @@
         }
 
       );
+    </script>
+    <script type="text/javascript">
+      var app = angular.module('myApp', []);
+      app.controller('customersCtrl', function($scope, $http) {
+          $http.get("http://www.w3schools.com/angular/customers.php")
+          .then(function (response) {$scope.names = response.data.records;});
+      });
     </script>
   </body>
 </html>
