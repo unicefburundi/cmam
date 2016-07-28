@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from bdiadmin.models import Province, District
+from bdiadmin.models import Province, District, CDS
 
 
 class ProvinceSerializer(serializers.ModelSerializer):
@@ -13,3 +13,9 @@ class DistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = District
         fields = ("name", "code", "province")
+
+class CDSSerializer(serializers.ModelSerializer):
+    """ Serializer to represent the District model """
+    class Meta:
+        model = CDS
+        fields = ("name", "code", "district")

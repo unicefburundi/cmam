@@ -37,19 +37,25 @@
         </div>
       </div>
       <hr>
-      <div class="row">
-        <div class="col-md-3"  ng-controller="myCtrl">
+      <div class="row" ng-controller="myCtrl">
+        <div class="col-md-3"  >
           <form>
             <!-- Product -->
             <div id="product-group" class="form-group">
               <label>Products</label>
-              <select class="form-control"  ng-model="sorties.products" ng-options="x.designation for x in cars" ng-change="update()"></select>
+              <select class="form-control"  ng-model="sorties.products" ng-options="x.designation for x in produits track by x.id" ng-change="update_product()" ></select>
             </div>
 
             <!-- Province -->
             <div id="province-group" class="form-group">
               <label>Province</label>
-              <select class="form-control"  ng-model="sorties.province" ng-options="x.designation for x in cars"></select>
+              <select class="form-control"  ng-model="sorties.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+            </div>
+
+            <!-- District -->
+            <div id="district-group" class="form-group">
+              <label>District</label>
+              <select class="form-control"  ng-model="sorties.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
             </div>
 
             <!-- SUBMIT BUTTON -->
@@ -60,7 +66,7 @@
 
           <!-- SHOW DATA FROM INPUTS AS THEY ARE BEING TYPED -->
           <pre>
-              {{ selectedCar }}
+              {{ sorties }}
           </pre>
 
           <p class="bg-danger">
@@ -86,8 +92,9 @@
               </tbody>
             </table>
           </div>
-          <div class="row district">
+          <div class="row district" >
             <h5> Stocks au <b>niveau du district</b>.</h5>
+
             <table id="datatable2" class="table table-bordered">
               <thead>
                 <tr>
@@ -99,12 +106,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>Kiremba</th>
-                  <td>4</td>
-                  <td>1</td>
-                  <td>6</td>
+              {% verbatim %}
+                <tr ng-repeat="x in districts">
+                  <th>{{ x.name }}</th>
+                  <td>{{ x.reception }}</td>
+                  <td>{{ x.sortie }}</td>
+                  <td>{{ x.reception - x.sortie }}</td>
                 </tr>
+              {% endverbatim %}
             </tbody>
             </table>
           </div>
@@ -122,12 +131,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th>Nyamarobe</th>
-                <td>1</td>
-                <td>1</td>
-                <td>6</td>
-              </tr>
+              {% verbatim %}
+                <tr ng-repeat="x in cds">
+                  <th>{{ x.name }}</th>
+                  <td>{{ x.reception }}</td>
+                  <td>{{ x.sortie }}</td>
+                  <td>{{ x.reception - x.sortie }}</td>
+                </tr>
+                  {% endverbatim %}
             </tbody>
           </table>
         </div>
@@ -155,19 +166,46 @@
       );
     </script>
     <script>
-        var app = angular.module('myApp', []);
-        app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+      $('.camebu').hide();
+      $('.district').hide();
+      $('.cds').hide();
+      var app = angular.module('myApp', []);
+          app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+            // products
           $http.get("/cmam/products/")
           .then(function (response) {
-                  $scope.cars = response.data;
+                  $scope.produits = response.data;
               });
-          $scope.update = function () {
+          $scope.update_product = function () {
+            $('.camebu').show();
             var unit = $scope.sorties.products;
             $('#unites').html('<strong >' + unit.general_measuring_unit +'</strong>');
             $('#cen-entrees').html('<strong >' + unit.quantite_en_stock_central +'</strong>');
              $('#cen-sorties').html('<strong >' + unit.sortie +'</strong>');
              var reste = unit.quantite_en_stock_central - unit.sortie;
              $('#cen-restant').html('<strong >' + reste +'</strong>');
+          };
+
+          // province
+          $http.get("/bdiadmin/province/")
+          .then(function (response) {
+                  $scope.provinces = response.data;
+              });
+          $scope.update_province = function () {
+            var unit = $scope.sorties.province;
+            $http.get("/cmam/provinces/" + unit.code + "/" + $scope.sorties.products.id + "/")
+              .then(function (response) {
+                      $scope.districts = response.data[0].districts;
+                      $('.district').show();
+                  });
+          };
+          $scope.update_district = function () {
+            var unit = $scope.sorties.district;
+            $http.get("/cmam/districts/" + unit.code + "/" + $scope.sorties.products.id + "/")
+              .then(function (response) {
+                      $scope.cds = response.data[0].cds;
+                      $('.cds').show();
+                  });
           };
  }]);
       </script>
