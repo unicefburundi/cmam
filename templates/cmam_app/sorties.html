@@ -20,15 +20,16 @@
         <h3> Search</h3>
         <div class="col-md-7">
           <form class="form-inline">
-            <div class="form-group">
+            <div class="form-group" ng-controller="myCtrl">
               <label for="debut">A partir de </label>
-              <input class="form-control" id="debut" placeholder="10-07-2016" type="text">
+              <input class="form-control" id="debut" placeholder="10-07-2016" type="text" ng-model="debut" ng-change="debut()">
             </div>
             <div class="form-group">
               <label for="fin">Au</label>
-              <input class="form-control" id="fin" placeholder=" present" type="text">
+              <input class="form-control" id="fin" placeholder=" present" type="text" ng-model="fin" ng-change="fin()">
             </div>
             <button type="submit" class="btn btn-primary">OK</button> </form>
+            <pre>{{ debut }} et {{ fin }}</pre>
         </div>
         <div class="col-md-5">
           <div class="col-md-3">Unités en</div>
@@ -64,18 +65,13 @@
             </button>
           </form>
 
-          <!-- SHOW DATA FROM INPUTS AS THEY ARE BEING TYPED -->
-          <pre>
-              {{ sorties }}
-          </pre>
-
           <p class="bg-danger">
           Les sorties de CAMEBU sont superieures aux entrees des Districts</p>
         </div>
         <div class="col-md-4">
           <div class="row camebu"  ng-controller="myCtrl">
             <h5> Stocks au <b>niveau central</b>.</h5>
-            <table id="datatable1" class="table table-bordered">
+            <table id="datatable1" class="table table-bordered" >
               <thead>
                 <tr>
                   <th>Entrée</th>
@@ -84,11 +80,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr >
-                  <td id="cen-entrees">45</td>
-                  <td id="cen-sorties">20</td>
-                  <td id="cen-restant">25</td>
+                {% verbatim %}
+                  <tr >
+                  <td id="cen-entrees">{{ sorties.products.reception  || 0}}</td>
+                  <td id="cen-sorties">{{ sorties.products.sortie || 0 }}</td>
+                  <td id="cen-restant">{{ (sorties.products.quantite_en_stock_central + sorties.products.reception - sorties.products.sortie) || 0 }}</td>
                 </tr>
+                {% endverbatim %}
               </tbody>
             </table>
           </div>
@@ -98,8 +96,7 @@
             <table id="datatable2" class="table table-bordered">
               <thead>
                 <tr>
-                  <th><br>
-                  </th>
+                  <th>District</th>
                   <th>Entrée</th>
                   <th>Sorties</th>
                   <th>Stock Restant</th>
@@ -123,8 +120,7 @@
           <table id="datatable2" class="table table-bordered">
             <thead>
               <tr>
-                <th><br>
-                </th>
+                <th>CDS</th>
                 <th>Entrée</th>
                 <th>Sorties</th>
                 <th>Stock Restant</th>
@@ -165,49 +161,6 @@
 
       );
     </script>
-    <script>
-      $('.camebu').hide();
-      $('.district').hide();
-      $('.cds').hide();
-      var app = angular.module('myApp', []);
-          app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
-            // products
-          $http.get("/cmam/products/")
-          .then(function (response) {
-                  $scope.produits = response.data;
-              });
-          $scope.update_product = function () {
-            $('.camebu').show();
-            var unit = $scope.sorties.products;
-            $('#unites').html('<strong >' + unit.general_measuring_unit +'</strong>');
-            $('#cen-entrees').html('<strong >' + unit.quantite_en_stock_central +'</strong>');
-             $('#cen-sorties').html('<strong >' + unit.sortie +'</strong>');
-             var reste = unit.quantite_en_stock_central - unit.sortie;
-             $('#cen-restant').html('<strong >' + reste +'</strong>');
-          };
-
-          // province
-          $http.get("/bdiadmin/province/")
-          .then(function (response) {
-                  $scope.provinces = response.data;
-              });
-          $scope.update_province = function () {
-            var unit = $scope.sorties.province;
-            $http.get("/cmam/provinces/" + unit.code + "/" + $scope.sorties.products.id + "/")
-              .then(function (response) {
-                      $scope.districts = response.data[0].districts;
-                      $('.district').show();
-                  });
-          };
-          $scope.update_district = function () {
-            var unit = $scope.sorties.district;
-            $http.get("/cmam/districts/" + unit.code + "/" + $scope.sorties.products.id + "/")
-              .then(function (response) {
-                      $scope.cds = response.data[0].cds;
-                      $('.cds').show();
-                  });
-          };
- }]);
-      </script>
+    <script src="{% static "js/cmam-app.js" %}"></script>
   </body>
 </html>

@@ -15,12 +15,12 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ("id", "designation", "quantite_en_stock_central", "general_measuring_unit",  'reception', 'sortie')
 
     def get_reception(self, obj):
-        reception = ProductsReceptionReport.objects.filter(produit=obj ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))
+        reception = ProductsReceptionReport.objects.filter(produit=obj , reception__report__facility__facility_level__name='Centrale').aggregate(reception=Coalesce( Sum('quantite_recue'), 0))
         return reception['reception']
 
 
     def get_sortie(self, obj):
-        sortie = ProductsTranferReport.objects.filter(produit=obj ).aggregate(sortie=Coalesce(Sum('quantite_donnee'), 0))
+        sortie = ProductsTranferReport.objects.filter(produit=obj, sortie__report__facility__facility_level__name='Centrale' ).aggregate(sortie=Coalesce(Sum('quantite_donnee'), 0))
         return sortie['sortie']
 
 class ProvinceDistrictsSerializer(ProvinceSerializer):
