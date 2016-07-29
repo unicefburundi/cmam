@@ -22,14 +22,13 @@
           <form class="form-inline">
             <div class="form-group" ng-controller="myCtrl">
               <label for="debut">A partir de </label>
-              <input class="form-control" id="debut" placeholder="10-07-2016" type="text" ng-model="debut" ng-change="debut()">
+              <input class="form-control" id="debut" placeholder="10-07-2016" type="text" ng-model="date" ng-change="debut()" datepicker>
             </div>
             <div class="form-group">
               <label for="fin">Au</label>
               <input class="form-control" id="fin" placeholder=" present" type="text" ng-model="fin" ng-change="fin()">
             </div>
             <button type="submit" class="btn btn-primary">OK</button> </form>
-            <pre>{{ debut }} et {{ fin }}</pre>
         </div>
         <div class="col-md-5">
           <div class="col-md-3">Unités en</div>
@@ -58,15 +57,18 @@
               <label>District</label>
               <select class="form-control"  ng-model="sorties.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
             </div>
-
-            <!-- SUBMIT BUTTON -->
-            <button type="submit" class="btn btn-success btn-lg btn-block">
-              <span class="glyphicon glyphicon-flash"></span> Submit!
-            </button>
           </form>
 
-          <p class="bg-danger">
-          Les sorties de CAMEBU sont superieures aux entrees des Districts</p>
+          <div class="message">
+            {% if messages %}
+              {% for message in messages %}
+                <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                  <a class="close" data-dismiss="alert" href="#">&times;</a>
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
         </div>
         <div class="col-md-4">
           <div class="row camebu"  ng-controller="myCtrl">
@@ -108,7 +110,7 @@
                   <th>{{ x.name }}</th>
                   <td>{{ x.reception }}</td>
                   <td>{{ x.sortie }}</td>
-                  <td>{{ x.reception - x.sortie }}</td>
+                  <td ng-class="{ red: x.reception < x.sortie }">{{ x.reception - x.sortie }}</td>
                 </tr>
               {% endverbatim %}
             </tbody>

@@ -6,7 +6,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
               $scope.produits = response.data;
           });
             $scope.update_product = function () {
-                $scope.produits = [$scope.sorties.products];
+                // $scope.produits = [$scope.sorties.products];
                 console.log($scope.produits);
                 $('#unites').html('<strong >' + $scope.sorties.products.general_measuring_unit +'</strong>');
             // $('#cen-entrees').html('<strong >' + unit.quantite_en_stock_central +'</strong>');
@@ -34,6 +34,27 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
               $scope.cds = response.data[0].cds;
           });
         };
-        $scope.debut = "John";
-        $scope.fin = "Doe";
+        // Datepicker
+        $scope.date = '19/03/2013';
+        $scope.fin = '19/03/2013';
+
     }]);
+
+app.directive('datepicker', function() {
+            return {
+                restrict: 'A',
+                require : 'ngModel',
+                link : function (scope, element, attrs, ngModelCtrl) {
+                    $(function(){
+                        element.datepicker({
+                            dateFormat:'dd/mm/yy',
+                            onSelect:function (date) {
+                                scope.$apply(function () {
+                                    ngModelCtrl.$setViewValue(date);
+                                });
+                            }
+                        });
+                    });
+                }
+            };
+        });
