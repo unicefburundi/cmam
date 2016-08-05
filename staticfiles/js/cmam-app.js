@@ -35,7 +35,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
           });
         };
         // Datepicker
-        $scope.date = '19/03/2013';
+        $scope.debut = '19/03/2013';
         $scope.fin = '19/03/2013';
 
     }]);
@@ -48,9 +48,10 @@ app.directive('datepicker', function() {
                     $(function(){
                         element.datepicker({
                             dateFormat:'dd/mm/yy',
-                            onSelect:function (date) {
+                            onSelect:function (debut) {
                                 scope.$apply(function () {
-                                    ngModelCtrl.$setViewValue(date);
+                                    ngModelCtrl.$setViewValue(debut);
+                                    console.log($scope.debut)
                                 });
                             }
                         });

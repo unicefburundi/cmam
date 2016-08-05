@@ -1,12 +1,16 @@
-<html>
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  </head>
-  <body>{% load staticfiles %}
-    <title>Les sorties </title>
+{% extends "index.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    Sorties
+{% endblock title %}
+{% block header_js %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+{% endblock header_js %}
+
+{% block header_stilesheets %}
+    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
       integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
       crossorigin="anonymous">
@@ -15,18 +19,22 @@
       integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
       crossorigin="anonymous">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
-    <div class="container" ng-app="myApp">
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+{% endblock header_stilesheets %}
+
+{% block container %}
+<div class="container" ng-app="myApp">
       <div class="row">
         <h3> Search</h3>
-        <div class="col-md-7">
+        <div class="col-md-7" ng-controller="myCtrl">
           <form class="form-inline">
-            <div class="form-group" ng-controller="myCtrl">
+            <div class="form-group" >
               <label for="debut">A partir de </label>
-              <input class="form-control" id="debut" placeholder="10-07-2016" type="text" ng-model="date" ng-change="debut()" datepicker>
+              <input class="form-control" id="debut" placeholder="10-07-2016" type="text" ng-model="debut"  datepicker />
             </div>
             <div class="form-group">
               <label for="fin">Au</label>
-              <input class="form-control" id="fin" placeholder=" present" type="text" ng-model="fin" ng-change="fin()">
+              <input class="form-control" id="fin" placeholder=" present" type="text" ng-model="fin" datepicker />
             </div>
             <button type="submit" class="btn btn-primary">OK</button> </form>
         </div>
@@ -118,11 +126,11 @@
           </div>
         </div>
         <div class="col-md-5 cds">
-          <h5> Stocks au <strong>niveau des CDS</strong>.</h5>
+          <h5> Stocks au <strong>niveau des SST et STA</strong>.</h5>
           <table id="datatable2" class="table table-bordered">
             <thead>
               <tr>
-                <th>CDS</th>
+                <th>SST et STA</th>
                 <th>Entrée</th>
                 <th>Sorties</th>
                 <th>Stock Restant</th>
@@ -141,8 +149,10 @@
           </table>
         </div>
       </div>
-    </div>
-    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+{% endblock container %}
+
+{% block footer_js %}
+  <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script>
@@ -164,5 +174,4 @@
       );
     </script>
     <script src="{% static "js/cmam-app.js" %}"></script>
-  </body>
-</html>
+{% endblock footer_js %}

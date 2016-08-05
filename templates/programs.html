@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title>La situation </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+      crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+      crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h3> Search</h3>
+        <div class="col-md-7">
+          <form class="form-inline">
+            <div class="form-group"> <label for="debut">A partir de </label> <input
+                class="form-control" id="debut" placeholder="10-07-2016" type="text">
+            </div>
+            <div class="form-group"> <label for="fin">Au</label> <input class="form-control"
+                id="fin" placeholder=" present" type="text"> </div>
+            <button type="submit" class="btn btn-primary">OK</button> </form>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3">
+          <form class="form-horizontal">
+            <div class="form-group"> <label for="produit" class="col-md-1 control-label">Produit</label>
+              <div class="col-md-11"> <input class="form-control" id="produit"
+                  placeholder="ATPE" type="text"> </div>
+            </div>
+            <div class="form-group"> <label for="province" class="col-md-1 control-label">Province</label>
+              <div class="col-md-11"> <input class="form-control" id="province"
+                  placeholder="Ngozi" type="text"> </div>
+            </div>
+            <div class="form-group"> <label for="district" class="col-md-1 control-label">District</label>
+              <div class="col-md-11"> <input class="form-control" id="district"
+                  placeholder="DS Kiremba" type="text"> </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-3">
+          <h3>Taux de guerison</h3>
+          <h1>35%</h1>
+          <table id="datatable1" class="table bg-warning">
+            <thead>
+              <tr>
+                <th>Province</th>
+                <th>District</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>82%</td>
+                <td>23%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-3">
+          <h3>Taux de deces</h3>
+          <h1>27%</h1>
+          <table id="datatable2" class="table bg-danger">
+            <thead>
+              <tr>
+                <th>Province</th>
+                <th>District</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0%</td>
+                <td>0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-3">
+          <h3>Taux d'abandon</h3>
+          <h1>16%</h1>
+          <table id="datatable3" class="table bg-info">
+            <thead>
+              <tr>
+                <th>Province</th>
+                <th>District</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>18%</td>
+                <td>40%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <table id="datatable4" class="table table-bordered">
+          <thead>
+            <tr>
+              <th rowspan="2">Total debut de semaine</th>
+              <th colspan="3">Nouvelles Admissions</th>
+              <th rowspan="2">RE-ADMISSION après Abandon(&lt;2mois)</th>
+              <th rowspan="2">TRANSFERT INTERNE</th>
+              <th colspan="4">Sorties</th>
+              <th rowspan="2">Total decharge</th>
+              <th rowspan="2">Total Fin de semaine</th>
+            </tr>
+            <tr>
+              <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB &lt; 180mm </th>
+              <th>OEUDEMES</th>
+              <th>Rechute</th>
+              <th>Traité avec succès</th>
+              <th>DECES</th>
+              <th>ABANDONS</th>
+              <th>NON REPONDANT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>42</td>
+              <td>13</td>
+              <td>4</td>
+              <td>15</td>
+              <td>46</td>
+              <td>17</td>
+              <td>4</td>
+              <td>12</td>
+              <td>41</td>
+              <td>21</td>
+              <td>34</td>
+              <td>21</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>33</td>
+              <td>64</td>
+              <td>5</td>
+              <td>66</td>
+              <td>27</td>
+              <td>5</td>
+              <td>82</td>
+              <td>31</td>
+              <td>1</td>
+              <td>4</td>
+              <td>21</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>13</td>
+              <td>24</td>
+              <td>13</td>
+              <td>41</td>
+              <td>6</td>
+              <td>8</td>
+              <td>20</td>
+              <td>41</td>
+              <td>10</td>
+              <td>4</td>
+              <td>25</td>
+            </tr>
+            <tr>
+              <td>40</td>
+              <td>1</td>
+              <td>43</td>
+              <td>1</td>
+              <td>6</td>
+              <td>27</td>
+              <td>4</td>
+              <td>10</td>
+              <td>23</td>
+              <td>21</td>
+              <td>23</td>
+              <td>2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+    <!-- Latest compiled and minified Locales -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <script>
+      /*  jQuery ready function. Specify a function to execute when the DOM is fully loaded.  */
+      $(document).ready(
+
+        /* This is the function that will get executed after the DOM is fully loaded */
+        function () {
+          $( "#debut" ).datepicker({
+            changeMonth: true,//this option for allowing user to select month
+            changeYear: true //this option for allowing user to select from year range
+          });
+          $( "#fin" ).datepicker({
+            changeMonth: true,//this option for allowing user to select month
+            changeYear: true //this option for allowing user to select from year range
+          });
+        }
+
+      );
+    </script>
+  </body>
+</html>

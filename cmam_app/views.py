@@ -32,7 +32,11 @@ def home(request):
 
 @login_required(login_url="login/")
 def dashboard(request):
-    return render(request, "landing_page.html")
+    return render(request, "index.html")
+
+@login_required(login_url="login/")
+def programs(request):
+    return render(request, "programs.html")
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
