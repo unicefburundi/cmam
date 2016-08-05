@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_extensions',
     'django_tables2',
+    'django_faker',
     'djng',
     'bdiadmin',
     'cmam_app'
@@ -151,6 +152,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGE_SIZE': 10
 }
+
+FAKER_LOCALE = None     # settings.LANGUAGE_CODE is loaded
+FAKER_PROVIDERS = None  # faker.DEFAULT_PROVIDERS is loaded (all)
 
 try:
     from localsettings import *

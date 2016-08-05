@@ -1,0 +1,196 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta name="description" content="A admin dashboard for CMAMUnicef Burundi project">
+    <title>{% block title %}CMAM Dashboard{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block header_js %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+{% endblock header_js %}
+{% block header_stilesheets %}
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css" integrity="sha384-MIwDKRSSImVFAZCVLtU0LMDdON6KVCrZHyVQQj6e8wIEJkW4tvwqXrbMIya1vriY" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+{% endblock header_stilesheets %}
+  </head>
+  <body>
+    <nav class="navbar navbar-fixed-top navbar-dark bg-primary"> <button class="navbar-toggler hidden-sm-up pull-right"
+        type="button" data-toggle="collapse" data-target="#collapsingNavbar"> ☰
+      </button> <a class="navbar-brand" href="/">CMAM</a>
+      <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
+        <ul class="nav navbar-nav pull-right">
+          <li class="nav-item active"> <a class="nav-link" href="{% url 'dashboard' %}">Home <span
+                class="sr-only">Home</span></a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{% url 'programs' %}">Programs</a>
+          </li>
+          <li class="nav-item"> <a class="nav-link" href="{% url 'stocks' %}" >Stocks</a>
+          </li>
+          <li class="nav-item"> <a class="nav-link" href="" data-target="#myModal"
+              data-toggle="modal">Documentation</a> </li>
+        </ul>
+      </div>
+    </nav>
+{% block container %}
+  <div class="container-fluid" id="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2"> <a href="#" class="thumbnail"> <img class="img-responsive"
+                src="{% static "img/gov.png" %}" alt="Card image cap"> </a> </div>
+          <div class="col-md-5">
+            <div class="row">
+              <div class="col-md-4 col-lg-4">
+                <p class="navbar-text "> <a href="#" class="navbar-link">
+                    Programs </a> </p>
+              </div>
+              <div class="col-md-4 col-lg-4">
+                <p class="navbar-text "> <a href="{% url 'stocks' %}" class="navbar-link"> Stocks
+                  </a> </p>
+              </div>
+              <div class="col-md-4 col-lg-4">
+                <p class="navbar-text "> <a href="#" class="navbar-link">
+                    Documentation </a> </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="jumbotron"> Community-based Management of Acute Malnutrition </div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon1">Services</span>
+              <input class="form-control" placeholder="SST" aria-describedby="basic-addon1" type="text">
+            </div>
+            <div id="container" style="margin: 0 auto"></div>
+          </div>
+        </div>
+      </div>
+      <!--/row-->
+      <div class="row row-offcanvas row-offcanvas-left">
+        <div class="col-md-4 col-lg-3" id="sidebar">
+          <form class="form-horizontal">
+            <div class="form-group"> <label for="annee" class="col-lg-4 control-label">Years</label>
+              <div class="col-lg-8"> <input class="form-control" id="annee" placeholder="2016"
+                  type="text"> </div>
+            </div>
+            <div class="form-group"> <label for="week" class="col-lg-4 control-label">Week</label>
+              <div class="col-lg-8"> <input class="form-control" id="week" placeholder="W8"
+                  type="text"> </div>
+            </div>
+            <div class="form-group"> <label for="province" class="col-lg-4 control-label">Provinces</label>
+              <div class="col-lg-8"> <input class="form-control" id="province"
+                  placeholder="Ngozi" type="text"> </div>
+            </div>
+            <div class="form-group"> <label for="district" class="col-lg-4 control-label">District</label>
+              <div class="col-lg-8"> <input class="form-control" id="district"
+                  placeholder="DS Kiremba" type="text"> </div>
+            </div>
+          </form>
+        </div>
+        <!--/col-->
+        <div class="col-md-8 col-lg-9 main">
+          <hr>
+          <div class="row">
+            <div class="col-md-2">
+            <table id="datatable">
+              <thead>
+                <tr>
+                  <th><br>
+                  </th>
+                  <th>Admission</th>
+                  <th>Sorties</th>
+                  <th>Total fin de semaine</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>S1/2016</th>
+                  <td>31</td>
+                  <td>11</td>
+                  <td>54</td>
+                </tr>
+                <tr>
+                  <th>S2/2016</th>
+                  <td>24</td>
+                  <td>10</td>
+                  <td>31</td>
+                </tr>
+                <tr>
+                  <th>S3/2016</th>
+                  <td>50</td>
+                  <td>11</td>
+                  <td>24</td>
+                </tr>
+                <tr>
+                  <th>S4/2016</th>
+                  <td>10</td>
+                  <td>18</td>
+                  <td>43</td>
+                </tr>
+                <tr>
+                  <th>S5/2016</th>
+                  <td>58</td>
+                  <td>20</td>
+                  <td>44</td>
+                </tr>
+              </tbody>
+            </table>
+            <table id="datatable2">
+            <tbody>
+              <tr>
+                <th>Buraza</th>
+                <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
+                <td class="avrg">1</td>
+              </tr>
+              <tr>
+                <th>Buhinda</th>
+                <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
+                <td class="avrg">1</td>
+              </tr>
+              <tr>
+                <th>Bungere</th>
+                <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
+                <td class="avrg">1</td>
+              </tr>
+              <tr>
+                <th>Karoba</th>
+                <td><a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign">No</span></a></td>
+                <td class="avrg">0</td>
+              </tr>
+              <tr>
+                <th>Ruhanza</th>
+                <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
+                <td class="avrg">1</td>
+              </tr>
+            </tbody>
+          </table>
+            </div>
+            <div class="col-md-2">
+              <span class="lead">Taux de rapportage</span>
+              <h2 id="taux_rapportage"></h2>
+            </div>
+            <div class="col-md-8">
+              <div id="container2" style="margin: 0 auto"></div>
+            </div>
+          </div>
+
+          <!--/row--> </div>
+        <!--/main col--> </div>
+    </div>
+{% endblock container %}
+    <!--/.container-->
+    <footer class="container-fluid">
+      <p class="text-right small">©2016 UNICEF Burundi</p>
+    </footer>
+    <!--scripts loaded here-->
+    {% block footer_js %}
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js" integrity="sha384-ux8v3A6CPtOTqOzMKiuo3d/DomGaaClxFYdCu2HPMBEkf6x2xiDyJ7gkXU0MWwaD" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="{% static "js/scripts.js" %}"></script>
+    {% endblock footer_js %}
+  </body>
+</html>

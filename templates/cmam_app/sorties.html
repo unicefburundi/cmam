@@ -1,13 +1,16 @@
-<html>
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  </head>
-  <body>{% load staticfiles %}
-    <title>Les sorties </title>
+{% extends "index.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    Sorties
+{% endblock title %}
+{% block header_js %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="{% static "js/cmam.js" %}"></script>
-    <!-- Latest compiled and minified CSS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+{% endblock header_js %}
+
+{% block header_stilesheets %}
+    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
       integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
       crossorigin="anonymous">
@@ -16,21 +19,22 @@
       integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
       crossorigin="anonymous">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
-    <script type="text/javascript">
-    	angular.module('djangular-demo', ['djng.forms']);
-  </script>
-    <div class="container">
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+{% endblock header_stilesheets %}
+
+{% block container %}
+<div class="container" ng-app="myApp">
       <div class="row">
         <h3> Search</h3>
-        <div class="col-md-7">
+        <div class="col-md-7" ng-controller="myCtrl">
           <form class="form-inline">
-            <div class="form-group">
+            <div class="form-group" >
               <label for="debut">A partir de </label>
-              <input class="form-control" id="debut" placeholder="10-07-2016" type="text">
+              <input class="form-control" id="debut" placeholder="10-07-2016" type="text" ng-model="debut"  datepicker />
             </div>
             <div class="form-group">
               <label for="fin">Au</label>
-              <input class="form-control" id="fin" placeholder=" present" type="text">
+              <input class="form-control" id="fin" placeholder=" present" type="text" ng-model="fin" datepicker />
             </div>
             <button type="submit" class="btn btn-primary">OK</button> </form>
         </div>
@@ -41,20 +45,43 @@
         </div>
       </div>
       <hr>
-      <div class="row">
-        <div class="col-md-3">
-          <form name="{{ form.form_name }}" method="post" action="." novalidate="">
-            {% csrf_token %}
-            {{ form.as_div }}
-            <button type="submit" ng-disabled="{{form.form_name}}.$invalid" class="btn btn-primary">Search</button>
+      <div class="row" ng-controller="myCtrl">
+        <div class="col-md-3"  >
+          <form>
+            <!-- Product -->
+            <div id="product-group" class="form-group">
+              <label>Products</label>
+              <select class="form-control"  ng-model="sorties.products" ng-options="x.designation for x in produits track by x.id" ng-change="update_product()" ></select>
+            </div>
+
+            <!-- Province -->
+            <div id="province-group" class="form-group">
+              <label>Province</label>
+              <select class="form-control"  ng-model="sorties.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+            </div>
+
+            <!-- District -->
+            <div id="district-group" class="form-group">
+              <label>District</label>
+              <select class="form-control"  ng-model="sorties.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+            </div>
           </form>
-          <p class="bg-danger">
-          Les sorties de CAMEBU sont superieures aux entrees des Districts</p>
+
+          <div class="message">
+            {% if messages %}
+              {% for message in messages %}
+                <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                  <a class="close" data-dismiss="alert" href="#">&times;</a>
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
         </div>
         <div class="col-md-4">
-          <div class="row camebu" ng-app="myApp" ng-controller="customersCtrl">
+          <div class="row camebu"  ng-controller="myCtrl">
             <h5> Stocks au <b>niveau central</b>.</h5>
-            <table id="datatable1" class="table table-bordered">
+            <table id="datatable1" class="table table-bordered" >
               <thead>
                 <tr>
                   <th>Entrée</th>
@@ -64,123 +91,68 @@
               </thead>
               <tbody>
                 {% verbatim %}
-                <tr ng-repeat="x in names">
-                  <td>{{ x.Name }}</td>
-                  <td>{{ x.Country }}</td>
-                  <td class="entrees">45</td>
+                  <tr >
+                  <td id="cen-entrees">{{ sorties.products.reception  || 0}}</td>
+                  <td id="cen-sorties">{{ sorties.products.sortie || 0 }}</td>
+                  <td id="cen-restant">{{ (sorties.products.quantite_en_stock_central + sorties.products.reception - sorties.products.sortie) || 0 }}</td>
                 </tr>
                 {% endverbatim %}
               </tbody>
             </table>
           </div>
-          <div class="row district">
+          <div class="row district" >
             <h5> Stocks au <b>niveau du district</b>.</h5>
+
             <table id="datatable2" class="table table-bordered">
               <thead>
                 <tr>
-                  <th><br>
-                  </th>
+                  <th>District</th>
                   <th>Entrée</th>
                   <th>Sorties</th>
                   <th>Stock Restant</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>Kiremba</th>
-                  <td>4</td>
-                  <td>1</td>
-                  <td>6</td>
+              {% verbatim %}
+                <tr ng-repeat="x in districts">
+                  <th>{{ x.name }}</th>
+                  <td>{{ x.reception }}</td>
+                  <td>{{ x.sortie }}</td>
+                  <td ng-class="{ red: x.reception < x.sortie }">{{ x.reception - x.sortie }}</td>
                 </tr>
-                <tr>
-                  <th>Buye</th>
-                  <td>20</td>
-                  <td>3</td>
-                  <td>2</td>
-                </tr>
-                <tr>
-                  <th>Ngozi</th>
-                  <td>4</td>
-                  <td>6</td>
-                  <td>11</td>
-                </tr>
-                <tr>
-                  <th>Rema</th>
-                  <td>0</td>
-                  <td>10</td>
-                  <td>3</td>
-                </tr>
-              </tbody>
+              {% endverbatim %}
+            </tbody>
             </table>
           </div>
         </div>
         <div class="col-md-5 cds">
-          <h5> Stocks au <strong>niveau des CDS</strong>.</h5>
+          <h5> Stocks au <strong>niveau des SST et STA</strong>.</h5>
           <table id="datatable2" class="table table-bordered">
             <thead>
               <tr>
-                <th><br>
-                </th>
+                <th>SST et STA</th>
                 <th>Entrée</th>
                 <th>Sorties</th>
                 <th>Stock Restant</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th>Nyamarobe</th>
-                <td>1</td>
-                <td>1</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <th>Musasa</th>
-                <td>20</td>
-                <td>3</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th>Gakere</th>
-                <td>0</td>
-                <td>6</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <th>Murehe</th>
-                <td>2</td>
-                <td>10</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <th>Kiremba</th>
-                <td>1</td>
-                <td>1</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <th>Gisha</th>
-                <td>0</td>
-                <td>3</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th>Kananira</th>
-                <td>0</td>
-                <td>6</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <td>Bisiga</td>
-                <th>3</th>
-                <td>10</td>
-                <td>3</td>
-              </tr>
+              {% verbatim %}
+                <tr ng-repeat="x in cds">
+                  <th>{{ x.name }}</th>
+                  <td>{{ x.reception }}</td>
+                  <td>{{ x.sortie }}</td>
+                  <td>{{ x.reception - x.sortie }}</td>
+                </tr>
+                  {% endverbatim %}
             </tbody>
           </table>
         </div>
       </div>
-    </div>
-    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+{% endblock container %}
+
+{% block footer_js %}
+  <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script>
@@ -201,12 +173,5 @@
 
       );
     </script>
-    <script type="text/javascript">
-      var app = angular.module('myApp', []);
-      app.controller('customersCtrl', function($scope, $http) {
-          $http.get("http://www.w3schools.com/angular/customers.php")
-          .then(function (response) {$scope.names = response.data.records;});
-      });
-    </script>
-  </body>
-</html>
+    <script src="{% static "js/cmam-app.js" %}"></script>
+{% endblock footer_js %}

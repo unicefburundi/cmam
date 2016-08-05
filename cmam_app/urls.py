@@ -5,10 +5,15 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'products', ProductViewSet)
+router.register(r'provinces', ProvinceDistrictViewSet)
+router.register(r'districts', DistrictCDSViewSet)
+
+
 
 
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
     url(r'external_request', handel_rapidpro_request, name="handel_request"),
-    url(r'^sorties/$', SortiesView.as_view(), name="sorties"),
+    url(r'^stocks/$', SortiesView.as_view(), name="stocks"),
+    url(r'^programs/$', programs, name="programs"),
 )
