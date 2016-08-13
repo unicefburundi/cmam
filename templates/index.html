@@ -37,9 +37,37 @@
   <div class="container-fluid" id="main">
       <div class="container">
         <div class="row">
-          <div class="col-md-2"> <a href="#" class="thumbnail"> <img class="img-responsive"
-                src="{% static "img/gov.png" %}" alt="Card image cap"> </a> </div>
-          <div class="col-md-5">
+          <div class="col-md-3">
+            <div class="row">
+              <a href="#" class="thumbnail">
+                <img class="img-responsive" src="{% static "img/gov.png" %}" alt="Card image cap">
+              </a>
+            </div>
+            <hr>
+            <div class="row">
+              <div id="sidebar">
+                <form class="form-horizontal">
+                  <div class="form-group"> <label for="annee" class="col-lg-4 control-label">Years</label>
+                    <div class="col-lg-8"> <input class="form-control" id="annee" placeholder="2016"
+                        type="text"> </div>
+                  </div>
+                  <div class="form-group"> <label for="week" class="col-lg-4 control-label">Week</label>
+                    <div class="col-lg-8"> <input class="form-control" id="week" placeholder="W8"
+                        type="text"> </div>
+                  </div>
+                  <div class="form-group"> <label for="province" class="col-lg-4 control-label">Provinces</label>
+                    <div class="col-lg-8"> <input class="form-control" id="province"
+                        placeholder="Ngozi" type="text"> </div>
+                  </div>
+                  <div class="form-group"> <label for="district" class="col-lg-4 control-label">District</label>
+                    <div class="col-lg-8"> <input class="form-control" id="district"
+                        placeholder="DS Kiremba" type="text"> </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
             <div class="row">
               <div class="col-md-4 col-lg-4">
                 <p class="navbar-text "> <a href="#" class="navbar-link">
@@ -55,129 +83,107 @@
               </div>
             </div>
             <div class="row">
-              <div class="jumbotron"> Community-based Management of Acute Malnutrition </div>
+              <div class="lead"> Community-based Management of Acute Malnutrition </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-6">
+                <table id="datatable">
+                  <thead>
+                    <tr>
+                      <th><br>
+                      </th>
+                      <th>Admission</th>
+                      <th>Sorties</th>
+                      <th>Total fin de semaine</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>S1/2016</th>
+                      <td>31</td>
+                      <td>11</td>
+                      <td>54</td>
+                    </tr>
+                    <tr>
+                      <th>S2/2016</th>
+                      <td>24</td>
+                      <td>10</td>
+                      <td>31</td>
+                    </tr>
+                    <tr>
+                      <th>S3/2016</th>
+                      <td>50</td>
+                      <td>11</td>
+                      <td>24</td>
+                    </tr>
+                    <tr>
+                      <th>S4/2016</th>
+                      <td>10</td>
+                      <td>18</td>
+                      <td>43</td>
+                    </tr>
+                    <tr>
+                      <th>S5/2016</th>
+                      <td>58</td>
+                      <td>20</td>
+                      <td>44</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table id="datatable2">
+                <tbody>
+                  <tr>
+                    <th>Buraza</th>
+                    <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
+                    <td class="avrg">1</td>
+                  </tr>
+                  <tr>
+                    <th>Buhinda</th>
+                    <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
+                    <td class="avrg">1</td>
+                  </tr>
+                  <tr>
+                    <th>Bungere</th>
+                    <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
+                    <td class="avrg">1</td>
+                  </tr>
+                  <tr>
+                    <th>Karoba</th>
+                    <td><a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign">No</span></a></td>
+                    <td class="avrg">0</td>
+                  </tr>
+                  <tr>
+                    <th>Ruhanza</th>
+                    <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
+                    <td class="avrg">1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <span class="lead">Taux de rapportage</span>
+              <h2 id="taux_rapportage"></h2>
             </div>
           </div>
+        </div>
           <div class="col-md-5">
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon1">Services</span>
               <input class="form-control" placeholder="SST" aria-describedby="basic-addon1" type="text">
             </div>
             <div id="container" style="margin: 0 auto"></div>
+            <hr>
+            <div class="row">
+              <div >
+                <div id="container2" style="margin: 0 auto"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <!--/row-->
-      <div class="row row-offcanvas row-offcanvas-left">
-        <div class="col-md-4 col-lg-3" id="sidebar">
-          <form class="form-horizontal">
-            <div class="form-group"> <label for="annee" class="col-lg-4 control-label">Years</label>
-              <div class="col-lg-8"> <input class="form-control" id="annee" placeholder="2016"
-                  type="text"> </div>
-            </div>
-            <div class="form-group"> <label for="week" class="col-lg-4 control-label">Week</label>
-              <div class="col-lg-8"> <input class="form-control" id="week" placeholder="W8"
-                  type="text"> </div>
-            </div>
-            <div class="form-group"> <label for="province" class="col-lg-4 control-label">Provinces</label>
-              <div class="col-lg-8"> <input class="form-control" id="province"
-                  placeholder="Ngozi" type="text"> </div>
-            </div>
-            <div class="form-group"> <label for="district" class="col-lg-4 control-label">District</label>
-              <div class="col-lg-8"> <input class="form-control" id="district"
-                  placeholder="DS Kiremba" type="text"> </div>
-            </div>
-          </form>
-        </div>
         <!--/col-->
-        <div class="col-md-8 col-lg-9 main">
-          <hr>
-          <div class="row">
-            <div class="col-md-2">
-            <table id="datatable">
-              <thead>
-                <tr>
-                  <th><br>
-                  </th>
-                  <th>Admission</th>
-                  <th>Sorties</th>
-                  <th>Total fin de semaine</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>S1/2016</th>
-                  <td>31</td>
-                  <td>11</td>
-                  <td>54</td>
-                </tr>
-                <tr>
-                  <th>S2/2016</th>
-                  <td>24</td>
-                  <td>10</td>
-                  <td>31</td>
-                </tr>
-                <tr>
-                  <th>S3/2016</th>
-                  <td>50</td>
-                  <td>11</td>
-                  <td>24</td>
-                </tr>
-                <tr>
-                  <th>S4/2016</th>
-                  <td>10</td>
-                  <td>18</td>
-                  <td>43</td>
-                </tr>
-                <tr>
-                  <th>S5/2016</th>
-                  <td>58</td>
-                  <td>20</td>
-                  <td>44</td>
-                </tr>
-              </tbody>
-            </table>
-            <table id="datatable2">
-            <tbody>
-              <tr>
-                <th>Buraza</th>
-                <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
-                <td class="avrg">1</td>
-              </tr>
-              <tr>
-                <th>Buhinda</th>
-                <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
-                <td class="avrg">1</td>
-              </tr>
-              <tr>
-                <th>Bungere</th>
-                <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
-                <td class="avrg">1</td>
-              </tr>
-              <tr>
-                <th>Karoba</th>
-                <td><a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign">No</span></a></td>
-                <td class="avrg">0</td>
-              </tr>
-              <tr>
-                <th>Ruhanza</th>
-                <td><a href="#" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok">Ok</span></a></td>
-                <td class="avrg">1</td>
-              </tr>
-            </tbody>
-          </table>
-            </div>
-            <div class="col-md-2">
-              <span class="lead">Taux de rapportage</span>
-              <h2 id="taux_rapportage"></h2>
-            </div>
-            <div class="col-md-8">
-              <div id="container2" style="margin: 0 auto"></div>
-            </div>
-          </div>
-
-          <!--/row--> </div>
-        <!--/main col--> </div>
     </div>
 {% endblock container %}
     <!--/.container-->
