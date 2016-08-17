@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title %}
-    Sorties
+    Stock
 {% endblock title %}
 {% block header_js %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -51,19 +51,19 @@
             <!-- Product -->
             <div id="product-group" class="form-group">
               <label>Products</label>
-              <select class="form-control"  ng-model="sorties.products" ng-options="x.designation for x in produits track by x.id" ng-change="update_product()" ></select>
+              <select class="form-control"  ng-model="dashboard.products" ng-options="x.designation for x in produits track by x.id" ng-change="update_product()" ></select>
             </div>
 
             <!-- Province -->
             <div id="province-group" class="form-group">
               <label>Province</label>
-              <select class="form-control"  ng-model="sorties.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+              <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
             </div>
 
             <!-- District -->
             <div id="district-group" class="form-group">
               <label>District</label>
-              <select class="form-control"  ng-model="sorties.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+              <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
             </div>
           </form>
 
@@ -92,9 +92,9 @@
               <tbody>
                 {% verbatim %}
                   <tr >
-                  <td id="cen-entrees">{{ sorties.products.reception  || 0}}</td>
-                  <td id="cen-sorties">{{ sorties.products.sortie || 0 }}</td>
-                  <td id="cen-restant">{{ (sorties.products.quantite_en_stock_central + sorties.products.reception - sorties.products.sortie) || 0 }}</td>
+                  <td id="cen-entrees">{{ dashboard.products.reception  || 0}}</td>
+                  <td id="cen-sorties">{{ dashboard.products.sortie || 0 }}</td>
+                  <td id="cen-restant">{{ (dashboard.products.quantite_en_stock_central + dashboard.products.reception - dashboard.products.sortie) || 0 }}</td>
                 </tr>
                 {% endverbatim %}
               </tbody>

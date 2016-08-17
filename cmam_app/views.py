@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from cmam_app.models import *
@@ -16,10 +16,14 @@ from django.db.models.functions import Coalesce
 from django.db.models import Sum
 
 
-def test(request):
-	text = """<h1> TEST ! </h1>"""
-	#return HttpResponse(request, 'cmam_app/test.html', locals())
-	return HttpResponse(text)
+@login_required
+def get_year(request):
+    dates = Report.objects.values('reporting_date').distinct().dates('reporting_date', 'year')
+    years = {}
+    for d in dates:
+        years[d.year] = d.year
+    return JsonResponse(years, safe=False)
+
 
 
 def landing(request):
@@ -86,15 +90,17 @@ class ProvinceDistrictViewSet(viewsets.ModelViewSet):
 
 class DistrictCDSViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to view or edit province.
+    API endpoint that allows users to view or edit district.
     """
     queryset = District.objects.all()
     serializer_class = DistrictCDSSerializer
+    lookup_field = 'code'
 
-    # For get provinces
+    # For get districts
     @detail_route(methods=['get'], url_path='(?P<product>\d+)')
     def update_product(self, request, pk, product=None):
         """ Updates the object identified by the pk ans add the product """
         queryset = District.objects.filter(code=pk)
         serializer = DistrictCDSSerializer(queryset, many=True, context={'product': product})
         return Response(serializer.data, status=status.HTTP_200_OK)
+

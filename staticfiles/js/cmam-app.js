@@ -1,18 +1,12 @@
 var app = angular.module('myApp', []);
 app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
-            // products
-            $http.get("/cmam/products/")
-            .then(function (response) {
-              $scope.produits = response.data;
-          });
-            $scope.update_product = function () {
-                // $scope.produits = [$scope.sorties.products];
-                console.log($scope.produits);
-                $('#unites').html('<strong >' + $scope.sorties.products.general_measuring_unit +'</strong>');
-            // $('#cen-entrees').html('<strong >' + unit.quantite_en_stock_central +'</strong>');
-            //  $('#cen-sorties').html('<strong >' + unit.sortie +'</strong>');
-            //  var reste = unit.quantite_en_stock_central - unit.sortie;
-            //  $('#cen-restant').html('<strong >' + reste +'</strong>');
+        // products
+        $http.get("/cmam/products/")
+        .then(function (response) {
+          $scope.produits = response.data;
+        });
+        $scope.update_product = function () {
+          $('#unites').html('<strong >' + $scope.dashboard.products.general_measuring_unit +'</strong>');
         };
 
           // province
@@ -21,23 +15,48 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
               $scope.provinces = response.data;
           });
           $scope.update_province = function () {
-            var unit = $scope.sorties.province;
-            $http.get("/cmam/provinces/" + unit.code + "/" + $scope.sorties.products.id + "/")
-            .then(function (response) {
-              $scope.districts = response.data[0].districts;
-          });
+            var unit = $scope.dashboard.province;
+            if ($scope.dashboard.products) {
+              $http.get("/cmam/provinces/" + unit.code + "/" + $scope.dashboard.products.id + "/")
+                .then(function (response) {
+                  $scope.districts = response.data[0].districts;
+              });
+              } else {
+                $http.get("/cmam/provinces/" + unit.code + "/")
+                  .then(function (response) {
+                    $scope.districts = response.data.districts;
+                });
+              }
         };
+          // district
         $scope.update_district = function () {
-            var unit = $scope.sorties.district;
-            $http.get("/cmam/districts/" + unit.code + "/" + $scope.sorties.products.id + "/")
-            .then(function (response) {
-              $scope.cds = response.data[0].cds;
-          });
+            var unit = $scope.dashboard.district;
+            if ($scope.dashboard.products) {
+              $http.get("/cmam/districts/" + unit.code + "/" + $scope.dashboard.products.id + "/")
+                .then(function (response) {
+                  $scope.cds = response.data[0].cds;
+              });
+              } else {
+                $http.get("/cmam/districts/" + unit.code + "/" )
+                  .then(function (response) {
+                    $scope.cds = response.data.cds;
+                    console.log($scope.cds);
+                });
+              }
         };
         // Datepicker
         $scope.debut = '19/03/2013';
         $scope.fin = '19/03/2013';
 
+        // years
+        $http.get("/cmam/get_year/")
+        .then(function (response) {
+          $scope.years = response.data;
+        });
+
+        $scope.update_years = function () {
+          console.log($scope.dashboard.year);
+        };
     }]);
 
 app.directive('datepicker', function() {
