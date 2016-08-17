@@ -14,7 +14,7 @@ router.register(r'districts', DistrictCDSViewSet)
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
     url(r'external_request', handel_rapidpro_request, name="handel_request"),
-    url(r'^stocks/$', SortiesView.as_view(), name="stocks"),
+    url(r'^stocks/$', StockView.as_view(), name="stocks"),
     url(r'^programs/$', programs, name="programs"),
     url(r'^get_year/$', get_year, name="get_year"),
 )

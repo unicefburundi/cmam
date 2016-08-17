@@ -40,7 +40,7 @@ def dashboard(request):
 
 @login_required(login_url="login/")
 def programs(request):
-    return render(request, "programs.html")
+    return render(request, "cmam_app/programs.html")
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
@@ -54,8 +54,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         return context
 
 
-class SortiesView(FormView):
-    template_name = 'cmam_app/sorties.html'
+class StockView(FormView):
+    template_name = 'cmam_app/stocks.html'
     form_class = SortiesForm
 
     def get_context_data(self, **kwargs):

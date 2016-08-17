@@ -70,7 +70,6 @@ app.directive('datepicker', function() {
                             onSelect:function (debut) {
                                 scope.$apply(function () {
                                     ngModelCtrl.$setViewValue(debut);
-                                    console.log($scope.debut)
                                 });
                             }
                         });

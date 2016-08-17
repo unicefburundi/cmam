@@ -59,6 +59,40 @@ class ReportAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('facility', 'reporting_date', 'text', 'category')
     list_filter = ( 'category',)
 
+class IncomingPatientsReportAdminResource(resources.ModelResource):
+    class Meta:
+        model = IncomingPatientsReport
+        fields = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne','date_of_first_week_day', 'report__reporting_date', 'report__text', 'report__category', 'report__facility', 'report__facility__facility_level')
+
+class IncomingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = IncomingPatientsReportAdminResource
+    list_display = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne','date_of_first_week_day', 'facility', 'type')
+    search_fields = ('date_of_first_week_day', )
+    list_filter = ( 'date_of_first_week_day', 'report__facility__facility_level')
+
+    def facility(self, obj):
+        return obj.report.facility
+
+    def type(self, obj):
+        return obj.report.facility.facility_level
+
+class OutgoingPatientsReportAdminResource(resources.ModelResource):
+    class Meta:
+        model = OutgoingPatientsReport
+        fields = ('gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne', 'date_of_first_week_day', 'report__reporting_date', 'report__text', 'report__category', 'report__facility', 'report__facility__facility_level')
+
+class OutgoingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = OutgoingPatientsReportAdminResource
+    list_display = ('gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne', 'date_of_first_week_day', 'facility', 'type')
+    search_fields = ('date_of_first_week_day', )
+    list_filter = ( 'date_of_first_week_day', 'report__facility__facility_level')
+
+    def facility(self, obj):
+        return obj.report.facility
+
+    def type(self, obj):
+        return obj.report.facility.facility_level
+
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Facility, FacilityAdmin)
@@ -71,8 +105,8 @@ admin.site.register(Reception)
 admin.site.register(StockOutReport)
 admin.site.register(ProductsReceptionReport)
 admin.site.register(ProductsTranferReport)
-admin.site.register(IncomingPatientsReport)
-admin.site.register(OutgoingPatientsReport)
+admin.site.register(IncomingPatientsReport, IncomingPatientsReportAdmin)
+admin.site.register(OutgoingPatientsReport, OutgoingPatientsReportAdmin)
 admin.site.register(StockReport)
 admin.site.register(ProductStockReport)
 admin.site.register(Temporary)
