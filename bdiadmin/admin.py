@@ -69,12 +69,15 @@ class DistrictAdmin(ExportMixin, admin.ModelAdmin):
 class CDSResource(resources.ModelResource):
     class Meta:
         model = CDS
-        fields = ('name', 'code', 'district')
+        fields = ('name', 'code', 'district', 'district__province__name')
 
 class CDSAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = CDSResource
     search_fields = ('name', 'code')
-    list_display = ('name', 'code', 'district')
+    list_display = ('name', 'code', 'district', 'province')
+
+    def province(self, obj):
+        return obj.district.province
 
 admin.site.register(Province, ProvinceAdmin)
 admin.site.register(Commune, CommuneAdmin)

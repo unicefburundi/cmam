@@ -7,7 +7,7 @@ router = routers.DefaultRouter()
 router.register(r'products', ProductViewSet)
 router.register(r'provinces', ProvinceDistrictViewSet)
 router.register(r'districts', DistrictCDSViewSet)
-# router.register(r'years', YearViewSet)
+router.register(r'inoutreports', InOutPatientsViewset, 'inoutreports')
 
 
 

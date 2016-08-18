@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from cmam_app.models import *
-from cmam_app.serializers import ProductSerializer, ProvinceDistrictsSerializer, DistrictCDSSerializer
+from cmam_app.serializers import *
 from bdiadmin.models import Province, District
 from django.views.generic.edit import FormView
 from cmam_app.forms import SortiesForm
@@ -14,6 +14,7 @@ from rest_framework import status
 from django.contrib import messages
 from django.db.models.functions import Coalesce
 from django.db.models import Sum
+import itertools
 
 
 @login_required
@@ -104,3 +105,12 @@ class DistrictCDSViewSet(viewsets.ModelViewSet):
         serializer = DistrictCDSSerializer(queryset, many=True, context={'product': product})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class InOutPatientsViewset(viewsets.ModelViewSet):
+    """
+    API endpoint that lists all In/Out patients.
+    """
+    def list(self, request):
+        queryset = list(itertools.chain(IncomingPatientsReport.objects.all(), OutgoingPatientsReport.objects.all()))
+        serializer = InOutPatientSerializer(queryset, many=True)
+        return Response(serializer.data)

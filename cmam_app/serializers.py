@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from cmam_app.models import ProductsReceptionReport, ProductsTranferReport, Product, Report
+from cmam_app.models import *
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from bdiadmin.serializers import ProvinceSerializer
@@ -57,3 +57,13 @@ class DistrictCDSSerializer(ProvinceSerializer):
                 d['sortie'] = ProductsTranferReport.objects.filter(produit=product, sortie__report__facility__id_facility=d['code'] ).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
 
         return cds
+
+class IncomingPatientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncomingPatientsReport
+
+class OutgoingPatientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OutgoingPatientsReport
+
+
