@@ -69,6 +69,15 @@ class OutgoingPatientSerializer(serializers.ModelSerializer):
         fields = ('report','gueri','deces','abandon','non_repondant','transfert_interne','date_of_first_week_day')
 
 class InOutSerializer(serializers.Serializer):
-    item_type = serializers.CharField(max_length=20)
-    data = serializers.CharField(max_length=10000)
-
+    total_debut_semaine = serializers.IntegerField(default=0)
+    ptb = serializers.IntegerField(default=0)
+    oedemes = serializers.IntegerField(default=0)
+    rechute = serializers.IntegerField(default=0)
+    readmission = serializers.IntegerField(default=0)
+    transfert_interne = serializers.IntegerField(default=0)
+    date_of_first_week_day = serializers.DateField()
+    gueri = serializers.IntegerField(default=0)
+    deces = serializers.IntegerField(default=0)
+    abandon = serializers.IntegerField(default=0)
+    non_repondant = serializers.IntegerField(default=0)
+    transfert_interne = serializers.IntegerField(default=0)
