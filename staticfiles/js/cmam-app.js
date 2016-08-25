@@ -57,23 +57,18 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.update_years = function () {
           console.log($scope.dashboard.year);
         };
-    }]);
+}]);
 
-app.directive('datepicker', function() {
-            return {
-                restrict: 'A',
-                require : 'ngModel',
-                link : function (scope, element, attrs, ngModelCtrl) {
-                    $(function(){
-                        element.datepicker({
-                            dateFormat:'dd/mm/yy',
-                            onSelect:function (debut) {
-                                scope.$apply(function () {
-                                    ngModelCtrl.$setViewValue(debut);
-                                });
-                            }
-                        });
-                    });
-                }
-            };
-        });
+app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
+// products
+    $http.get("/cmam/incoming/")
+    .then(function (response) {
+      $scope.incoming = response.data;
+      console.log($scope.incoming);
+    });
+    $http.get("/cmam/outgoing/")
+    .then(function (response) {
+      $scope.outgoing = response.data;
+      console.log($scope.outgoing);
+    });
+}]);

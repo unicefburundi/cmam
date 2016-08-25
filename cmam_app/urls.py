@@ -7,7 +7,8 @@ router = routers.DefaultRouter()
 router.register(r'products', ProductViewSet)
 router.register(r'provinces', ProvinceDistrictViewSet)
 router.register(r'districts', DistrictCDSViewSet)
-router.register(r'inoutreport', InOutViewset, 'inoutreport')
+router.register(r'incoming', IncomingViewset)
+router.register(r'outgoing', OutgoingViewset)
 
 
 urlpatterns = patterns('',

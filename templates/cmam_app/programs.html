@@ -24,7 +24,7 @@
 {% endblock header_stilesheets %}
 
 {% block container %}
-    <div class="container">
+    <div class="container" ng-app="myApp" >
       <div class="row">
         <h3> Search</h3>
         <div class="col-md-7">
@@ -38,21 +38,24 @@
         </div>
       </div>
       <hr>
-      <div class="row">
+      <div class="row" ng-controller="myCtrl">
         <div class="col-md-3">
           <form class="form-horizontal">
-            <div class="form-group"> <label for="produit" class="col-md-1 control-label">Service</label>
-              <div class="col-md-11"> <input class="form-control" id="produit"
-                  placeholder="SST" type="text"> </div>
+            <div id="year-group" class="form-group">
+              <label>Year</label>
+              <select class="form-control"  ng-model="dashboard.year" ng-options="x for x in years track by x" ng-change="update_years()"></select>
             </div>
-            <div class="form-group"> <label for="province" class="col-md-1 control-label">Province</label>
-              <div class="col-md-11"> <input class="form-control" id="province"
-                  placeholder="Ngozi" type="text"> </div>
+            <!-- Province -->
+            <div id="province-group" class="form-group">
+              <label>Province</label>
+              <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
             </div>
-            <div class="form-group"> <label for="district" class="col-md-1 control-label">District</label>
-              <div class="col-md-11"> <input class="form-control" id="district"
-                  placeholder="DS Kiremba" type="text"> </div>
-            </div>
+
+            <!-- District -->
+            <div id="district-group" class="form-group">
+              <label>District</label>
+              <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+              </div>
           </form>
         </div>
         <div class="col-md-3">
@@ -111,7 +114,7 @@
         </div>
       </div>
       <hr>
-      <div class="row">
+      <div class="row" ng-controller="pgrmCtrl">
         <table id="datatable4" class="table table-bordered">
           <thead>
             <tr>
@@ -150,52 +153,7 @@
               <td>34</td>
               <td>21</td>
             </tr>
-            <tr>
-              <td>2</td>
-              <td>33</td>
-              <td>64</td>
-              <td>5</td>
-              <td>66</td>
-              <td>27</td>
-              <td>5</td>
-              <td>82</td>
-              <td>31</td>
-              <td>17</td>
-              <td>1</td>
-              <td>4</td>
-              <td>21</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>13</td>
-              <td>24</td>
-              <td>13</td>
-              <td>41</td>
-              <td>6</td>
-              <td>17</td>
-              <td>8</td>
-              <td>20</td>
-              <td>41</td>
-              <td>10</td>
-              <td>4</td>
-              <td>25</td>
-            </tr>
-            <tr>
-              <td>40</td>
-              <td>1</td>
-              <td>43</td>
-              <td>1</td>
-              <td>6</td>
-              <td>27</td>
-              <td>4</td>
-              <td>10</td>
-              <td>23</td>
-              <td>17</td>
-              <td>21</td>
-              <td>23</td>
-              <td>2</td>
-            </tr>
-          </tbody>
+            </tbody>
         </table>
       </div>
     </div>
@@ -224,4 +182,5 @@
       );
     </script>
     <script src="{% static "js/cmam-app.js" %}"></script>
+
 {% endblock footer_js %}

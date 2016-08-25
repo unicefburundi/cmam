@@ -59,25 +59,14 @@ class DistrictCDSSerializer(ProvinceSerializer):
         return cds
 
 class IncomingPatientSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = IncomingPatientsReport
-        fields = ('report','total_debut_semaine','ptb','oedemes','rechute','readmission','transfert_interne','date_of_first_week_day')
+        fields = ('total_debut_semaine','ptb','oedemes','rechute','readmission','transfert_interne','date_of_first_week_day')
 
 class OutgoingPatientSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = OutgoingPatientsReport
-        fields = ('report','gueri','deces','abandon','non_repondant','transfert_interne','date_of_first_week_day')
+        fields = ('gueri','deces','abandon','non_repondant','transfert_interne','date_of_first_week_day')
 
-class InOutSerializer(serializers.Serializer):
-    total_debut_semaine = serializers.IntegerField(default=0)
-    ptb = serializers.IntegerField(default=0)
-    oedemes = serializers.IntegerField(default=0)
-    rechute = serializers.IntegerField(default=0)
-    readmission = serializers.IntegerField(default=0)
-    transfert_interne = serializers.IntegerField(default=0)
-    date_of_first_week_day = serializers.DateField()
-    gueri = serializers.IntegerField(default=0)
-    deces = serializers.IntegerField(default=0)
-    abandon = serializers.IntegerField(default=0)
-    non_repondant = serializers.IntegerField(default=0)
-    transfert_interne = serializers.IntegerField(default=0)
