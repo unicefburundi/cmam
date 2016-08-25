@@ -14,8 +14,9 @@ from rest_framework import status
 from django.contrib import messages
 from django.db.models.functions import Coalesce
 from django.db.models import Sum
-import itertools
-
+from itertools import chain
+from rest_framework.generics import GenericAPIView
+from rest_framework import mixins
 
 @login_required
 def get_year(request):
@@ -105,12 +106,31 @@ class DistrictCDSViewSet(viewsets.ModelViewSet):
         serializer = DistrictCDSSerializer(queryset, many=True, context={'product': product})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class InOutViewset(viewsets.GenericViewSet):
+    serializer_class = InOutSerializer
+    # base_name='inoutreports'
 
-class InOutPatientsViewset(viewsets.ModelViewSet):
-    """
-    API endpoint that lists all In/Out patients.
-    """
-    def list(self, request):
-        queryset = list(itertools.chain(IncomingPatientsReport.objects.all(), OutgoingPatientsReport.objects.all()))
-        serializer = InOutPatientSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def list(self, request, *args, **kwargs):
+        queryset_a = IncomingPatientsReport.objects.all()
+        queryset_b = OutgoingPatientsReport.objects.all()
+        # Create an iterator for the querysets and turn it into a list.
+        results_list = list(chain(queryset_a, queryset_b))
+
+        # # Optionally filter based on date, score, etc.
+        # sorted_list = sorted(results_list, key=lambda instance: -instance.date_of_first_week_day)
+
+        # Build the list with items based on the FeedItemSerializer fields
+        results = list()
+        for entry in results_list:
+            item_type = entry.__class__.__name__.lower()
+            if isinstance(entry, IncomingPatientsReport):
+                serializer = IncomingPatientSerializer(entry)
+            if isinstance(entry, OutgoingPatientsReport):
+                serializer = OutgoingPatientSerializer(entry)
+
+            results.append({'item_type': item_type, 'data': serializer.data})
+
+        return results
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)

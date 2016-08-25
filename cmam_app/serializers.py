@@ -61,9 +61,14 @@ class DistrictCDSSerializer(ProvinceSerializer):
 class IncomingPatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncomingPatientsReport
+        fields = ('report','total_debut_semaine','ptb','oedemes','rechute','readmission','transfert_interne','date_of_first_week_day')
 
 class OutgoingPatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = OutgoingPatientsReport
+        fields = ('report','gueri','deces','abandon','non_repondant','transfert_interne','date_of_first_week_day')
 
+class InOutSerializer(serializers.Serializer):
+    item_type = serializers.CharField(max_length=20)
+    data = serializers.CharField(max_length=10000)
 
