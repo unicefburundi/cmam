@@ -40,7 +40,6 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                 $http.get("/cmam/districts/" + unit.code + "/" )
                   .then(function (response) {
                     $scope.cds = response.data.cds;
-                    console.log($scope.cds);
                 });
               }
         };
@@ -55,7 +54,6 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         });
 
         $scope.update_years = function () {
-          console.log($scope.dashboard.year);
         };
 }]);
 
@@ -64,11 +62,13 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
     $http.get("/cmam/incoming/")
     .then(function (response) {
       $scope.incoming = response.data;
-      console.log($scope.incoming);
+      $scope.lesobjets = response.data;
     });
     $http.get("/cmam/outgoing/")
     .then(function (response) {
       $scope.outgoing = response.data;
-      console.log($scope.outgoing);
+      $scope.lesobjets = $scope.lesobjets.concat(response.data);
+      console.log($scope.lesobjets );
     });
+
 }]);

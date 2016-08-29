@@ -138,21 +138,23 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>42</td>
-              <td>13</td>
-              <td>4</td>
-              <td>17</td>
-              <td>15</td>
-              <td>46</td>
-              <td>17</td>
-              <td>4</td>
-              <td>12</td>
-              <td>41</td>
-              <td>21</td>
-              <td>34</td>
-              <td>21</td>
+            {% verbatim %}
+            <tr ng-repeat="x in lesobjets track by $index">
+              <td>{{x.total_debut_semaine}}</td>
+              <td>{{x.ptb}}</td>
+              <td>{{x.oedemes}}</td>
+              <td>{{x.rechute}}</td>
+              <td>{{x.readmission}}</td>
+              <td>{{x.transfert_interne}}</td>
+              <td>{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne}}</td>
+              <td>{{x.gueri}}</td>
+              <td>{{x.deces}}</td>
+              <td>{{x.abandon}}</td>
+              <td>{{x.non_repondant}}</td>
+              <td>{{x.gueri + x.deces + x.abandon + x.non_repondant}}</td>
+              <td>{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant)}}</td>
             </tr>
+            {% endverbatim %}
             </tbody>
         </table>
       </div>
