@@ -11,6 +11,8 @@ from cmam_app.forms import SortiesForm
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework import status
+from drf_multiple_model.mixins import MultipleModelMixin
+
 
 @login_required
 def get_year(request):
@@ -98,3 +100,19 @@ class OutgoingViewset(viewsets.ModelViewSet):
     """
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = OutgoingPatientSerializer
+
+class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
+    serializer_class = InOutSerialiser
+
+    queryList = (
+        (IncomingPatientsReport.objects.all(), IncomingPatientSerializer),
+        (OutgoingPatientsReport.objects.all(), OutgoingPatientSerializer),
+        )
+
+    # def get_queryset(self):
+    #     import ipdb; ipdb.set_trace()
+    #     return self.request
+
+    # def get_serializer_class(self):
+    #     import ipdb; ipdb.set_trace()
+    #     return self.request
