@@ -59,16 +59,8 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 
 app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
 // products
-    $http.get("/cmam/incoming/")
+    $http.get("/cmam/inoutreport/")
     .then(function (response) {
-      $scope.incoming = response.data;
-      $scope.lesobjets = response.data;
+      $scope.lesobjets =  response.data;
     });
-    $http.get("/cmam/outgoing/")
-    .then(function (response) {
-      $scope.outgoing = response.data;
-      $scope.lesobjets = $scope.lesobjets.concat(response.data);
-      console.log($scope.lesobjets );
-    });
-
 }]);

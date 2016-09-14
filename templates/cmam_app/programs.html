@@ -120,8 +120,8 @@
             <tr>
               <th rowspan="2">Total debut de semaine</th>
               <th colspan="3">Nouvelles Admissions</th>
-              <th rowspan="2">RE-ADMISSION après Abandon(&lt;2mois)</th>
-              <th rowspan="2">TRANSFERT INTERNE</th>
+              <th rowspan="2">Re-admission après Abandon(&lt;2mois)</th>
+              <th rowspan="2">Transfert interne</th>
               <th rowspan="2">Total des Admissions</th>
               <th colspan="4">Sorties</th>
               <th rowspan="2">Total decharge</th>
@@ -129,30 +129,30 @@
             </tr>
             <tr>
               <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB &lt; 180mm </th>
-              <th>OEUDEMES</th>
+              <th>Oeudeme</th>
               <th>Rechute</th>
               <th>Traité avec succès</th>
-              <th>DECES</th>
-              <th>ABANDONS</th>
-              <th>NON REPONDANT</th>
+              <th>Deces</th>
+              <th>Abandons</th>
+              <th>Non repondant</th>
             </tr>
           </thead>
           <tbody>
             {% verbatim %}
             <tr ng-repeat="x in lesobjets track by $index">
-              <td>{{x.total_debut_semaine}}</td>
-              <td>{{x.ptb}}</td>
-              <td>{{x.oedemes}}</td>
-              <td>{{x.rechute}}</td>
-              <td>{{x.readmission}}</td>
-              <td>{{x.transfert_interne}}</td>
-              <td>{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne}}</td>
-              <td>{{x.gueri}}</td>
-              <td>{{x.deces}}</td>
-              <td>{{x.abandon}}</td>
-              <td>{{x.non_repondant}}</td>
-              <td>{{x.gueri + x.deces + x.abandon + x.non_repondant}}</td>
-              <td>{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant)}}</td>
+              <td>{{x.total_debut_semaine || 0}}</td>
+              <td>{{x.ptb || 0}}</td>
+              <td>{{x.oedemes || 0}}</td>
+              <td>{{x.rechute || 0}}</td>
+              <td>{{x.readmission || 0}}</td>
+              <td>{{x.transfert_interne || 0}}</td>
+              <td>{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne || 0}}</td>
+              <td>{{x.gueri || 0}}</td>
+              <td>{{x.deces || 0}}</td>
+              <td>{{x.abandon || 0}}</td>
+              <td>{{x.non_repondant || 0}}</td>
+              <td>{{x.gueri + x.deces + x.abandon + x.non_repondant || 0}}</td>
+              <td>{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant) || 0}}</td>
             </tr>
             {% endverbatim %}
             </tbody>

@@ -11,7 +11,7 @@ from cmam_app.forms import SortiesForm
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework import status
-from drf_multiple_model.mixins import MultipleModelMixin
+from drf_multiple_model.mixins import MultipleModelMixin, Query
 
 
 @login_required
@@ -109,10 +109,48 @@ class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
         (OutgoingPatientsReport.objects.all(), OutgoingPatientSerializer),
         )
 
-    # def get_queryset(self):
-    #     import ipdb; ipdb.set_trace()
-    #     return self.request
+    def list(self, request, *args, **kwargs):
+        # import ipdb; ipdb.set_trace()
+        queryList = self.get_queryList()
 
-    # def get_serializer_class(self):
-    #     import ipdb; ipdb.set_trace()
-    #     return self.request
+        # Iterate through the queryList, run each queryset and serialize the data
+        results = []
+        for query in queryList:
+            if not isinstance(query, Query):
+                query = Query.new_from_tuple(query)
+            # Run the queryset through Django Rest Framework filters
+            queryset = query.queryset.all()
+            queryset = self.filter_queryset(queryset)
+
+            # If there is a user-defined filter, run that too.
+            if query.filter_fn is not None:
+                queryset = query.filter_fn(queryset, request, *args, **kwargs)
+
+            # Run the paired serializer
+            context = self.get_serializer_context()
+            data = query.serializer(queryset, many=True, context=context).data
+
+            results = self.format_data(data, query, results)
+
+        if self.flat:
+            # Sort by given attribute, if sorting_attribute is provided
+            if self.sorting_field:
+                results = self.queryList_sort(results)
+
+            # Return paginated results if pagination is enabled
+            page = self.paginate_queryList(results)
+            if page is not None:
+                return self.get_paginated_response(page)
+
+        if request.accepted_renderer.format == 'html':
+            return Response({'data': results})
+        income = results[0]['incomingpatientsreport']
+        outgon = results[1]['outgoingpatientsreport']
+
+        for i in income:
+            for o in outgon:
+                if i['date_of_first_week_day'] == o['date_of_first_week_day']:
+                    i.update(o)
+                    outgon.remove(o)
+        results = income + outgon
+        return Response(results)
