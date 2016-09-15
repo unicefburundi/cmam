@@ -5,43 +5,31 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         .then(function (response) {
           $scope.produits = response.data;
         });
-        $scope.update_product = function () {
-          $('#unites').html('<strong >' + $scope.dashboard.products.general_measuring_unit +'</strong>');
-        };
 
-          // province
-          $http.get("/bdiadmin/province/")
+        // province
+        $http.get("/bdiadmin/province/")
           .then(function (response) {
               $scope.provinces = response.data;
           });
           $scope.update_province = function () {
             var unit = $scope.dashboard.province;
-            if ($scope.dashboard.products) {
-              $http.get("/cmam/provinces/" + unit.code + "/" + $scope.dashboard.products.id + "/")
+            if ($scope.produits) {
+              $http.get("/cmam/provinces/" + unit.code + "/" )
                 .then(function (response) {
-                  $scope.districts = response.data[0].districts;
-              });
-              } else {
-                $http.get("/cmam/provinces/" + unit.code + "/")
-                  .then(function (response) {
                     $scope.districts = response.data.districts;
-                });
-              }
+              });
+            }
         };
           // district
         $scope.update_district = function () {
             var unit = $scope.dashboard.district;
-            if ($scope.dashboard.products) {
-              $http.get("/cmam/districts/" + unit.code + "/" + $scope.dashboard.products.id + "/")
+            if ($scope.dashboard.province) {
+              $http.get("/cmam/districts/" + unit.code + "/" )
                 .then(function (response) {
-                  $scope.cds = response.data[0].cds;
-              });
-              } else {
-                $http.get("/cmam/districts/" + unit.code + "/" )
-                  .then(function (response) {
-                    $scope.cds = response.data.cds;
+                  $scope.cds = response.data.cds;
                     console.log($scope.cds);
-                });
+
+              });
               }
         };
         // Datepicker
@@ -55,25 +43,25 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         });
 
         $scope.update_years = function () {
-          console.log($scope.dashboard.year);
         };
-    }]);
+}]);
 
-app.directive('datepicker', function() {
-            return {
-                restrict: 'A',
-                require : 'ngModel',
-                link : function (scope, element, attrs, ngModelCtrl) {
-                    $(function(){
-                        element.datepicker({
-                            dateFormat:'dd/mm/yy',
-                            onSelect:function (debut) {
-                                scope.$apply(function () {
-                                    ngModelCtrl.$setViewValue(debut);
-                                });
-                            }
-                        });
-                    });
-                }
-            };
-        });
+app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
+    $http.get("/cmam/inoutreport/")
+    .then(function (response) {
+      $scope.lesobjets =  response.data;
+    });
+
+    $http({
+        url: '/cmam/inoutreport/',
+        method: "POST",
+        data: { 'code' : 2 },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    })
+    .then(function(response) {
+            // success
+    },
+    function(response) { // optional
+            // failed
+    });
+}]);

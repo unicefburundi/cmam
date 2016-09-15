@@ -151,12 +151,12 @@ class ProductsTranferReport(models.Model):
 class IncomingPatientsReport(models.Model):
 	''' In this model, we put patient numbers of different categories of patients received in a week '''
 	report = models.ForeignKey(Report)
-	total_debut_semaine = models.IntegerField()
-	ptb = models.IntegerField()
-	oedemes = models.IntegerField()
-	rechute = models.IntegerField()
-	readmission = models.IntegerField()
-	transfert_interne = models.IntegerField()
+	total_debut_semaine = models.IntegerField(default=0)
+	ptb = models.IntegerField(default=0)
+	oedemes = models.IntegerField(default=0)
+	rechute = models.IntegerField(default=0)
+	readmission = models.IntegerField(default=0)
+	transfert_interne = models.IntegerField(default=0)
 	date_of_first_week_day = models.DateField()
 
 	def __unicode__(self):
@@ -165,10 +165,10 @@ class IncomingPatientsReport(models.Model):
 class OutgoingPatientsReport(models.Model):
 	''' In this model, we put patient numbers of different categories of patients who are not on the program since next week '''
 	report = models.ForeignKey(Report)
-	gueri = models.IntegerField()
-	deces = models.IntegerField()
-	abandon = models.IntegerField()
-	non_repondant = models.IntegerField()
+	gueri = models.IntegerField(default=0)
+	deces = models.IntegerField(default=0)
+	abandon = models.IntegerField(default=0)
+	non_repondant = models.IntegerField(default=0)
 	transfert_interne = models.IntegerField(default=0)
 	date_of_first_week_day = models.DateField()
 

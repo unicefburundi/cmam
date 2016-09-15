@@ -24,7 +24,7 @@
 {% endblock header_stilesheets %}
 
 {% block container %}
-    <div class="container">
+    <div class="container" ng-app="myApp" >
       <div class="row">
         <h3> Search</h3>
         <div class="col-md-7">
@@ -38,21 +38,24 @@
         </div>
       </div>
       <hr>
-      <div class="row">
+      <div class="row" ng-controller="myCtrl">
         <div class="col-md-3">
           <form class="form-horizontal">
-            <div class="form-group"> <label for="produit" class="col-md-1 control-label">Service</label>
-              <div class="col-md-11"> <input class="form-control" id="produit"
-                  placeholder="SST" type="text"> </div>
+            <div id="year-group" class="form-group">
+              <label>Year</label>
+              <select class="form-control"  ng-model="dashboard.year" ng-options="x for x in years track by x" ng-change="update_years()"></select>
             </div>
-            <div class="form-group"> <label for="province" class="col-md-1 control-label">Province</label>
-              <div class="col-md-11"> <input class="form-control" id="province"
-                  placeholder="Ngozi" type="text"> </div>
+            <!-- Province -->
+            <div id="province-group" class="form-group">
+              <label>Province</label>
+              <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
             </div>
-            <div class="form-group"> <label for="district" class="col-md-1 control-label">District</label>
-              <div class="col-md-11"> <input class="form-control" id="district"
-                  placeholder="DS Kiremba" type="text"> </div>
-            </div>
+
+            <!-- District -->
+            <div id="district-group" class="form-group">
+              <label>District</label>
+              <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+              </div>
           </form>
         </div>
         <div class="col-md-3">
@@ -111,14 +114,14 @@
         </div>
       </div>
       <hr>
-      <div class="row">
+      <div class="row" ng-controller="pgrmCtrl">
         <table id="datatable4" class="table table-bordered">
           <thead>
             <tr>
               <th rowspan="2">Total debut de semaine</th>
               <th colspan="3">Nouvelles Admissions</th>
-              <th rowspan="2">RE-ADMISSION après Abandon(&lt;2mois)</th>
-              <th rowspan="2">TRANSFERT INTERNE</th>
+              <th rowspan="2">Re-admission après Abandon(&lt;2mois)</th>
+              <th rowspan="2">Transfert interne</th>
               <th rowspan="2">Total des Admissions</th>
               <th colspan="4">Sorties</th>
               <th rowspan="2">Total decharge</th>
@@ -126,76 +129,33 @@
             </tr>
             <tr>
               <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB &lt; 180mm </th>
-              <th>OEUDEMES</th>
+              <th>Oeudeme</th>
               <th>Rechute</th>
               <th>Traité avec succès</th>
-              <th>DECES</th>
-              <th>ABANDONS</th>
-              <th>NON REPONDANT</th>
+              <th>Deces</th>
+              <th>Abandons</th>
+              <th>Non repondant</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>42</td>
-              <td>13</td>
-              <td>4</td>
-              <td>17</td>
-              <td>15</td>
-              <td>46</td>
-              <td>17</td>
-              <td>4</td>
-              <td>12</td>
-              <td>41</td>
-              <td>21</td>
-              <td>34</td>
-              <td>21</td>
+            {% verbatim %}
+            <tr ng-repeat="x in lesobjets track by $index">
+              <td>{{x.total_debut_semaine || 0}}</td>
+              <td>{{x.ptb || 0}}</td>
+              <td>{{x.oedemes || 0}}</td>
+              <td>{{x.rechute || 0}}</td>
+              <td>{{x.readmission || 0}}</td>
+              <td>{{x.transfert_interne || 0}}</td>
+              <td>{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne || 0}}</td>
+              <td>{{x.gueri || 0}}</td>
+              <td>{{x.deces || 0}}</td>
+              <td>{{x.abandon || 0}}</td>
+              <td>{{x.non_repondant || 0}}</td>
+              <td>{{x.gueri + x.deces + x.abandon + x.non_repondant || 0}}</td>
+              <td>{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant) || 0}}</td>
             </tr>
-            <tr>
-              <td>2</td>
-              <td>33</td>
-              <td>64</td>
-              <td>5</td>
-              <td>66</td>
-              <td>27</td>
-              <td>5</td>
-              <td>82</td>
-              <td>31</td>
-              <td>17</td>
-              <td>1</td>
-              <td>4</td>
-              <td>21</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>13</td>
-              <td>24</td>
-              <td>13</td>
-              <td>41</td>
-              <td>6</td>
-              <td>17</td>
-              <td>8</td>
-              <td>20</td>
-              <td>41</td>
-              <td>10</td>
-              <td>4</td>
-              <td>25</td>
-            </tr>
-            <tr>
-              <td>40</td>
-              <td>1</td>
-              <td>43</td>
-              <td>1</td>
-              <td>6</td>
-              <td>27</td>
-              <td>4</td>
-              <td>10</td>
-              <td>23</td>
-              <td>17</td>
-              <td>21</td>
-              <td>23</td>
-              <td>2</td>
-            </tr>
-          </tbody>
+            {% endverbatim %}
+            </tbody>
         </table>
       </div>
     </div>
@@ -224,4 +184,5 @@
       );
     </script>
     <script src="{% static "js/cmam-app.js" %}"></script>
+
 {% endblock footer_js %}

@@ -11,10 +11,8 @@ from cmam_app.forms import SortiesForm
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib import messages
-from django.db.models.functions import Coalesce
-from django.db.models import Sum
-import itertools
+from drf_multiple_model.mixins import MultipleModelMixin, Query
+from rest_framework import filters
 
 
 @login_required
@@ -59,21 +57,6 @@ class StockView(FormView):
     template_name = 'cmam_app/stocks.html'
     form_class = SortiesForm
 
-    def get_context_data(self, **kwargs):
-        context = super(SortiesView, self).get_context_data(**kwargs)
-        for p in Product.objects.all():
-            sorties_central = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__facility_level__name='Centrale' ).aggregate(sortie=Coalesce(Sum('quantite_donnee'), 0))['sortie']
-            sorties_district = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__facility_level__name='District' ).aggregate(sortie=Coalesce(Sum('quantite_donnee'), 0))['sortie']
-            entrees_district = ProductsReceptionReport.objects.filter(produit=p , reception__report__facility__facility_level__name='District').aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
-            entrees_cds = ProductsReceptionReport.objects.filter(produit=p , reception__report__facility__facility_level__name='CDS').aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
-            entrees_hospital = ProductsReceptionReport.objects.filter(produit=p , reception__report__facility__facility_level__name='Hospital').aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
-
-            if  sorties_central != entrees_district:
-                messages.add_message(self.request, messages.INFO, 'Les sorties central ({0})  sont differentes des entrees district ({1}) pour le {2}!'.format(sorties_central, entrees_district, p))
-            if  sorties_district != (entrees_cds + entrees_hospital):
-                messages.add_message(self.request, messages.INFO, 'Les sorties districts ({0})  sont differentes des entrees cds ({1}) et hospitaux ({2}) pour le {3}!'.format(sorties_district, entrees_cds, entrees_hospital, p))
-        return context
-
 class ProvinceDistrictViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit province.
@@ -99,18 +82,80 @@ class DistrictCDSViewSet(viewsets.ModelViewSet):
 
     # For get districts
     @detail_route(methods=['get'], url_path='(?P<product>\d+)')
-    def update_product(self, request, pk, product=None):
+    def update_product(self, request, code, product=None):
         """ Updates the object identified by the pk ans add the product """
-        queryset = District.objects.filter(code=pk)
+        queryset = District.objects.filter(code=code)
         serializer = DistrictCDSSerializer(queryset, many=True, context={'product': product})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class IncomingViewset(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to view or edit district.
+    """
+    queryset = IncomingPatientsReport.objects.all()
+    serializer_class = IncomingPatientSerializer
 
-class InOutPatientsViewset(viewsets.ModelViewSet):
+class OutgoingViewset(viewsets.ModelViewSet):
     """
-    API endpoint that lists all In/Out patients.
+    API endpoint that allows users to view or edit district.
     """
-    def list(self, request):
-        queryset = list(itertools.chain(IncomingPatientsReport.objects.all(), OutgoingPatientsReport.objects.all()))
-        serializer = InOutPatientSerializer(queryset, many=True)
-        return Response(serializer.data)
+    queryset = OutgoingPatientsReport.objects.all()
+    serializer_class = OutgoingPatientSerializer
+
+class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
+    serializer_class = InOutSerialiser
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('report',)
+
+    queryList = (
+        (IncomingPatientsReport.objects.all(), IncomingPatientSerializer),
+        (OutgoingPatientsReport.objects.all(), OutgoingPatientSerializer),
+        )
+
+    def list(self, request, *args, **kwargs):
+        queryList = self.get_queryList()
+        # import ipdb; ipdb.set_trace()
+        # Iterate through the queryList, run each queryset and serialize the data
+        results = []
+        for query in queryList:
+            if not isinstance(query, Query):
+                query = Query.new_from_tuple(query)
+            # Run the queryset through Django Rest Framework filters
+            queryset = query.queryset.all()
+            queryset = self.filter_queryset(queryset)
+
+            # If there is a user-defined filter, run that too.
+            if query.filter_fn is not None:
+                queryset = query.filter_fn(queryset, request, *args, **kwargs)
+
+            # Run the paired serializer
+            context = self.get_serializer_context()
+            data = query.serializer(queryset, many=True, context=context).data
+
+            results = self.format_data(data, query, results)
+
+        if self.flat:
+            # Sort by given attribute, if sorting_attribute is provided
+            if self.sorting_field:
+                results = self.queryList_sort(results)
+
+            # Return paginated results if pagination is enabled
+            page = self.paginate_queryList(results)
+            if page is not None:
+                return self.get_paginated_response(page)
+
+        if request.accepted_renderer.format == 'html':
+            return Response({'data': results})
+        income = results[0]['incomingpatientsreport']
+        outgon = results[1]['outgoingpatientsreport']
+
+        for i in income:
+            for o in outgon:
+                if i['date_of_first_week_day'] == o['date_of_first_week_day']:
+                    i.update(o)
+                    outgon.remove(o)
+        results = income + outgon
+        return Response(results)
+
+    def get_queryset(self, *args, **kwargs):
+        return self.get_queryList()
