@@ -58,9 +58,21 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 }]);
 
 app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
-// products
     $http.get("/cmam/inoutreport/")
     .then(function (response) {
       $scope.lesobjets =  response.data;
+    });
+
+    $http({
+        url: '/cmam/inoutreport/',
+        method: "POST",
+        data: { 'code' : 2 },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    })
+    .then(function(response) {
+            // success
+    },
+    function(response) { // optional
+            // failed
     });
 }]);

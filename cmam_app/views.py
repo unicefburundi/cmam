@@ -12,6 +12,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework import status
 from drf_multiple_model.mixins import MultipleModelMixin, Query
+from rest_framework import filters
 
 
 @login_required
@@ -103,6 +104,8 @@ class OutgoingViewset(viewsets.ModelViewSet):
 
 class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
     serializer_class = InOutSerialiser
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('report',)
 
     queryList = (
         (IncomingPatientsReport.objects.all(), IncomingPatientSerializer),
@@ -110,9 +113,8 @@ class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
         )
 
     def list(self, request, *args, **kwargs):
-        # import ipdb; ipdb.set_trace()
         queryList = self.get_queryList()
-
+        # import ipdb; ipdb.set_trace()
         # Iterate through the queryList, run each queryset and serialize the data
         results = []
         for query in queryList:
@@ -154,3 +156,6 @@ class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
                     outgon.remove(o)
         results = income + outgon
         return Response(results)
+
+    def get_queryset(self, *args, **kwargs):
+        return self.get_queryList()
