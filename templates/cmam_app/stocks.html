@@ -38,23 +38,12 @@
             </div>
             <button type="submit" class="btn btn-primary">OK</button> </form>
         </div>
-        <div class="col-md-5">
-          <div class="col-md-3">Unités en</div>
-          <div class="col-md-2 bg-danger" id="unites"></div>
-          <div class="col-md-7"></div>
-        </div>
       </div>
       <hr>
       <div class="row" ng-controller="myCtrl">
         <div class="col-md-3"  >
           <form>
-            <!-- Product -->
-            <div id="product-group" class="form-group">
-              <label>Products</label>
-              <select class="form-control"  ng-model="dashboard.products" ng-options="x.designation for x in produits track by x.id" ng-change="update_product()" ></select>
-            </div>
-
-            <!-- Province -->
+          <!-- Province -->
             <div id="province-group" class="form-group">
               <label>Province</label>
               <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
@@ -66,88 +55,10 @@
               <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
             </div>
           </form>
-
-          <div class="message">
-            {% if messages %}
-              {% for message in messages %}
-                <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-                  <a class="close" data-dismiss="alert" href="#">&times;</a>
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
         </div>
-        <div class="col-md-4">
-          <div class="row camebu"  ng-controller="myCtrl">
-            <h5> Stocks au <b>niveau central</b>.</h5>
-            <table id="datatable1" class="table table-bordered" >
-              <thead>
-                <tr>
-                  <th>Entrée</th>
-                  <th>Sorties</th>
-                  <th>Stock Restant</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% verbatim %}
-                  <tr >
-                  <td id="cen-entrees">{{ dashboard.products.reception  || 0}}</td>
-                  <td id="cen-sorties">{{ dashboard.products.sortie || 0 }}</td>
-                  <td id="cen-restant">{{ (dashboard.products.quantite_en_stock_central + dashboard.products.reception - dashboard.products.sortie) || 0 }}</td>
-                </tr>
-                {% endverbatim %}
-              </tbody>
-            </table>
-          </div>
-          <div class="row district" >
-            <h5> Stocks au <b>niveau du district</b>.</h5>
-
-            <table id="datatable2" class="table table-bordered">
-              <thead>
-                <tr>
-                  <th>District</th>
-                  <th>Entrée</th>
-                  <th>Sorties</th>
-                  <th>Stock Restant</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% verbatim %}
-                <tr ng-repeat="x in districts">
-                  <th>{{ x.name }}</th>
-                  <td>{{ x.reception }}</td>
-                  <td>{{ x.sortie }}</td>
-                  <td ng-class="{ red: x.reception < x.sortie }">{{ x.reception - x.sortie }}</td>
-                </tr>
-              {% endverbatim %}
-            </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="col-md-5 cds">
-          <h5> Stocks au <strong>niveau des SST et STA</strong>.</h5>
-          <table id="datatable2" class="table table-bordered">
-            <thead>
-              <tr>
-                <th>SST et STA</th>
-                <th>Entrée</th>
-                <th>Sorties</th>
-                <th>Stock Restant</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% verbatim %}
-                <tr ng-repeat="x in cds">
-                  <th>{{ x.name }}</th>
-                  <td>{{ x.reception }}</td>
-                  <td>{{ x.sortie }}</td>
-                  <td>{{ x.reception - x.sortie }}</td>
-                </tr>
-                  {% endverbatim %}
-            </tbody>
-          </table>
-        </div>
+        {% block stock_table %}
+          {% include "cmam_app/stock_tables.html" %}
+        {% endblock stock_table %}
       </div>
 {% endblock container %}
 

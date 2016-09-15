@@ -5,12 +5,9 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         .then(function (response) {
           $scope.produits = response.data;
         });
-        $scope.update_product = function () {
-          $('#unites').html('<strong >' + $scope.dashboard.products.general_measuring_unit +'</strong>');
-        };
 
-          // province
-          $http.get("/bdiadmin/province/")
+        // province
+        $http.get("/bdiadmin/province/")
           .then(function (response) {
               $scope.provinces = response.data;
           });
