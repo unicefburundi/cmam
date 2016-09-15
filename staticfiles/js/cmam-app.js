@@ -13,31 +13,23 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
           });
           $scope.update_province = function () {
             var unit = $scope.dashboard.province;
-            if ($scope.dashboard.products) {
-              $http.get("/cmam/provinces/" + unit.code + "/" + $scope.dashboard.products.id + "/")
+            if ($scope.produits) {
+              $http.get("/cmam/provinces/" + unit.code + "/" )
                 .then(function (response) {
-                  $scope.districts = response.data[0].districts;
-              });
-              } else {
-                $http.get("/cmam/provinces/" + unit.code + "/")
-                  .then(function (response) {
                     $scope.districts = response.data.districts;
-                });
-              }
+              });
+            }
         };
           // district
         $scope.update_district = function () {
             var unit = $scope.dashboard.district;
-            if ($scope.dashboard.products) {
-              $http.get("/cmam/districts/" + unit.code + "/" + $scope.dashboard.products.id + "/")
+            if ($scope.dashboard.province) {
+              $http.get("/cmam/districts/" + unit.code + "/" )
                 .then(function (response) {
-                  $scope.cds = response.data[0].cds;
+                  $scope.cds = response.data.cds;
+                    console.log($scope.cds);
+
               });
-              } else {
-                $http.get("/cmam/districts/" + unit.code + "/" )
-                  .then(function (response) {
-                    $scope.cds = response.data.cds;
-                });
               }
         };
         // Datepicker

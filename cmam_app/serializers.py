@@ -38,6 +38,12 @@ class ProvinceDistrictsSerializer(ProvinceSerializer):
                 product = int(self.context.get('product'))
                 d['reception'] = ProductsReceptionReport.objects.filter(produit=product, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
                 d['sortie'] = ProductsTranferReport.objects.filter(produit=product, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
+        else:
+            for d in districts:
+                for p in Product.objects.all():
+                    d[p.designation] = {}
+                    d[p.designation]['reception'] = ProductsReceptionReport.objects.filter(produit=p, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
+                    d[p.designation]['sortie'] = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
         return districts
 
 class DistrictCDSSerializer(ProvinceSerializer):
@@ -55,6 +61,12 @@ class DistrictCDSSerializer(ProvinceSerializer):
                 product = int(self.context.get('product'))
                 d['reception'] = ProductsReceptionReport.objects.filter(produit=product, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
                 d['sortie'] = ProductsTranferReport.objects.filter(produit=product, sortie__report__facility__id_facility=d['code'] ).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
+        else:
+            for d in cds:
+                for p in Product.objects.all():
+                    d[p.designation] = {}
+                    d[p.designation]['reception'] = ProductsReceptionReport.objects.filter(produit=p, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
+                    d[p.designation]['sortie'] = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
 
         return cds
 
