@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     url(r'^home/$', 'cmam_app.views.home', name='home'),
     url(r'^dashboard/$', 'cmam_app.views.dashboard', name='dashboard'),
     url(r'^login/$', views.login, {'template_name': 'login.html'}, name="login"),
-    url(r'^logout/$', views.login, {'template_name': 'login.html'}, name="logout"),
+    url(r'^logout/$', views.logout, {'template_name': 'login.html'}, name="logout"),
     url(r'^$', 'cmam_app.views.landing'),
     )
 
