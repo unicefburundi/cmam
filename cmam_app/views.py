@@ -23,6 +23,13 @@ def get_year(request):
         years[d.year] = d.year
     return JsonResponse(years, safe=False)
 
+@login_required
+def get_week(request):
+    dates = Report.objects.values('reporting_date').distinct().dates('reporting_date', 'day')
+    weeks = {}
+    for d in dates:
+        weeks[d.strftime("%W")] = "W{0}".format(d.strftime("%W"))
+    return JsonResponse(weeks, safe=False)
 
 
 def landing(request):

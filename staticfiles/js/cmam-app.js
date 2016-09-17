@@ -42,7 +42,16 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
           $scope.years = response.data;
         });
 
+        // weeks
+        $http.get("/cmam/get_week/")
+        .then(function (response) {
+          $scope.weeks = response.data;
+        });
+
         $scope.update_years = function () {
+        };
+
+        $scope.update_weeks = function () {
         };
 }]);
 

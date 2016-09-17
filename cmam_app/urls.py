@@ -19,4 +19,5 @@ urlpatterns = patterns('',
     url(r'^stocks/$', StockView.as_view(), name="stocks"),
     url(r'^programs/$', programs, name="programs"),
     url(r'^get_year/$', get_year, name="get_year"),
+    url(r'^get_week/$', get_week, name="get_week"),
 )
