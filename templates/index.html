@@ -116,89 +116,168 @@
                         {% block container %}
                             <div class="container-fluid" id="main" >
                               <div class="container" ng-controller="myCtrl">
-                                <div class="row">
-                                  <div class="col-md-3">
-                                    <div class="row" >
-
+                              <ul class="nav nav-tabs">
+                                <li  {% block activeSST %}class="active"{% endblock activeSST %} >
+                                  <a href="#sst" data-toggle="tab">SST</a>
+                                </li>
+                                <li  {% block activeSTA %}{% endblock activeSTA %} >
+                                  <a href="#sta" data-toggle="tab">STA</a>
+                                </li>
+                              </ul>
+                                {% block sst %}
+                                  <div class="row">
+                                    <div class="tab-pane {% block activesst1 %}active{% endblock activesst1 %}" id="sst">
+                                      <div class="col-md-5">
+                                        <div class="row">
+                                          <div class="col-md-8">
+                                            <table id="datatable">
+                                              <thead>
+                                                <tr>
+                                                  <th><br>
+                                                  </th>
+                                                  <th>Admission</th>
+                                                  <th>Sorties</th>
+                                                  <th>Total fin de semaine</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th>S1/2016</th>
+                                                  <td>31</td>
+                                                  <td>11</td>
+                                                  <td>54</td>
+                                                </tr>
+                                                <tr>
+                                                  <th>S2/2016</th>
+                                                  <td>24</td>
+                                                  <td>10</td>
+                                                  <td>31</td>
+                                                </tr>
+                                                <tr>
+                                                  <th>S3/2016</th>
+                                                  <td>50</td>
+                                                  <td>11</td>
+                                                  <td>24</td>
+                                                </tr>
+                                                <tr>
+                                                  <th>S4/2016</th>
+                                                  <td>10</td>
+                                                  <td>18</td>
+                                                  <td>43</td>
+                                                </tr>
+                                                <tr>
+                                                  <th>S5/2016</th>
+                                                  <td>58</td>
+                                                  <td>20</td>
+                                                  <td>44</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table id="datatable2">
+                                            <tbody >
+                                          {% verbatim %}
+                                            <tr ng-repeat="x in cds">
+                                              <th>{{ x.name }}</th>
+                                              <td class="avrg">{{ x.code}}</td>
+                                            </tr>
+                                          {% endverbatim %}
+                                        </tbody>
+                                          </table>
+                                        </div>
+                                        <div class="col-md-4">
+                                          <span class="lead">Taux de rapportage</span>
+                                          <h2 id="taux_rapportag"></h2>
+                                        </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <div class="col-md-4">
-                                    <div class="row">
-                                      <div class="col-md-8">
-                                        <table id="datatable">
-                                          <thead>
-                                            <tr>
-                                              <th><br>
-                                              </th>
-                                              <th>Admission</th>
-                                              <th>Sorties</th>
-                                              <th>Total fin de semaine</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr>
-                                              <th>S1/2016</th>
-                                              <td>31</td>
-                                              <td>11</td>
-                                              <td>54</td>
-                                            </tr>
-                                            <tr>
-                                              <th>S2/2016</th>
-                                              <td>24</td>
-                                              <td>10</td>
-                                              <td>31</td>
-                                            </tr>
-                                            <tr>
-                                              <th>S3/2016</th>
-                                              <td>50</td>
-                                              <td>11</td>
-                                              <td>24</td>
-                                            </tr>
-                                            <tr>
-                                              <th>S4/2016</th>
-                                              <td>10</td>
-                                              <td>18</td>
-                                              <td>43</td>
-                                            </tr>
-                                            <tr>
-                                              <th>S5/2016</th>
-                                              <td>58</td>
-                                              <td>20</td>
-                                              <td>44</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                        <table id="datatable2">
-                                        <tbody >
-                                      {% verbatim %}
-                                        <tr ng-repeat="x in cds">
-                                          <th>{{ x.name }}</th>
-                                          <td class="avrg">{{ x.code}}</td>
-                                        </tr>
-                                      {% endverbatim %}
-                                    </tbody>
-                                      </table>
-                                    </div>
-                                    <div class="col-md-4">
-                                      <span class="lead">Taux de rapportage</span>
-                                      <h2 id="taux_rapportag"></h2>
-                                    </div>
-                                  </div>
-                                </div>
-                                  <div class="col-md-5">
-                                    <div class="input-group">
-                                      <span class="input-group-addon" id="basic-addon1">Services</span>
-                                      <input class="form-control" placeholder="SST" aria-describedby="basic-addon1" type="text">
-                                    </div>
-                                    <div id="container" style="margin: 0 auto"></div>
-                                    <hr>
-                                    <div class="row">
-                                      <div >
-                                        <div id="container2" style="margin: 0 auto"></div>
+                                      <div class="col-md-7">
+                                        <div id="container" style="margin: 0 auto"></div>
+                                        <hr>
+                                        <div class="row">
+                                          <div >
+                                            <div id="container2" style="margin: 0 auto"></div>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
+                                {% endblock sst %}
+                                {% block sta %}
+                                    <div class="tab-pane {% block activesta1 %}{% endblock activesta1 %}" id="sta">
+                                      <div class="col-md-5">
+                                        <div class="row">
+                                          <div class="col-md-8">
+                                            <table id="datatable3">
+                                              <thead>
+                                                <tr>
+                                                  <th><br>
+                                                  </th>
+                                                  <th>Admission</th>
+                                                  <th>Sorties</th>
+                                                  <th>Total fin de semaine</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <th>S1/2016</th>
+                                                  <td>31</td>
+                                                  <td>11</td>
+                                                  <td>54</td>
+                                                </tr>
+                                                <tr>
+                                                  <th>S2/2016</th>
+                                                  <td>24</td>
+                                                  <td>10</td>
+                                                  <td>31</td>
+                                                </tr>
+                                                <tr>
+                                                  <th>S3/2016</th>
+                                                  <td>50</td>
+                                                  <td>11</td>
+                                                  <td>24</td>
+                                                </tr>
+                                                <tr>
+                                                  <th>S4/2016</th>
+                                                  <td>10</td>
+                                                  <td>18</td>
+                                                  <td>43</td>
+                                                </tr>
+                                                <tr>
+                                                  <th>S5/2016</th>
+                                                  <td>58</td>
+                                                  <td>20</td>
+                                                  <td>44</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table id="datatable4">
+                                            <tbody >
+                                          {% verbatim %}
+                                            <tr ng-repeat="x in cds">
+                                              <th>{{ x.name }}</th>
+                                              <td class="avrg">{{ x.code}}</td>
+                                            </tr>
+                                          {% endverbatim %}
+                                        </tbody>
+                                          </table>
+                                        </div>
+                                        <div class="col-md-4">
+                                          <span class="lead">Taux de rapportage</span>
+                                          <h2 id="taux_rapportage"></h2>
+                                        </div>
+                                      </div>
+                                    </div>
+                                      <div class="col-md-7">
+                                        <div id="container3" style="margin: 0 auto"></div>
+                                        <hr>
+                                        <div class="row">
+                                          <div >
+                                            <div id="container4" style="margin: 0 auto"></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                {% endblock sta %}
                               </div>
                               <!--/row-->
                             <!--/col-->
