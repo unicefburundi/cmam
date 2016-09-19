@@ -51,15 +51,15 @@ $(document).ready(function() {
         }
     });
     $('#datatable').hide();
-    var $dataRows=$("#datatable2 tr");
-    var total = 0;
-    // console.log($dataRows.length);
-    $dataRows.each(function() {
-                $(this).find('.avrg').each(function(i){
-                    total+=parseInt( $(this).html());
-                });
-            });
-    var rapportage = document.getElementById("taux_rapportage");
-    rapportage.innerHTML = ""+ (total/ ($dataRows.length))*100 + "%";
+    // var $dataRows=$("#datatable2 tr");
+    // var total = 0;
+    // // console.log($dataRows.length);
+    // $dataRows.each(function() {
+    //             $(this).find('.avrg').each(function(i){
+    //                 total+=parseInt( $(this).html());
+    //             });
+    //         });
+    // var rapportage = document.getElementById("taux_rapportage");
+    // rapportage.innerHTML = ""+ (total/ ($dataRows.length))*100 + "%";
 
 });

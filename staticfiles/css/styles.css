@@ -1,3 +1,15 @@
-#side-form{
+.side-form{
   padding: 10px;
+}
+
+table
+{
+    width: 100%;
+    word-wrap: break-word;
+}
+
+
+table.table
+{
+    table-layout:auto ;
 }

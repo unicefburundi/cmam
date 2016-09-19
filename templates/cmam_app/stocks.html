@@ -22,44 +22,28 @@
     <link rel="stylesheet" href="{% static "css/styles.css" %}">
 {% endblock header_stilesheets %}
 
-{% block container %}
-<div class="container" ng-app="myApp">
-      <div class="row">
-        <h3> Search</h3>
-        <div class="col-md-7" ng-controller="myCtrl">
-          <form class="form-inline">
-            <div class="form-group" >
-              <label for="debut">A partir de </label>
-              <input class="form-control" id="debut" placeholder="10-07-2016" type="text" ng-model="debut"  datepicker />
-            </div>
-            <div class="form-group">
-              <label for="fin">Au</label>
-              <input class="form-control" id="fin" placeholder=" present" type="text" ng-model="fin" datepicker />
-            </div>
-            <button type="submit" class="btn btn-primary">OK</button> </form>
-        </div>
-      </div>
-      <hr>
-      <div class="row" ng-controller="myCtrl">
-        <div class="col-md-3"  >
-          <form>
-          <!-- Province -->
-            <div id="province-group" class="form-group">
-              <label>Province</label>
-              <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
-            </div>
+{% block search_form %}
+  <form role="form" class="side-form">
+  <!-- Province -->
+    <div id="province-group" class="form-group">
+      <label>Province</label>
+      <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+    </div>
 
-            <!-- District -->
-            <div id="district-group" class="form-group">
-              <label>District</label>
-              <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
-            </div>
-          </form>
-        </div>
-        {% block stock_table %}
-          {% include "cmam_app/stock_tables.html" %}
-        {% endblock stock_table %}
-      </div>
+    <!-- District -->
+    <div id="district-group" class="form-group">
+      <label>District</label>
+      <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+    </div>
+  </form>
+{% endblock search_form %}
+
+{% block container %}
+<div class="row" >
+{% block stock_table %}
+  {% include "cmam_app/stock_tables.html" %}
+{% endblock stock_table %}
+</div>
 {% endblock container %}
 
 {% block footer_js %}

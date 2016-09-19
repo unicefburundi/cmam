@@ -1,5 +1,5 @@
 
-<div class="col-md-9">
+<div class="col-md-12" ng-controller="myCtrl">
 <ul class="nav nav-tabs">
   <li  {% block activeamx %}class="active"{% endblock activeamx %} ><a href="#amx" data-toggle="tab">AMX</a></li>
   <li {% block activeatpe %}{% endblock activeatpe %} ><a href="#atpe"   data-toggle="tab">ATPE</a></li>
@@ -11,7 +11,7 @@
 {% block amx %}
   <div class="tab-pane {% block activeamx1 %}active{% endblock activeamx1 %}" id="amx">
     <div class="col-md-4">
-    <div class="row camebu"  ng-controller="myCtrl">
+    <div class="row camebu"  >
       <h5> Stocks au <b>niveau central</b>.</h5>
       <table id="datatable1" class="table table-bordered" >
         <thead>
@@ -32,7 +32,7 @@
         </tbody>
       </table>
     </div>
-    <div class="row district" >
+    <div class="row district" style="display: none;" >
       <h5> Stocks au <b>niveau du district</b>.</h5>
 
       <table id="datatable2" class="table table-bordered">
@@ -57,7 +57,7 @@
       </table>
     </div>
   </div>
-  <div class="col-md-5 cds">
+  <div class="col-md-5 cds" style="display: none;">
     <h5> Stocks au <strong>niveau des SST et STA</strong>.</h5>
     <table id="datatable2" class="table table-bordered">
       <thead>
@@ -92,7 +92,7 @@
 {% block atpe %}
   <div class="tab-pane {% block activeatpe1 %}{% endblock activeatpe1 %}" id="atpe">
     <div class="col-md-4">
-    <div class="row camebu"  ng-controller="myCtrl">
+    <div class="row camebu"  >
       <h5> Stocks au <b>niveau central</b>.</h5>
       <table id="datatable1" class="table table-bordered" >
         <thead>
@@ -173,7 +173,7 @@
 {% block f100 %}
   <div class="tab-pane {% block activef1001 %}{% endblock activef1001 %}" id="f100">
     <div class="col-md-4">
-    <div class="row camebu"  ng-controller="myCtrl">
+    <div class="row camebu"  >
       <h5> Stocks au <b>niveau central</b>.</h5>
       <table id="datatable1" class="table table-bordered" >
         <thead>

@@ -25,41 +25,29 @@
     <link rel="stylesheet" href="{% static "css/styles.css" %}">
 {% endblock header_stilesheets %}
 
+{% block search_form %}
+<form role="form" class="side-form">
+  <div id="services-group" class="form-group">
+    <label>Services</label>
+    <select class="form-control"  ng-model="dashboard.services" ng-options="x for x in services track by x" ng-change="update_services()"></select>
+  </div>
+  <!-- Province -->
+  <div id="province-group" class="form-group">
+    <label>Province</label>
+    <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+  </div>
+
+  <!-- District -->
+  <div id="district-group" class="form-group">
+    <label>District</label>
+    <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+    </div>
+</form>
+{% endblock search_form %}
+
 {% block container %}
     <div class="container" ng-app="myApp" >
-      <div class="row">
-        <h3> Search</h3>
-        <div class="col-md-7">
-          <form class="form-inline">
-            <div class="form-group"> <label for="debut">A partir de </label> <input
-                class="form-control" id="debut" placeholder="10-07-2016" type="text">
-            </div>
-            <div class="form-group"> <label for="fin">Au</label> <input class="form-control"
-                id="fin" placeholder=" present" type="text"> </div>
-            <button type="submit" class="btn btn-primary">OK</button> </form>
-        </div>
-      </div>
-      <hr>
       <div class="row" ng-controller="myCtrl">
-        <div class="col-md-3">
-          <form class="form-horizontal">
-            <div id="services-group" class="form-group">
-              <label>Services</label>
-              <select class="form-control"  ng-model="dashboard.services" ng-options="x for x in services track by x" ng-change="update_services()"></select>
-            </div>
-            <!-- Province -->
-            <div id="province-group" class="form-group">
-              <label>Province</label>
-              <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
-            </div>
-
-            <!-- District -->
-            <div id="district-group" class="form-group">
-              <label>District</label>
-              <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
-              </div>
-          </form>
-        </div>
         <div class="col-md-3">
           <h3>Taux de guerison</h3>
           <h1>35%</h1>
@@ -115,13 +103,13 @@
           </table>
         </div>
       </div>
-      <div class="row" ng-controller="pgrmCtrl">
-        <table id="datatable4" class="table table-bordered table-hover">
+      <div class="row container" ng-controller="pgrmCtrl">
+        <table id="datatable4" class="table fixed table-bordered table-hover">
           <thead class="thead-default">
             <tr>
               <th rowspan="2">Total debut de semaine</th>
               <th colspan="3">Nouvelles Admissions</th>
-              <th rowspan="2">Re-admission après Abandon(&lt;2mois)</th>
+              <th rowspan="2">Re-admission après Abandon (&lt;2mois)</th>
               <th rowspan="2">Transfert interne</th>
               <th rowspan="2">Total des Admissions</th>
               <th colspan="4">Sorties</th>
@@ -129,7 +117,7 @@
               <th rowspan="2">Total Fin de semaine</th>
             </tr>
             <tr>
-              <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB &lt; 180mm </th>
+              <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
               <th>Oeudeme</th>
               <th>Rechute</th>
               <th>Traité avec succès</th>

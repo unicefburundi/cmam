@@ -12,22 +12,27 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
               $scope.provinces = response.data;
           });
           $scope.update_province = function () {
-            var unit = $scope.dashboard.province;
+            var province = $scope.dashboard.province;
+            console.log(province );
+            $(".district").show();
             if ($scope.produits) {
-              $http.get("/cmam/provinces/" + unit.code + "/" )
+              $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
                     $scope.districts = response.data.districts;
               });
+            } else{
+              console.log("pas de produits");
             }
         };
           // district
         $scope.update_district = function () {
-            var unit = $scope.dashboard.district;
+            var district = $scope.dashboard.district;
             if ($scope.dashboard.province) {
-              $http.get("/cmam/districts/" + unit.code + "/" )
+              $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
                   $scope.cds = response.data.cds;
-                    console.log($scope.cds);
+                  $(".cds").show();
+                  console.log($scope.cds);
 
               });
               }
