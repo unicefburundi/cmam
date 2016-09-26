@@ -13,15 +13,13 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
           });
           $scope.update_province = function () {
             var province = $scope.dashboard.province;
-            console.log(province );
+            $(".cds").hide();
             $(".district").show();
             if ($scope.produits) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
                     $scope.districts = response.data.districts;
               });
-            } else{
-              console.log("pas de produits");
             }
         };
           // district
@@ -32,7 +30,6 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                 .then(function (response) {
                   $scope.cds = response.data.cds;
                   $(".cds").show();
-                  console.log($scope.cds);
 
               });
               }
