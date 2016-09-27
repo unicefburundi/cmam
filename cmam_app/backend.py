@@ -75,6 +75,8 @@ def handel_rapidpro_request(request):
     #Let's eliminate unnecessary spaces in the incoming message
     eliminate_unnecessary_spaces(incoming_data)
 
+    incoming_data['info_to_supervisor'] = False
+
     #Let's check which kind of message this message is.
     identify_message(incoming_data)
 
