@@ -2,6 +2,9 @@ from django.contrib import admin
 from cmam_app.models import *
 from import_export import resources
 from import_export.admin import ExportMixin
+from import_export import fields
+from bdiadmin.models import *
+
 
 class ProductAdminResource(resources.ModelResource):
     class Meta:
@@ -49,9 +52,47 @@ class ReporterAdmin(ExportMixin, admin.ModelAdmin):
     list_filter = ( 'facility__facility_level__name',)
 
 class ReportAdminResource(resources.ModelResource):
+    centrale = fields.Field()
+    province = fields.Field()
+    district = fields.Field()
+    hospital = fields.Field()
+    cds  = fields.Field()
+
     class Meta:
         model = Report
-        fields = ('facility', 'reporting_date', 'text', 'category')
+        fields = ('cds', 'hospital', 'centrale', 'district', 'province', 'reporting_date', 'text', 'category')
+
+    def dehydrate_cds(self, report):
+        if report.facility.facility_level.name in ["CDS", "Hospital"]:
+            return report.facility.name
+        return
+
+    def dehydrate_district(self, report):
+        if report.facility.facility_level.name in ["CDS", "Hospital"]:
+            return CDS.objects.get(code = report.facility.id_facility).district.name
+        elif report.facility.facility_level.name in ["District"]:
+            return report.facility.name
+        return
+
+    def dehydrate_hospital(self, report):
+        if report.facility.facility_level.name in ["Hospital"]:
+            cds = CDS.objects.get(code = report.facility.id_facility)
+            return cds.district.name
+        return
+
+    def dehydrate_province(self, report):
+        if report.facility.facility_level.name in ["CDS", "Hospital"]:
+            return CDS.objects.get(code = report.facility.id_facility).district.province.name
+        elif report.facility.facility_level.name in ["District"]:
+            return District.objects.get(code = report.facility.id_facility).province.name
+        elif report.facility.facility_level.name in ["Province"]:
+            return report.facility.name
+        return
+
+    def dehydrate_centrale(self, report):
+        if report.facility.facility_level.name in ["Centrale"]:
+            return "Centale"
+        return "Burundi"
 
 class ReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReportAdminResource
