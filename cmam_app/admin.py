@@ -54,13 +54,13 @@ class ReporterAdmin(ExportMixin, admin.ModelAdmin):
 class ReportAdminResource(resources.ModelResource):
     centrale = fields.Field()
     province = fields.Field()
+    facility_type = fields.Field()
     district = fields.Field()
-    hospital = fields.Field()
     cds  = fields.Field()
 
     class Meta:
         model = Report
-        fields = ('cds', 'hospital', 'centrale', 'district', 'province', 'reporting_date', 'text', 'category')
+        fields = ('cds', 'hospital', 'centrale', 'district', 'province', 'reporting_date', 'text', 'category', 'facility_type')
 
     def dehydrate_cds(self, report):
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
@@ -74,15 +74,11 @@ class ReportAdminResource(resources.ModelResource):
             return report.facility.name
         return
 
-    def dehydrate_hospital(self, report):
-        if report.facility.facility_level.name in ["Hospital"]:
-            cds = CDS.objects.get(code = report.facility.id_facility)
-            return cds.district.name
-        return
+    def dehydrate_facility_type(self, report):
+        return report.facility.facility_level.name
 
     def dehydrate_province(self, report):
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
-            print report.facility.id_facility
             return CDS.objects.get(code = report.facility.id_facility).district.province.name
         elif report.facility.facility_level.name in ["District"]:
             return District.objects.get(code = int(report.facility.id_facility)).province.name
