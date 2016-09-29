@@ -16,3 +16,4 @@ staticfiles/img/
 *.mo
 *.bak
 facility.json
+*.sql

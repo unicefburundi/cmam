@@ -82,9 +82,10 @@ class ReportAdminResource(resources.ModelResource):
 
     def dehydrate_province(self, report):
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
+            print report.facility.id_facility
             return CDS.objects.get(code = report.facility.id_facility).district.province.name
         elif report.facility.facility_level.name in ["District"]:
-            return District.objects.get(code = report.facility.id_facility).province.name
+            return District.objects.get(code = int(report.facility.id_facility)).province.name
         elif report.facility.facility_level.name in ["Province"]:
             return report.facility.name
         return
@@ -98,7 +99,7 @@ class ReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReportAdminResource
     list_display = ('facility', 'reporting_date', 'text', 'category')
     search_fields = ('facility', 'reporting_date', 'text', 'category')
-    list_filter = ( 'category',)
+    list_filter = ( 'category', 'facility__facility_level')
 
 class IncomingPatientsReportAdminResource(resources.ModelResource):
     class Meta:

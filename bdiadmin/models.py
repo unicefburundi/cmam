@@ -88,8 +88,8 @@ class CDS(models.Model):
     )
     district = models.ForeignKey(District)
     name = models.CharField( max_length=40)
-    code = models.CharField(unique=True, max_length=6)
-    status = models.CharField(max_length=4, choices=STATUS_CHOICES, blank=True, null=True, help_text=_('Either Public, Conf, Ass, Prive  or Hospital status.'))
+    code = models.CharField(unique=True, max_length=7)
+    status = models.CharField(max_length=5, choices=STATUS_CHOICES, blank=True, null=True, help_text=_('Either Public, Conf, Ass, Prive  or Hospital status.'))
 
     def __unicode__(self):
         return self.name
