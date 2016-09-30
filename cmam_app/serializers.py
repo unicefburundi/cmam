@@ -84,6 +84,7 @@ class OutgoingPatientSerializer(serializers.ModelSerializer):
 
 
 class InOutSerialiser(serializers.Serializer):
+    week = serializers.CharField()
     total_debut_semaine = serializers.IntegerField(default=0)
     ptb = serializers.IntegerField(default=0)
     oedemes = serializers.IntegerField(default=0)

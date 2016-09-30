@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_multiple_model.mixins import MultipleModelMixin, Query
 from rest_framework import filters
-
+from datetime import datetime
 
 @login_required
 def get_year(request):
@@ -157,7 +157,9 @@ class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
         outgon = results[1]['outgoingpatientsreport']
 
         for i in income:
+            i['week'] = "W{0}".format(datetime.strptime(i['date_of_first_week_day'], "%Y-%m-%d").strftime("%W"))
             for o in outgon:
+                o['week'] = "W{0}".format(datetime.strptime(o['date_of_first_week_day'], "%Y-%m-%d").strftime("%W"))
                 if i['date_of_first_week_day'] == o['date_of_first_week_day']:
                     i.update(o)
                     outgon.remove(o)

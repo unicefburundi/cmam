@@ -23,7 +23,7 @@
 {% endblock header_stilesheets %}
 
 {% block search_form %}
-  <form role="form" class="side-form">
+  <form role="form" class="side-form" >
   <!-- Province -->
     <div id="province-group" class="form-group">
       <label>Province</label>
@@ -39,10 +39,340 @@
 {% endblock search_form %}
 
 {% block container %}
-<div class="row" >
-{% block stock_table %}
-  {% include "cmam_app/stock_tables.html" %}
-{% endblock stock_table %}
+
+  <div class="col-md-12"  >
+    <ul class="nav nav-tabs">
+      <li  {% block activeamx %}class="active"{% endblock activeamx %} ><a href="#amx" data-toggle="tab">AMX</a></li>
+      <li {% block activeatpe %}{% endblock activeatpe %} ><a href="#atpe"   data-toggle="tab">ATPE</a></li>
+      <li {% block activef100 %}{% endblock activef100 %} ><a href="#f100"   data-toggle="tab">F100</a></li>
+      <li {% block activef75 %}{% endblock activef75 %} ><a href="#f75"   data-toggle="tab">F75</a></li>
+    </ul>
+
+    <div class="tab-content" ng-controller="myCtrl">
+    {% block amx %}
+      <div class="tab-pane {% block activeamx1 %}active{% endblock activeamx1 %}" id="amx">
+        <div class="col-md-4">
+        <div class="row camebu"  >
+          <h5> Stocks au <b>niveau central</b>.</h5>
+          <table id="datatable1" class="table table-bordered" >
+            <thead>
+              <tr>
+                <th>Entrée</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% verbatim %}
+                <tr >
+                <td id="cen-entrees">{{ produits[0].reception  || 0}}</td>
+                <td id="cen-sorties">{{ produits[0].sortie || 0 }}</td>
+                <td id="cen-restant">{{ (produits[0].quantite_en_stock_central + produits[0].reception - produits[0].sortie) || 0 }}</td>
+              </tr>
+              {% endverbatim %}
+            </tbody>
+          </table>
+        </div>
+        <div class="row district" style="display: none;" >
+          <h5> Stocks au <b>niveau du district</b>.</h5>
+
+          <table id="datatable2" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>District</th>
+                <th>Entrée</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% verbatim %}
+              <tr ng-repeat="x in districts">
+                <th>{{ x.name}}</th>
+                <td>{{ x.AMX.reception }}</td>
+                <td>{{ x.AMX.sortie }}</td>
+                <td ng-class="{ red: x.AMX.reception < x.AMX.sortie }">{{ x.AMX.reception - x.AMX.sortie }}</td>
+              </tr>
+            {% endverbatim %}
+          </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-5 cds" style="display: none;">
+        <h5> Stocks au <strong>niveau des SST et STA</strong>.</h5>
+        <table id="datatable2" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>SST et STA</th>
+              <th>Entrée</th>
+              <th>Sorties</th>
+              <th>Stock Restant</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% verbatim %}
+              <tr ng-repeat="x in cds">
+                <th>{{ x.name }}</th>
+                <td>{{ x.AMX.reception }}</td>
+                <td>{{ x.AMX.sortie }}</td>
+                <td>{{ x.AMX.reception - x.AMX.sortie }}</td>
+              </tr>
+                {% endverbatim %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3">
+        <div class="col-md-6">Unités en</div>
+        <div class="col-md-6 bg-danger" >{% verbatim %}
+          {{produits[0].general_measuring_unit}} de {{produits[0].designation}}
+        {% endverbatim %}</div>
+      </div>
+    </div>
+    {% endblock amx %}
+
+    {% block atpe %}
+      <div class="tab-pane {% block activeatpe1 %}{% endblock activeatpe1 %}" id="atpe">
+        <div class="col-md-4">
+        <div class="row camebu"  >
+          <h5> Stocks au <b>niveau central</b>.</h5>
+          <table id="datatable1" class="table table-bordered" >
+            <thead>
+              <tr>
+                <th>Entrée</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% verbatim %}
+                <tr >
+                <td >{{ produits[1].reception  || 0}}</td>
+                <td >{{ produits[1].sortie || 0 }}</td>
+                <td >{{ (produits[1].quantite_en_stock_central + produits[1].reception - produits[1].sortie) || 0 }}</td>
+              </tr>
+              {% endverbatim %}
+            </tbody>
+          </table>
+        </div>
+        <div class="row district" style="display: none;">
+          <h5> Stocks au <b>niveau du district</b>.</h5>
+
+          <table id="datatable2" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>District</th>
+                <th>Entrée</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% verbatim %}
+              <tr ng-repeat="x in districts">
+                <th>{{ x.name}}</th>
+                <td>{{ x.ATPE.reception }}</td>
+                <td>{{ x.ATPE.sortie }}</td>
+                <td ng-class="{ red: x.ATPE.reception < x.ATPE.sortie }">{{ x.ATPE.reception - x.ATPE.sortie }}</td>
+              </tr>
+            {% endverbatim %}
+          </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-5 cds" style="display: none;">
+        <h5> Stocks au <strong>niveau des SST et STA</strong>.</h5>
+        <table id="datatable2" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>SST et STA</th>
+              <th>Entrée</th>
+              <th>Sorties</th>
+              <th>Stock Restant</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% verbatim %}
+              <tr ng-repeat="x in cds">
+                <th>{{ x.name }}</th>
+                <td>{{ x.ATPE.reception }}</td>
+                <td>{{ x.ATPE.sortie }}</td>
+                <td>{{ x.ATPE.reception - x.ATPE.sortie }}</td>
+              </tr>
+                {% endverbatim %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3">
+        <div class="col-md-6">Unités en</div>
+        <div class="col-md-6 bg-danger" >{% verbatim %}
+          {{produits[1].general_measuring_unit}} de {{produits[1].designation}}
+        {% endverbatim %}</div>
+      </div>
+    </div>
+    {% endblock atpe %}
+
+    {% block f100 %}
+      <div class="tab-pane {% block activef1001 %}{% endblock activef1001 %}" id="f100">
+        <div class="col-md-4">
+        <div class="row camebu"  >
+          <h5> Stocks au <b>niveau central</b>.</h5>
+          <table id="datatable1" class="table table-bordered" >
+            <thead>
+              <tr>
+                <th>Entrée</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% verbatim %}
+                <tr >
+                <td >{{ produits[2].reception  || 0}}</td>
+                <td >{{ produits[2].sortie || 0 }}</td>
+                <td >{{ (produits[2].quantite_en_stock_central + produits[2].reception - produits[2].sortie) || 0 }}</td>
+              </tr>
+              {% endverbatim %}
+            </tbody>
+          </table>
+        </div>
+        <div class="row district" style="display: none;">
+          <h5> Stocks au <b>niveau du district</b>.</h5>
+
+          <table id="datatable2" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>District</th>
+                <th>Entrée</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% verbatim %}
+              <tr ng-repeat="x in districts">
+                <th>{{ x.name}}</th>
+                <td>{{ x.F100.reception }}</td>
+                <td>{{ x.F100.sortie }}</td>
+                <td ng-class="{ red: x.F100.reception < x.F100.sortie }">{{ x.F100.reception - x.F100.sortie }}</td>
+              </tr>
+            {% endverbatim %}
+          </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-5 cds" style="display: none;">
+        <h5> Stocks au <strong>niveau des SST et STA</strong>.</h5>
+        <table id="datatable2" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>SST et STA</th>
+              <th>Entrée</th>
+              <th>Sorties</th>
+              <th>Stock Restant</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% verbatim %}
+              <tr ng-repeat="x in cds">
+                <th>{{ x.name }}</th>
+                <td>{{ x.F100.reception }}</td>
+                <td>{{ x.F100.sortie }}</td>
+                <td>{{ x.F100.reception - x.F100.sortie }}</td>
+              </tr>
+                {% endverbatim %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3">
+        <div class="col-md-6">Unités en</div>
+        <div class="col-md-6 bg-danger" >{% verbatim %}
+          {{produits[2].general_measuring_unit}} de {{produits[2].designation}}
+        {% endverbatim %}</div>
+      </div>
+    </div>
+    {% endblock f100 %}
+
+    {% block f75 %}
+      <div class="tab-pane {% block activef751 %}{% endblock activef751 %}" id="f75">
+        <div class="col-md-4">
+        <div class="row camebu"  ng-controller="myCtrl">
+          <h5> Stocks au <b>niveau central</b>.</h5>
+          <table id="datatable1" class="table table-bordered" >
+            <thead>
+              <tr>
+                <th>Entrée</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% verbatim %}
+                <tr >
+                <td >{{ produits[3].reception  || 0}}</td>
+                <td >{{ produits[3].sortie || 0 }}</td>
+                <td >{{ (produits[3].quantite_en_stock_central + produits[1].reception - produits[3].sortie) || 0 }}</td>
+              </tr>
+              {% endverbatim %}
+            </tbody>
+          </table>
+        </div>
+        <div class="row district" style="display: none;">
+          <h5> Stocks au <b>niveau du district</b>.</h5>
+
+          <table id="datatable2" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>District</th>
+                <th>Entrée</th>
+                <th>Sorties</th>
+                <th>Stock Restant</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% verbatim %}
+              <tr ng-repeat="x in districts">
+                <th>{{ x.name}}</th>
+                <td>{{ x.F75.reception }}</td>
+                <td>{{ x.F75.sortie }}</td>
+                <td ng-class="{ red: x.F75.reception < x.F75.sortie }">{{ x.F75.reception - x.F75.sortie }}</td>
+              </tr>
+            {% endverbatim %}
+          </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-5 cds" style="display: none;">
+        <h5> Stocks au <strong>niveau des SST et STA</strong>.</h5>
+        <table id="datatable2" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>SST et STA</th>
+              <th>Entrée</th>
+              <th>Sorties</th>
+              <th>Stock Restant</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% verbatim %}
+              <tr ng-repeat="x in cds">
+                <th>{{ x.name }}</th>
+                <td>{{ x.F75.reception }}</td>
+                <td>{{ x.F75.sortie }}</td>
+                <td>{{ x.F75.reception - x.F75.sortie }}</td>
+              </tr>
+                {% endverbatim %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3">
+        <div class="col-md-6">Unités en</div>
+        <div class="col-md-6 bg-danger" >{% verbatim %}
+          {{produits[3].general_measuring_unit}} de {{produits[3].designation}}
+        {% endverbatim %}</div>
+      </div>
+    </div>
+    {% endblock f75 %}
+    </div>
 </div>
 {% endblock container %}
 

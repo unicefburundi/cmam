@@ -1,5 +1,5 @@
 
-<div class="col-md-12" ng-controller="myCtrl">
+<div class="col-md-12"  >
 <ul class="nav nav-tabs">
   <li  {% block activeamx %}class="active"{% endblock activeamx %} ><a href="#amx" data-toggle="tab">AMX</a></li>
   <li {% block activeatpe %}{% endblock activeatpe %} ><a href="#atpe"   data-toggle="tab">ATPE</a></li>
@@ -7,7 +7,7 @@
   <li {% block activef75 %}{% endblock activef75 %} ><a href="#f75"   data-toggle="tab">F75</a></li>
   </ul>
 
-<div class="tab-content">
+<div class="tab-content" ng-controller="myCtrl">
 {% block amx %}
   <div class="tab-pane {% block activeamx1 %}active{% endblock activeamx1 %}" id="amx">
     <div class="col-md-4">

@@ -1,4 +1,4 @@
-var app = angular.module('myApp', []);
+var app = angular.module('stock', []);
 app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         // products
         $http.get("/cmam/products/")
@@ -18,9 +18,8 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
             if ($scope.produits) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
-                    $scope.districts = response.data.districts;
-                  console.log($scope.districts);
-
+                    $scope.district = response.data.districts;
+                  console.log($scope.district);
               });
             }
         };
@@ -31,6 +30,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
                   $scope.cds = response.data.cds;
+                  console.log($scope.cds);
                   $(".cds").show();
 
               });
