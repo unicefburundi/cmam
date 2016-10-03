@@ -1,262 +1,333 @@
-{% extends "index.html" %}
 {% load staticfiles %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-    Programs
-{% endblock title %}
+<head>
 
-{% block header_js %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-{% endblock header_js %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A admin dashboard for CMAMUnicef Burundi project">
+  <meta name="author" content="UNICEF Burundi">
 
-{% block header_stilesheets %}
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-      crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-      integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
-      crossorigin="anonymous">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
-    <link rel="stylesheet" href="{% static "css/styles.css" %}">
-{% endblock header_stilesheets %}
+  <title>{% block title %}CMAM Dashboard{% endblock title %}</title>
 
-{% block search_form %}
-<form role="form" class="side-form">
-  <!-- Province -->
-  <div id="province-group" class="form-group">
-    <label>Province</label>
-    <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
-  </div>
+  <!-- Bootstrap Core CSS -->
+  <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
 
-  <!-- District -->
-  <div id="district-group" class="form-group">
-    <label>District</label>
-    <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
-    </div>
-</form>
-{% endblock search_form %}
+  <!-- MetisMenu CSS -->
+  <link href="{% static "vendor/metisMenu/metisMenu.min.css" %}" rel="stylesheet">
 
-{% block container %}
-    <div class="container" ng-app="myApp" >
-      <div class="row" ng-controller="myCtrl">
-        <div class="col-md-3">
-          <h3>Taux de guerison</h3>
-          <h1>0%</h1>
-          <table id="datatable1" class="table bg-warning">
-            <thead>
-              <tr>
-                <th>Province</th>
-                <th>District</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>0%</td>
-                <td>0%</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="col-md-3">
-          <h3>Taux de deces</h3>
-          <h1>0%</h1>
-          <table id="datatable2" class="table bg-danger">
-            <thead>
-              <tr>
-                <th>Province</th>
-                <th>District</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>0%</td>
-                <td>0%</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="col-md-3">
-          <h3>Taux d'abandon</h3>
-          <h1>0%</h1>
-          <table id="datatable3" class="table bg-info">
-            <thead>
-              <tr>
-                <th>Province</th>
-                <th>District</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>18%</td>
-                <td>40%</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <!-- Custom CSS -->
+  <link href="{% static "css/sb-admin-2.css" %}" rel="stylesheet">
+
+  <!-- Custom Fonts -->
+  <link href="{% static "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+  <link href="{% static "css/styles.css" %}" rel="stylesheet" type="text/css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script src="{% static "js/angular.min.js" %}"></script>
+</head>
+
+<body ng-app="ProgramApp">
+
+  <div id="wrapper"  ng-controller="FormCtrl">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'home' %}">CMAM</a>
       </div>
-      <div class="row container" ng-controller="pgrmCtrl">
-      <ul class="nav nav-tabs">
-        <li  {% block activeSTA %}class="active"{% endblock activeSTA %} ><a href="#STA" data-toggle="tab">STA</a></li>
-        <li  {% block activeSST %}{% endblock activeSST %} ><a href="#SST" data-toggle="tab">SST</a></li>
+      <!-- /.navbar-header -->
+
+      <ul class="nav navbar-top-links navbar-right">
+        <li>
+          <a class="page-scroll" href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'programs' %}"><i class="fa fa-plus-square fa-fw"></i>Programs</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li>
+          <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
+        </li>
+        {% else %}
+        <li>
+          <a class="page-scroll" href="{% url 'login' %}?next=/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
+        </li>
+        {% endif %}
       </ul>
-      <div class="tab-content" ng-controller="myCtrl">
-        <div class="tab-pane {% block activeSTA1 %}active{% endblock activeSTA1 %}" id="STA">
-          <table id="datatable4" class="table fixed table-bordered table-hover">
-            <thead class="thead-default">
-              <tr>
-                <th rowspan="2">Week</th>
-                <th rowspan="2">Total debut de semaine</th>
-                <th colspan="3">Nouvelles Admissions</th>
-                <th rowspan="2">Re-admission après Abandon</th>
-                <th rowspan="2">Transfert interne</th>
-                <th rowspan="2">Total des Admissions</th>
-                <th colspan="5">Sorties</th>
-                <th rowspan="2">Total decharge</th>
-                <th rowspan="2">Total Fin de semaine</th>
-              </tr>
-              <tr>
-                <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
-                <th>Oeudeme</th>
-                <th>Rechute</th>
-                <th>Gueri</th>
-                <th>Deces</th>
-                <th>Abandons</th>
-                <th>Non repondant</th>
-                <th>Transferts iterne</th>
-              </tr>
-            </thead>
-            <tbody ng-init="total_debut_semaine = 0; ptb = 0 ; oedemes=0; rechute=0; readmission=0; transfert_interne=0; gueri=0; deces=0; abandon=0; non_repondant=0; Admissions=0; decharge=0; Fin=0">
-              {% verbatim %}
-              <tr ng-repeat="x in lesobjets track by $index">
-                <td>{{x.week}}</td>
-                <td ng-init="$parent.total_debut_semaine = $parent.total_debut_semaine + x.total_debut_semaine " >{{x.total_debut_semaine || 0}}</td>
-                <td ng-init="$parent.ptb = $parent.ptb + x.ptb ">{{x.ptb || 0}}</td>
-                <td ng-init="$parent.oedemes = $parent.oedemes + x.oedemes ">{{x.oedemes || 0}}</td>
-                <td ng-init="$parent.rechute = $parent.rechute + x.rechute ">{{x.rechute || 0}}</td>
-                <td ng-init="$parent.readmission = $parent.readmission + x.readmission ">{{x.readmission || 0}}</td>
-                <td ng-init="$parent.transfert_interne = $parent.transfert_interne + x.transfert_interne ">{{x.transfert_interne || 0}}</td>
-                <td ng-init="$parent.Admissions = $parent.Admissions + x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne ">{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne || 0}}</td>
-                <td ng-init="$parent.gueri = $parent.gueri + x.gueri ">{{x.gueri || 0}}</td>
-                <td ng-init="$parent.deces = $parent.deces + x.deces ">{{x.deces || 0}}</td>
-                <td ng-init="$parent.abandon = $parent.abandon + x.abandon ">{{x.abandon || 0}}</td>
-                <td ng-init="$parent.non_repondant = $parent.non_repondant + x.non_repondant ">{{x.non_repondant || 0}}</td>
-                <td ng-init="$parent.non_repondant = $parent.non_repondant + x.non_repondant ">{{x.non_repondant || 0}}</td>
-                <td ng-init="$parent.decharge = $parent.decharge + x.gueri + x.deces + x.abandon + x.non_repondant ">{{x.gueri + x.deces + x.abandon + x.non_repondant || 0}}</td>
-                <td ng-init="$parent.Fin = $parent.Fin + (x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant)">{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant) || 0}}</td>
-              </tr>
-              <tr class="success">
-                <td><b>{{total_debut_semaine}}</b> </td>
-                <td><b>{{ptb}}</td>
-                <td><b>{{oedemes}}</td>
-                <td><b>{{rechute}}</td>
-                <td><b>{{readmission}}</td>
-                <td><b>{{transfert_interne}}</td>
-                <td><b>{{Admissions}}</td>
-                <td><b>{{gueri}}</td>
-                <td><b>{{deces}}</td>
-                <td><b>{{abandon}}</td>
-                <td><b>{{non_repondant}}</td>
-                <td><b>{{decharge}}</td>
-                <td><b>{{Fin}}</td>
-              </tr>
-              {% endverbatim %}
-              </tbody>
-          </table>
-        </div>
-        <div class="tab-pane {% block activeSST1 %}{% endblock activeSST1 %}" id="SST">
-         <table id="datatable4" class="table fixed table-bordered table-hover">
-            <thead class="thead-default">
-              <tr>
-                <th rowspan="2">Week</th>
-                <th rowspan="2">Total debut de semaine</th>
-                <th colspan="3">Nouvelles Admissions</th>
-                <th rowspan="2">Re-admission après Abandon (&lt;2mois)</th>
-                <th rowspan="2">Transfert interne</th>
-                <th rowspan="2">Total des Admissions</th>
-                <th colspan="4">Sorties</th>
-                <th rowspan="2">Total decharge</th>
-                <th rowspan="2">Total Fin de semaine</th>
-              </tr>
-              <tr>
-                <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
-                <th>Oeudeme</th>
-                <th>Rechute</th>
-                <th>Traité avec succès</th>
-                <th>Deces</th>
-                <th>Abandons</th>
-                <th>Non repondant</th>
-              </tr>
-            </thead>
-            <tbody ng-init="total_debut_semaine = 0; ptb = 0 ; oedemes=0; rechute=0; readmission=0; transfert_interne=0; gueri=0; deces=0; abandon=0; non_repondant=0; Admissions=0; decharge=0; Fin=0">
-              {% verbatim %}
-              <tr ng-repeat="x in lesobjets track by $index">
-                <td>{{x.week}}</td>
-                <td ng-init="$parent.total_debut_semaine = $parent.total_debut_semaine + x.total_debut_semaine " >{{x.total_debut_semaine || 0}}</td>
-                <td ng-init="$parent.ptb = $parent.ptb + x.ptb ">{{x.ptb || 0}}</td>
-                <td ng-init="$parent.oedemes = $parent.oedemes + x.oedemes ">{{x.oedemes || 0}}</td>
-                <td ng-init="$parent.rechute = $parent.rechute + x.rechute ">{{x.rechute || 0}}</td>
-                <td ng-init="$parent.readmission = $parent.readmission + x.readmission ">{{x.readmission || 0}}</td>
-                <td ng-init="$parent.transfert_interne = $parent.transfert_interne + x.transfert_interne ">{{x.transfert_interne || 0}}</td>
-                <td ng-init="$parent.Admissions = $parent.Admissions + x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne ">{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne || 0}}</td>
-                <td ng-init="$parent.gueri = $parent.gueri + x.gueri ">{{x.gueri || 0}}</td>
-                <td ng-init="$parent.deces = $parent.deces + x.deces ">{{x.deces || 0}}</td>
-                <td ng-init="$parent.abandon = $parent.abandon + x.abandon ">{{x.abandon || 0}}</td>
-                <td ng-init="$parent.non_repondant = $parent.non_repondant + x.non_repondant ">{{x.non_repondant || 0}}</td>
-                <td ng-init="$parent.decharge = $parent.decharge + x.gueri + x.deces + x.abandon + x.non_repondant ">{{x.gueri + x.deces + x.abandon + x.non_repondant || 0}}</td>
-                <td ng-init="$parent.Fin = $parent.Fin + (x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant)">{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant) || 0}}</td>
-              </tr>
-              <tr class="success">
-                <td><b>{{total_debut_semaine}}</b> </td>
-                <td><b>{{ptb}}</td>
-                <td><b>{{oedemes}}</td>
-                <td><b>{{rechute}}</td>
-                <td><b>{{readmission}}</td>
-                <td><b>{{transfert_interne}}</td>
-                <td><b>{{Admissions}}</td>
-                <td><b>{{gueri}}</td>
-                <td><b>{{deces}}</td>
-                <td><b>{{abandon}}</td>
-                <td><b>{{non_repondant}}</td>
-                <td><b>{{decharge}}</td>
-                <td><b>{{Fin}}</td>
-              </tr>
-              {% endverbatim %}
-              </tbody>
-          </table>
+      <!-- /.navbar-top-links -->
+      <div class="navbar-default sidebar" role="navigation" >
+        <div class="sidebar-nav navbar-collapse">
+          <ul class="nav" >
+            <li >
+              {% block search_form %}
+              <form role="form" class="side-form" >
+                <!-- Province -->
+                <div id="province-group" class="form-group">
+                  <label>Province</label>
+                  <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+                </div>
+
+                <!-- District -->
+                <div id="district-group" class="form-group">
+                  <label>District</label>
+                  <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+                </div>
+              </form>
+              {% endblock search_form %}
+            </li>
+          </ul>
         </div>
       </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="page-wrapper">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <h1 class="page-header">Community-based Management of Acute Malnutrition</h1>
+            {% block container %}
+            <div class="container"  >
+                <div class="row" >
+                  <div class="col-md-3">
+                    <h3>Taux de guerison</h3>
+                    <h1>0%</h1>
+                    <table id="datatable1" class="table bg-warning">
+                      <thead>
+                        <tr>
+                          <th>Province</th>
+                          <th>District</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>0%</td>
+                          <td>0%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-md-3">
+                    <h3>Taux de deces</h3>
+                    <h1>0%</h1>
+                    <table id="datatable2" class="table bg-danger">
+                      <thead>
+                        <tr>
+                          <th>Province</th>
+                          <th>District</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>0%</td>
+                          <td>0%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-md-3">
+                    <h3>Taux d'abandon</h3>
+                    <h1>0%</h1>
+                    <table id="datatable3" class="table bg-info">
+                      <thead>
+                        <tr>
+                          <th>Province</th>
+                          <th>District</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>18%</td>
+                          <td>40%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="row container" ng-controller="pgrmCtrl">
+                <ul class="nav nav-tabs">
+                  <li  {% block activeSTA %}class="active"{% endblock activeSTA %} ><a href="#STA" data-toggle="tab">STA</a></li>
+                  <li  {% block activeSST %}{% endblock activeSST %} ><a href="#SST" data-toggle="tab">SST</a></li>
+                </ul>
+                <div class="tab-content" >
+                  <div class="tab-pane {% block activeSTA1 %}active{% endblock activeSTA1 %}" id="STA">
+                    <table id="datatable4" class="table fixed table-bordered table-hover">
+                      <thead class="thead-default">
+                        <tr>
+                          <th rowspan="2">Week</th>
+                          <th rowspan="2">Total debut de semaine</th>
+                          <th colspan="3">Nouvelles Admissions</th>
+                          <th rowspan="2">Re-admission après Abandon</th>
+                          <th rowspan="2">Transfert interne</th>
+                          <th rowspan="2">Total des Admissions</th>
+                          <th colspan="5">Sorties</th>
+                          <th rowspan="2">Total decharge</th>
+                          <th rowspan="2">Total Fin de semaine</th>
+                        </tr>
+                        <tr>
+                          <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
+                          <th>Oeudeme</th>
+                          <th>Rechute</th>
+                          <th>Gueri</th>
+                          <th>Deces</th>
+                          <th>Abandons</th>
+                          <th>Non repondant</th>
+                          <th>Transferts iterne</th>
+                        </tr>
+                      </thead>
+                      <tbody ng-init="total_debut_semaine = 0; ptb = 0 ; oedemes=0; rechute=0; readmission=0; transfert_interne=0; gueri=0; deces=0; abandon=0; non_repondant=0; Admissions=0; decharge=0; Fin=0">
+                        {% verbatim %}
+                        <tr ng-repeat="x in lesobjets track by $index">
+                          <td>{{x.week}}</td>
+                          <td ng-init="$parent.total_debut_semaine = $parent.total_debut_semaine + x.total_debut_semaine " >{{x.total_debut_semaine || 0}}</td>
+                          <td ng-init="$parent.ptb = $parent.ptb + x.ptb ">{{x.ptb || 0}}</td>
+                          <td ng-init="$parent.oedemes = $parent.oedemes + x.oedemes ">{{x.oedemes || 0}}</td>
+                          <td ng-init="$parent.rechute = $parent.rechute + x.rechute ">{{x.rechute || 0}}</td>
+                          <td ng-init="$parent.readmission = $parent.readmission + x.readmission ">{{x.readmission || 0}}</td>
+                          <td ng-init="$parent.transfert_interne = $parent.transfert_interne + x.transfert_interne ">{{x.transfert_interne || 0}}</td>
+                          <td ng-init="$parent.Admissions = $parent.Admissions + x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne ">{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne || 0}}</td>
+                          <td ng-init="$parent.gueri = $parent.gueri + x.gueri ">{{x.gueri || 0}}</td>
+                          <td ng-init="$parent.deces = $parent.deces + x.deces ">{{x.deces || 0}}</td>
+                          <td ng-init="$parent.abandon = $parent.abandon + x.abandon ">{{x.abandon || 0}}</td>
+                          <td ng-init="$parent.non_repondant = $parent.non_repondant + x.non_repondant ">{{x.non_repondant || 0}}</td>
+                          <td ng-init="$parent.non_repondant = $parent.non_repondant + x.non_repondant ">{{x.non_repondant || 0}}</td>
+                          <td ng-init="$parent.decharge = $parent.decharge + x.gueri + x.deces + x.abandon + x.non_repondant ">{{x.gueri + x.deces + x.abandon + x.non_repondant || 0}}</td>
+                          <td ng-init="$parent.Fin = $parent.Fin + (x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant)">{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant) || 0}}</td>
+                        </tr>
+                        <tr class="success">
+                          <td><b>Weeks</b></td>
+                          <td><b>{{total_debut_semaine}}</b> </td>
+                          <td><b>{{ptb}}</td>
+                          <td><b>{{oedemes}}</td>
+                          <td><b>{{rechute}}</td>
+                          <td><b>{{readmission}}</td>
+                          <td><b>{{transfert_interne}}</td>
+                          <td><b>{{Admissions}}</td>
+                          <td><b>{{gueri}}</td>
+                          <td><b>{{deces}}</td>
+                          <td><b>{{abandon}}</td>
+                          <td><b>{{non_repondant}}</td>
+                          <td><b>{{non_repondant}}</td>
+                          <td><b>{{decharge}}</td>
+                          <td><b>{{Fin}}</td>
+                        </tr>
+                        {% endverbatim %}
+                        </tbody>
+                    </table>
+                  </div>
+                  <div class="tab-pane {% block activeSST1 %}{% endblock activeSST1 %}" id="SST">
+                   <table id="datatable4" class="table fixed table-bordered table-hover">
+                      <thead class="thead-default">
+                        <tr>
+                          <th rowspan="2">Week</th>
+                          <th rowspan="2">Total debut de semaine</th>
+                          <th colspan="3">Nouvelles Admissions</th>
+                          <th rowspan="2">Re-admission après Abandon (&lt;2mois)</th>
+                          <th rowspan="2">Transfert interne</th>
+                          <th rowspan="2">Total des Admissions</th>
+                          <th colspan="4">Sorties</th>
+                          <th rowspan="2">Total decharge</th>
+                          <th rowspan="2">Total Fin de semaine</th>
+                        </tr>
+                        <tr>
+                          <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
+                          <th>Oeudeme</th>
+                          <th>Rechute</th>
+                          <th>Traité avec succès</th>
+                          <th>Deces</th>
+                          <th>Abandons</th>
+                          <th>Non repondant</th>
+                        </tr>
+                      </thead>
+                      <tbody ng-init="total_debut_semaine = 0; ptb = 0 ; oedemes=0; rechute=0; readmission=0; transfert_interne=0; gueri=0; deces=0; abandon=0; non_repondant=0; Admissions=0; decharge=0; Fin=0">
+                        {% verbatim %}
+                        <tr ng-repeat="x in lesobjets track by $index">
+                          <td>{{x.week}}</td>
+                          <td ng-init="$parent.total_debut_semaine = $parent.total_debut_semaine + x.total_debut_semaine " >{{x.total_debut_semaine || 0}}</td>
+                          <td ng-init="$parent.ptb = $parent.ptb + x.ptb ">{{x.ptb || 0}}</td>
+                          <td ng-init="$parent.oedemes = $parent.oedemes + x.oedemes ">{{x.oedemes || 0}}</td>
+                          <td ng-init="$parent.rechute = $parent.rechute + x.rechute ">{{x.rechute || 0}}</td>
+                          <td ng-init="$parent.readmission = $parent.readmission + x.readmission ">{{x.readmission || 0}}</td>
+                          <td ng-init="$parent.transfert_interne = $parent.transfert_interne + x.transfert_interne ">{{x.transfert_interne || 0}}</td>
+                          <td ng-init="$parent.Admissions = $parent.Admissions + x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne ">{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne || 0}}</td>
+                          <td ng-init="$parent.gueri = $parent.gueri + x.gueri ">{{x.gueri || 0}}</td>
+                          <td ng-init="$parent.deces = $parent.deces + x.deces ">{{x.deces || 0}}</td>
+                          <td ng-init="$parent.abandon = $parent.abandon + x.abandon ">{{x.abandon || 0}}</td>
+                          <td ng-init="$parent.non_repondant = $parent.non_repondant + x.non_repondant ">{{x.non_repondant || 0}}</td>
+                          <td ng-init="$parent.decharge = $parent.decharge + x.gueri + x.deces + x.abandon + x.non_repondant ">{{x.gueri + x.deces + x.abandon + x.non_repondant || 0}}</td>
+                          <td ng-init="$parent.Fin = $parent.Fin + (x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant)">{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant) || 0}}</td>
+                        </tr>
+                        <tr class="success">
+                          <td><b>Weeks</b></td>
+                          <td><b>{{total_debut_semaine}}</b> </td>
+                          <td><b>{{ptb}}</td>
+                          <td><b>{{oedemes}}</td>
+                          <td><b>{{rechute}}</td>
+                          <td><b>{{readmission}}</td>
+                          <td><b>{{transfert_interne}}</td>
+                          <td><b>{{Admissions}}</td>
+                          <td><b>{{gueri}}</td>
+                          <td><b>{{deces}}</td>
+                          <td><b>{{abandon}}</td>
+                          <td><b>{{non_repondant}}</td>
+                          <td><b>{{decharge}}</td>
+                          <td><b>{{Fin}}</td>
+                        </tr>
+                        {% endverbatim %}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endblock container %}
+          </div>
+          <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
     </div>
+    <!-- /#page-wrapper -->
+
   </div>
-{% endblock container %}
+  <!-- /#wrapper -->
+  <footer class="container-fluid">
+    <p class="text-right ">©2016 UNICEF Burundi</p>
+  </footer>
 
-{% block footer_js %}
-  <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script>
-      /*  jQuery ready function. Specify a function to execute when the DOM is fully loaded.  */
-      $(document).ready(
+      <!-- jQuery -->
+      <script src="{% static "js/libs/jquery.min.js" %}"></script>
 
-        /* This is the function that will get executed after the DOM is fully loaded */
-        function () {
-          $( "#debut" ).datepicker({
-            changeMonth: true,//this option for allowing user to select month
-            changeYear: true //this option for allowing user to select from year range
-          });
-          $( "#fin" ).datepicker({
-            changeMonth: true,//this option for allowing user to select month
-            changeYear: true //this option for allowing user to select from year range
-          });
-        }
+      <!-- Bootstrap Core JavaScript -->
+      <script src="{% static "js/bootstrap.min.js" %}"></script>
 
-      );
-    </script>
-    <script src="{% static "js/cmam-app.js" %}"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
-{% endblock footer_js %}
+      <!-- Metis Menu Plugin JavaScript -->
+      <script src="{% static "vendor/metisMenu/metisMenu.min.js" %}"></script>
+
+      <!-- Custom Theme JavaScript -->
+      <script src="{% static "js/sb-admin-2.js" %}"></script>
+
+      <!-- CMAM based Js -->
+      <script src="{% static "js/cmam-programs.js" %}"></script>
+  </body>
+
+</html>
