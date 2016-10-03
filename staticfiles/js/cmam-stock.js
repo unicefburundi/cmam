@@ -1,5 +1,5 @@
-var app = angular.module('stock', []);
-app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+var app = angular.module('StockApp', []);
+app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
         // products
         $http.get("/cmam/products/")
         .then(function (response) {
@@ -18,8 +18,8 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
             if ($scope.produits) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
-                    $scope.district = response.data.districts;
-                  console.log($scope.district);
+                    $scope.districts = response.data.districts;
+                  console.log($scope.districts);
               });
             }
         };

@@ -4,6 +4,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         $http.get("/cmam/products/")
         .then(function (response) {
           $scope.produits = response.data;
+          $scope.disto = 2;
         });
 
         // province
@@ -11,6 +12,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
           .then(function (response) {
               $scope.provinces = response.data;
           });
+
           $scope.update_province = function () {
             var province = $scope.dashboard.province;
             $(".cds").hide();
@@ -19,8 +21,6 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
                     $scope.districts = response.data.districts;
-                  console.log($scope.districts);
-
               });
             }
         };
