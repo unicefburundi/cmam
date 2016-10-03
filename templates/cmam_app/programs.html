@@ -105,30 +105,36 @@
           <div class="col-lg-12">
             <h1 class="page-header">Community-based Management of Acute Malnutrition</h1>
             {% block container %}
-            <div class="container"  >
-                <div class="row" >
-                  <div class="col-md-3">
-                    <h3>Taux de guerison</h3>
-                    <h1>0%</h1>
-                    <table id="datatable1" class="table bg-warning">
-                      <thead>
-                        <tr>
-                          <th>Province</th>
-                          <th>District</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>0%</td>
-                          <td>0%</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="col-md-3">
+            <div class="container"  ng-controller="pgrmCtrl">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#STA" data-toggle="tab">STA</a></li>
+                  <li ><a href="#SST" data-toggle="tab">SST</a></li>
+                </ul>
+                <div class="tab-content" >
+                  <div class="tab-pane " id="STA">
+                  <div class="row" >
+                    <div class="col-md-3">
+                      <h3>Taux de guerison</h3>
+                      <h1>0%</h1>
+                      <table class="table bg-warning">
+                        <thead>
+                          <tr>
+                            <th>Province</th>
+                            <th>District</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>0%</td>
+                            <td>0%</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-3">
                     <h3>Taux de deces</h3>
                     <h1>0%</h1>
-                    <table id="datatable2" class="table bg-danger">
+                    <table class="table bg-danger">
                       <thead>
                         <tr>
                           <th>Province</th>
@@ -146,7 +152,7 @@
                   <div class="col-md-3">
                     <h3>Taux d'abandon</h3>
                     <h1>0%</h1>
-                    <table id="datatable3" class="table bg-info">
+                    <table class="table bg-info">
                       <thead>
                         <tr>
                           <th>Province</th>
@@ -162,14 +168,7 @@
                     </table>
                   </div>
                 </div>
-                <div class="row container" ng-controller="pgrmCtrl">
-                <ul class="nav nav-tabs">
-                  <li  {% block activeSTA %}class="active"{% endblock activeSTA %} ><a href="#STA" data-toggle="tab">STA</a></li>
-                  <li  {% block activeSST %}{% endblock activeSST %} ><a href="#SST" data-toggle="tab">SST</a></li>
-                </ul>
-                <div class="tab-content" >
-                  <div class="tab-pane {% block activeSTA1 %}active{% endblock activeSTA1 %}" id="STA">
-                    <table id="datatable4" class="table fixed table-bordered table-hover">
+                    <table  class="table fixed table-bordered table-hover">
                       <thead class="thead-default">
                         <tr>
                           <th rowspan="2">Week</th>
@@ -215,26 +214,82 @@
                         <tr class="success">
                           <td><b>Weeks</b></td>
                           <td><b>{{total_debut_semaine}}</b> </td>
-                          <td><b>{{ptb}}</td>
-                          <td><b>{{oedemes}}</td>
-                          <td><b>{{rechute}}</td>
-                          <td><b>{{readmission}}</td>
-                          <td><b>{{transfert_interne}}</td>
-                          <td><b>{{Admissions}}</td>
-                          <td><b>{{gueri}}</td>
-                          <td><b>{{deces}}</td>
-                          <td><b>{{abandon}}</td>
-                          <td><b>{{non_repondant}}</td>
-                          <td><b>{{non_repondant}}</td>
-                          <td><b>{{decharge}}</td>
-                          <td><b>{{Fin}}</td>
+                          <td><b>{{ptb}}</b></td>
+                          <td><b>{{oedemes}}</b></td>
+                          <td><b>{{rechute}}</b></td>
+                          <td><b>{{readmission}}</b></td>
+                          <td><b>{{transfert_interne}}</b></td>
+                          <td><b>{{Admissions}}</b></td>
+                          <td><b>{{gueri}}</b></td>
+                          <td><b>{{deces}}</b></td>
+                          <td><b>{{abandon}}</b></td>
+                          <td><b>{{non_repondant}}</b></td>
+                          <td><b>{{non_repondant}}</b></td>
+                          <td><b>{{decharge}}</b></td>
+                          <td><b>{{Fin}}</b></td>
                         </tr>
                         {% endverbatim %}
                         </tbody>
                     </table>
                   </div>
-                  <div class="tab-pane {% block activeSST1 %}{% endblock activeSST1 %}" id="SST">
-                   <table id="datatable4" class="table fixed table-bordered table-hover">
+                  <div class="tab-pane " id="SST">
+                  <div class="row" >
+                    <div class="col-md-3">
+                      <h3>Taux de guerison</h3>
+                      <h1>0%</h1>
+                      <table class="table bg-warning">
+                        <thead>
+                          <tr>
+                            <th>Province</th>
+                            <th>District</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>0%</td>
+                            <td>0%</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-3">
+                    <h3>Taux de deces</h3>
+                    <h1>0%</h1>
+                    <table class="table bg-danger">
+                      <thead>
+                        <tr>
+                          <th>Province</th>
+                          <th>District</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>0%</td>
+                          <td>0%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-md-3">
+                    <h3>Taux d'abandon</h3>
+                    <h1>0%</h1>
+                    <table class="table bg-info">
+                      <thead>
+                        <tr>
+                          <th>Province</th>
+                          <th>District</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>18%</td>
+                          <td>40%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                   <table  class="table fixed table-bordered table-hover">
                       <thead class="thead-default">
                         <tr>
                           <th rowspan="2">Week</th>
@@ -278,27 +333,27 @@
                         <tr class="success">
                           <td><b>Weeks</b></td>
                           <td><b>{{total_debut_semaine}}</b> </td>
-                          <td><b>{{ptb}}</td>
-                          <td><b>{{oedemes}}</td>
-                          <td><b>{{rechute}}</td>
-                          <td><b>{{readmission}}</td>
-                          <td><b>{{transfert_interne}}</td>
-                          <td><b>{{Admissions}}</td>
-                          <td><b>{{gueri}}</td>
-                          <td><b>{{deces}}</td>
-                          <td><b>{{abandon}}</td>
-                          <td><b>{{non_repondant}}</td>
-                          <td><b>{{decharge}}</td>
-                          <td><b>{{Fin}}</td>
+                          <td><b>{{ptb}}</b></td>
+                          <td><b>{{oedemes}}</b></td>
+                          <td><b>{{rechute}}</b></td>
+                          <td><b>{{readmission}}</b></td>
+                          <td><b>{{transfert_interne}}</b></td>
+                          <td><b>{{Admissions}}</b></td>
+                          <td><b>{{gueri}}</b></td>
+                          <td><b>{{deces}}</b></td>
+                          <td><b>{{abandon}}</b></td>
+                          <td><b>{{non_repondant}}</b></td>
+                          <td><b>{{decharge}}</b></td>
+                          <td><b>{{Fin}}</b></td>
                         </tr>
                         {% endverbatim %}
                         </tbody>
                     </table>
                   </div>
-                </div>
+              </div>
               </div>
             </div>
-            {% endblock container %}
+          {% endblock container %}
           </div>
           <!-- /.col-lg-12 -->
         </div>
