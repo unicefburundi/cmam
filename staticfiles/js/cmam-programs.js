@@ -1,29 +1,29 @@
 var app = angular.module('ProgramApp', []);
 
 app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
+    // in out reports
     $http.get("/cmam/inoutreport/")
     .then(function (response) {
-      $scope.lesobjets =  response.data;
+        $scope.lesobjets =  response.data;
+        console.log(response.data);
+        var total_debut_semaine = 0;
+        $.each(response.data, function () {
+            total_debut_semaine += this.total_debut_semaine;
+            }
+        );
+        console.log(total_debut_semaine);
     });
-}]);
-
-app.controller('FormCtrl', ['$scope', '$http', function($scope, $http) {
-        // products
-        $http.get("/cmam/products/")
-        .then(function (response) {
-          $scope.produits = response.data;
-        });
 
         // province
         $http.get("/bdiadmin/province/")
           .then(function (response) {
-              $scope.provinces = response.data;
+                $scope.provinces = response.data;
           });
           $scope.update_province = function () {
-            var province = $scope.dashboard.province;
+            var province = $scope.province;
             $(".cds").hide();
             $(".district").show();
-            if ($scope.produits) {
+            if ($scope.province) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
                     $scope.districts = response.data.districts;
@@ -31,10 +31,10 @@ app.controller('FormCtrl', ['$scope', '$http', function($scope, $http) {
               });
             }
         };
-          // district
+        // district
         $scope.update_district = function () {
-            var district = $scope.dashboard.district;
-            if ($scope.dashboard.province) {
+            var district = $scope.district;
+            if ($scope.province) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
                   $scope.cds = response.data.cds;
@@ -42,27 +42,7 @@ app.controller('FormCtrl', ['$scope', '$http', function($scope, $http) {
                   $(".cds").show();
 
               });
-              }
-        };
-        // Datepicker
-        $scope.debut = '19/03/2013';
-        $scope.fin = '19/03/2013';
-
-        // years
-        $http.get("/cmam/get_year/")
-        .then(function (response) {
-          $scope.years = response.data;
-        });
-
-        // weeks
-        $http.get("/cmam/get_week/")
-        .then(function (response) {
-          $scope.weeks = response.data;
-        });
-
-        $scope.update_years = function () {
-        };
-
-        $scope.update_weeks = function () {
+            }
         };
 }]);
+

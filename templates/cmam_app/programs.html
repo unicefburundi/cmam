@@ -8,7 +8,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A admin dashboard for CMAMUnicef Burundi project">
+  <meta name="description" content="A admin dashboard for CMAM Unicef Burundi project">
   <meta name="author" content="UNICEF Burundi">
 
   <title>{% block title %}CMAM Dashboard{% endblock title %}</title>
@@ -37,7 +37,7 @@
 
 <body ng-app="ProgramApp">
 
-  <div id="wrapper"  ng-controller="FormCtrl">
+  <div id="wrapper"  ng-controller="pgrmCtrl">
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -82,13 +82,13 @@
                 <!-- Province -->
                 <div id="province-group" class="form-group">
                   <label>Province</label>
-                  <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+                  <select class="form-control"  ng-model="province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
                 </div>
 
                 <!-- District -->
                 <div id="district-group" class="form-group">
                   <label>District</label>
-                  <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+                  <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
                 </div>
               </form>
               {% endblock search_form %}
@@ -105,13 +105,13 @@
           <div class="col-lg-12">
             <h1 class="page-header">Community-based Management of Acute Malnutrition</h1>
             {% block container %}
-            <div class="container"  ng-controller="pgrmCtrl">
+            <div class="container"  >
                 <ul class="nav nav-tabs">
                   <li class="active"><a href="#STA" data-toggle="tab">STA</a></li>
                   <li ><a href="#SST" data-toggle="tab">SST</a></li>
                 </ul>
                 <div class="tab-content" >
-                  <div class="tab-pane " id="STA">
+                  <div class="tab-pane active" id="STA">
                   <div class="row" >
                     <div class="col-md-3">
                       <h3>Taux de guerison</h3>
