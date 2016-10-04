@@ -111,8 +111,8 @@ class OutgoingViewset(viewsets.ModelViewSet):
 
 class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
     serializer_class = InOutSerialiser
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('report',)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('report__facility__facility_level__name',)
 
     queryList = (
         (IncomingPatientsReport.objects.all(), IncomingPatientSerializer),

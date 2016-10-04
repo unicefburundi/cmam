@@ -115,7 +115,7 @@
                   <div class="row" >
                     <div class="col-md-3">
                       <h3>Taux de guerison</h3>
-                      <h1>0%</h1>
+                      <h1 id="taux_de_guerison_general_sta">0%</h1>
                       <table class="table bg-warning">
                         <thead>
                           <tr>
@@ -132,8 +132,8 @@
                       </table>
                     </div>
                     <div class="col-md-3">
-                    <h3>Taux de deces</h3>
-                    <h1>0%</h1>
+                    <h3 >Taux de deces</h3>
+                    <h1 id="taux_de_deces_general_sta">0%</h1>
                     <table class="table bg-danger">
                       <thead>
                         <tr>
@@ -151,7 +151,7 @@
                   </div>
                   <div class="col-md-3">
                     <h3>Taux d'abandon</h3>
-                    <h1>0%</h1>
+                    <h1 id="taux_d_abandon_general_sta">0%</h1>
                     <table class="table bg-info">
                       <thead>
                         <tr>
@@ -161,8 +161,8 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>18%</td>
-                          <td>40%</td>
+                          <td>0%</td>
+                          <td>0%</td>
                         </tr>
                       </tbody>
                     </table>
@@ -194,7 +194,7 @@
                       </thead>
                       <tbody ng-init="total_debut_semainea = 0; ptba = 0 ; oedemesa=0; rechutea=0; readmissiona=0; transfert_interne_ia=0; gueria=0; decesa=0; abandona=0; non_repondanta=0; transfert_interne_oa=0; Admissionsa=0; dechargea=0; Fina=0">
                         {% verbatim %}
-                        <tr ng-repeat="(x, y) in lesobjets track by $index">
+                        <tr ng-repeat="(x, y) in lescds track by $index">
                           <td>{{x}}</td>
                           <td ng-init="$parent.total_debut_semainea = $parent.total_debut_semainea + y.total_debut_semaine " >{{y.total_debut_semaine || 0}}</td>
                           <td ng-init="$parent.ptba = $parent.ptba + y.ptb ">{{y.ptb || 0}}</td>
@@ -236,7 +236,7 @@
                   <div class="row" >
                     <div class="col-md-3">
                       <h3>Taux de guerison</h3>
-                      <h1>0%</h1>
+                      <h1 id="taux_de_guerison_general_sst">0%</h1>
                       <table class="table bg-warning">
                         <thead>
                           <tr>
@@ -254,7 +254,7 @@
                     </div>
                     <div class="col-md-3">
                     <h3>Taux de deces</h3>
-                    <h1>0%</h1>
+                    <h1 id="taux_de_deces_general_sst">0%</h1>
                     <table class="table bg-danger">
                       <thead>
                         <tr>
@@ -272,7 +272,7 @@
                   </div>
                   <div class="col-md-3">
                     <h3>Taux d'abandon</h3>
-                    <h1>0%</h1>
+                    <h1 id="taux_d_abandon_general_sst">0%</h1>
                     <table class="table bg-info">
                       <thead>
                         <tr>
@@ -314,7 +314,7 @@
                       </thead>
                       <tbody ng-init="total_debut_semaine = 0; ptb = 0 ; oedemes=0; rechute=0; readmission=0; gueri=0; deces=0; abandon=0; non_repondant=0; Admissions=0; decharge=0; Fin=0; transfert_interne_i=0">
                         {% verbatim %}
-                        <tr ng-repeat="(x, y) in lesobjets track by $index">
+                        <tr ng-repeat="(x, y) in leshopitaux track by $index">
                           <td>{{x}}</td>
                           <td ng-init="$parent.total_debut_semaine = $parent.total_debut_semaine + y.total_debut_semaine " >{{y.total_debut_semaine || 0}}</td>
                           <td ng-init="$parent.ptb = $parent.ptb + y.ptb ">{{y.ptb || 0}}</td>

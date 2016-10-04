@@ -2,7 +2,7 @@ var app = angular.module('ProgramApp', []);
 
 app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
     // in out reports
-    $http.get("/cmam/inoutreport/")
+    $http.get("/cmam/inoutreport/?report__facility__facility_level__name=CDS")
     .then(function (response) {
         var weeks = {},
             columns = {},
@@ -26,8 +26,34 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 }
             });
         });
-            console.log(weeks, sumCols, columns);
-            $scope.lesobjets =  weeks;
+        $scope.lescds =  weeks;
+        });
+
+    $http.get("/cmam/inoutreport/?report__facility__facility_level__name=Hospital")
+    .then(function (response) {
+        var weeks = {},
+            columns = {},
+            sumCols = ['total_debut_semaine','ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i','gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o'], data = response.data;
+
+        $.each(data, function(index, obj) {
+            if (!weeks[obj['week']]) {
+                weeks[obj['week']] = {};
+            }
+            $.each(sumCols, function (index, col) {
+                if (!weeks[obj['week']][col]) {
+                    weeks[obj['week']][col] = 0;
+                }
+                if (!columns[col]) {
+                    columns[col] = 0;
+                }
+                var val = parseFloat(obj[col]);
+                if (!isNaN(val)) {
+                    weeks[obj['week']][col] += val;
+                    columns[col] += val;
+                }
+            });
+        });
+            $scope.leshopitaux =  weeks;
         });
 
         // province
