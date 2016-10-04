@@ -26,7 +26,6 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 }
             });
         });
-        console.log(columns);
         $scope.lescds =  weeks;
         $scope.sommecds = columns;
         });
@@ -65,18 +64,79 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
           .then(function (response) {
                 $scope.provinces = response.data;
           });
-          $scope.update_province = function () {
+
+        $scope.update_province = function () {
             var province = $scope.province;
-            $(".cds").hide();
-            $(".district").show();
             if ($scope.province) {
-              $http.get("/cmam/provinces/" + province.code + "/" )
-                .then(function (response) {
-                    $scope.districts = response.data.districts;
-                  console.log($scope.districts);
+
+                //update districts
+                $http.get("/cmam/provinces/" + province.code + "/" )
+                    .then(function (response) {
+                        $scope.districts = response.data.districts;
+                  });
+
+                // update hopitaux
+                $http.get("/cmam/inoutreport/?search=" + province.code+ "&report__facility__facility_level__name=Hospital")
+                    .then(function (response) {
+                        var weeks = {},
+                            columns = {},
+                            sumCols = ['total_debut_semaine','ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i','gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o'],
+                            data = response.data;
+
+                    $.each(data, function(index, obj) {
+                        if (!weeks[obj['week']]) {
+                            weeks[obj['week']] = {};
+                        }
+                        $.each(sumCols, function (index, col) {
+                            if (!weeks[obj['week']][col]) {
+                                weeks[obj['week']][col] = 0;
+                            }
+                            if (!columns[col]) {
+                                columns[col] = 0;
+                            }
+                            var val = parseFloat(obj[col]);
+                            if (!isNaN(val)) {
+                                weeks[obj['week']][col] += val;
+                                columns[col] += val;
+                            }
+                        });
+                    });
+
+                    $scope.leshopitaux =  weeks;
+                    $scope.sommehopitaux = columns;
               });
+                // update cds
+                $http.get("/cmam/inoutreport/?search=" + province.code+ "&report__facility__facility_level__name=CDS")
+                    .then(function (response) {
+                        var weeks = {},
+                            columns = {},
+                            sumCols = ['total_debut_semaine','ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i','gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o'],
+                            data = response.data;
+
+                        $.each(data, function(index, obj) {
+                            if (!weeks[obj['week']]) {
+                                weeks[obj['week']] = {};
+                            }
+                            $.each(sumCols, function (index, col) {
+                                if (!weeks[obj['week']][col]) {
+                                    weeks[obj['week']][col] = 0;
+                                }
+                                if (!columns[col]) {
+                                    columns[col] = 0;
+                                }
+                                var val = parseFloat(obj[col]);
+                                if (!isNaN(val)) {
+                                    weeks[obj['week']][col] += val;
+                                    columns[col] += val;
+                                }
+                            });
+                        });
+                        $scope.lescds =  weeks;
+                        $scope.sommecds = columns;
+                        });
             }
         };
+
         // district
         $scope.update_district = function () {
             var district = $scope.district;
@@ -84,9 +144,6 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
                   $scope.cds = response.data.cds;
-                  console.log($scope.cds);
-                  $(".cds").show();
-
               });
             }
         };
