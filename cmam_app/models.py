@@ -160,7 +160,7 @@ class IncomingPatientsReport(models.Model):
     oedemes = models.IntegerField(default=0)
     rechute = models.IntegerField(default=0)
     readmission = models.IntegerField(default=0)
-    transfert_interne = models.IntegerField(default=0)
+    transfert_interne_i = models.IntegerField(default=0)
     date_of_first_week_day = models.DateField()
 
     def __unicode__(self):
@@ -173,7 +173,7 @@ class OutgoingPatientsReport(models.Model):
     deces = models.IntegerField(default=0)
     abandon = models.IntegerField(default=0)
     non_repondant = models.IntegerField(default=0)
-    transfert_interne = models.IntegerField(default=0)
+    transfert_interne_o = models.IntegerField(default=0)
     date_of_first_week_day = models.DateField()
 
     def __unicode__(self):
@@ -205,4 +205,20 @@ class Temporary(models.Model):
 
     def __unicode__(self):
         return self.phone_number
+
+# class InOutPatientReport(models.Model):
+#     week = models.CharField(max_length=20)
+#     total_debut_semaine = models.IntegerField( default=0)
+#     ptb = models.IntegerField( default=0)
+#     oedemes = models.IntegerField( default=0)
+#     rechute = models.IntegerField( default=0)
+#     readmission = models.IntegerField( default=0)
+#     transfert_interne = models.IntegerField( default=0)
+#     date_of_first_week_day = models.IntegerField( default=0)
+#     gueri  = models.IntegerField( default=0)
+#     deces  = models.IntegerField( default=0)
+#     abandon = models.IntegerField( default=0)
+#     non_repondant = models.IntegerField( default=0)
+#     transfert_interne = models.IntegerField( default=0)
+
 

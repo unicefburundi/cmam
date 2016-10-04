@@ -1584,7 +1584,7 @@ def record_patient_served(args):
     the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'ADMISSION')
 
 
-    incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
+    incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne_i = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
 
     args['info_to_contact'] = "Rapport bien recu. Vous venez de rapporter les admissions comme suit : TDS="+args['text'].split(' ')[2]+", PTB="+args['text'].split(' ')[3]+", Oedemes="+args['text'].split(' ')[4]+", Rechute="+args['text'].split(' ')[5]+", Readmission="+args['text'].split(' ')[6]+", TI="+args['text'].split(' ')[7]+""
 
@@ -1614,7 +1614,7 @@ def record_patient_served(args):
         #It means that this site have given the outgoing patient report for that week
         outgoing_patients_report_for_that_week = outgoing_patients_report_for_that_week[0]
 
-        all_outgoing_patient_for_that_week = outgoing_patients_report_for_that_week.gueri+outgoing_patients_report_for_that_week.deces+outgoing_patients_report_for_that_week.abandon + outgoing_patients_report_for_that_week.non_repondant +outgoing_patients_report_for_that_week.transfert_interne
+        all_outgoing_patient_for_that_week = outgoing_patients_report_for_that_week.gueri+outgoing_patients_report_for_that_week.deces+outgoing_patients_report_for_that_week.abandon + outgoing_patients_report_for_that_week.non_repondant +outgoing_patients_report_for_that_week.transfert_interne_o
 
 
         all_incoming_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5]) + float(args['text'].split(' ')[6]) + float(args['text'].split(' ')[7])
@@ -1703,7 +1703,7 @@ def modify_patient_served(args):
     the_created_report = Report.objects.create(facility = args['facility'], reporting_date = datetime.datetime.now().date(), text = args['text'], category = 'ADMISSION')
 
 
-    incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
+    incoming_patients_report = IncomingPatientsReport.objects.create(report = the_created_report, total_debut_semaine = args['text'].split(' ')[2], ptb = args['text'].split(' ')[3], oedemes = args['text'].split(' ')[4], rechute = args['text'].split(' ')[5], readmission = args['text'].split(' ')[6], transfert_interne_i = args['text'].split(' ')[7], date_of_first_week_day = args['sent_date'])
 
     args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les admissions comme suit : TDS="+args['text'].split(' ')[2]+", PTB="+args['text'].split(' ')[3]+", Oedemes="+args['text'].split(' ')[4]+", Rechute="+args['text'].split(' ')[5]+", Readmission="+args['text'].split(' ')[6]+", TI="+args['text'].split(' ')[7]+""
 
@@ -1720,7 +1720,7 @@ def modify_patient_served(args):
         #It means that this site have given the outgoing patient report for that week
         outgoing_patients_report_for_that_week = outgoing_patients_report_for_that_week[0]
 
-        all_outgoing_patient_for_that_week = outgoing_patients_report_for_that_week.gueri+outgoing_patients_report_for_that_week.deces+outgoing_patients_report_for_that_week.abandon + outgoing_patients_report_for_that_week.non_repondant +outgoing_patients_report_for_that_week.transfert_interne
+        all_outgoing_patient_for_that_week = outgoing_patients_report_for_that_week.gueri+outgoing_patients_report_for_that_week.deces+outgoing_patients_report_for_that_week.abandon + outgoing_patients_report_for_that_week.non_repondant +outgoing_patients_report_for_that_week.transfert_interne_o
 
 
         all_incoming_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5]) + float(args['text'].split(' ')[6]) + float(args['text'].split(' ')[7])
@@ -1809,7 +1809,7 @@ def record_out_going_patients(args):
 
 
     if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS):
-        out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
+        out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne_o = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
         args['info_to_contact'] = "Rapport bien recu. Vous venez de rapporter les sorties des patients comme suit : Gueri="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]+", Transfert interne="+args['text'].split(' ')[6]
     else:
@@ -1843,7 +1843,7 @@ def record_out_going_patients(args):
         #It means that this site have given the incoming patient report for that week
         incoming_patients_report_for_that_week = incoming_patients_report_for_that_week[0]
 
-        all_incoming_patient_for_that_week = incoming_patients_report_for_that_week.total_debut_semaine + incoming_patients_report_for_that_week.ptb + incoming_patients_report_for_that_week.oedemes + incoming_patients_report_for_that_week.rechute + incoming_patients_report_for_that_week.readmission + incoming_patients_report_for_that_week.transfert_interne
+        all_incoming_patient_for_that_week = incoming_patients_report_for_that_week.total_debut_semaine + incoming_patients_report_for_that_week.ptb + incoming_patients_report_for_that_week.oedemes + incoming_patients_report_for_that_week.rechute + incoming_patients_report_for_that_week.readmission + incoming_patients_report_for_that_week.transfert_interne_i
 
 
         all_outgoing_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5])
@@ -1929,7 +1929,7 @@ def modify_out_going_patients(args):
 
 
     if(args['facility'].facility_level.name.upper() in CDS_SYNONYMS):
-        out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
+        out_patients_report = OutgoingPatientsReport.objects.create(report = the_created_report, gueri = args['text'].split(' ')[2], deces = args['text'].split(' ')[3], abandon = args['text'].split(' ')[4], non_repondant = args['text'].split(' ')[5], transfert_interne_o = args['text'].split(' ')[6], date_of_first_week_day = args['sent_date'])
 
         args['info_to_contact'] = "Modification reussie. Vous venez de rapporter les sorties des patients comme suit : Gueri="+args['text'].split(' ')[2]+", Deces="+args['text'].split(' ')[3]+", Abandons="+args['text'].split(' ')[4]+", Non repondant="+args['text'].split(' ')[5]+", Transfert interne="+args['text'].split(' ')[6]
     else:
@@ -1946,7 +1946,7 @@ def modify_out_going_patients(args):
         #It means that this site have given the incoming patient report for that week
         incoming_patients_report_for_that_week = incoming_patients_report_for_that_week[0]
 
-        all_incoming_patient_for_that_week = incoming_patients_report_for_that_week.total_debut_semaine + incoming_patients_report_for_that_week.ptb + incoming_patients_report_for_that_week.oedemes + incoming_patients_report_for_that_week.rechute + incoming_patients_report_for_that_week.readmission + incoming_patients_report_for_that_week.transfert_interne
+        all_incoming_patient_for_that_week = incoming_patients_report_for_that_week.total_debut_semaine + incoming_patients_report_for_that_week.ptb + incoming_patients_report_for_that_week.oedemes + incoming_patients_report_for_that_week.rechute + incoming_patients_report_for_that_week.readmission + incoming_patients_report_for_that_week.transfert_interne_i
 
 
         all_outgoing_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5])

@@ -100,11 +100,11 @@ class ReportAdmin(ExportMixin, admin.ModelAdmin):
 class IncomingPatientsReportAdminResource(resources.ModelResource):
     class Meta:
         model = IncomingPatientsReport
-        fields = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne','date_of_first_week_day', 'report__reporting_date', 'report__text', 'report__category', 'report__facility', 'report__facility__facility_level')
+        fields = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne_i','date_of_first_week_day', 'report__reporting_date', 'report__text', 'report__category', 'report__facility', 'report__facility__facility_level')
 
 class IncomingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = IncomingPatientsReportAdminResource
-    list_display = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne','date_of_first_week_day', 'facility', 'type')
+    list_display = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne_i','date_of_first_week_day', 'facility', 'type')
     search_fields = ('date_of_first_week_day', )
     list_filter = ( 'date_of_first_week_day', 'report__facility__facility_level')
 
@@ -117,11 +117,11 @@ class IncomingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
 class OutgoingPatientsReportAdminResource(resources.ModelResource):
     class Meta:
         model = OutgoingPatientsReport
-        fields = ('gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne', 'date_of_first_week_day', 'report__reporting_date', 'report__text', 'report__category', 'report__facility', 'report__facility__facility_level')
+        fields = ('gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o', 'date_of_first_week_day', 'report__reporting_date', 'report__text', 'report__category', 'report__facility', 'report__facility__facility_level')
 
 class OutgoingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = OutgoingPatientsReportAdminResource
-    list_display = ('gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne', 'date_of_first_week_day', 'facility', 'type')
+    list_display = ('gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o', 'date_of_first_week_day', 'facility', 'type')
     search_fields = ('date_of_first_week_day', )
     list_filter = ( 'date_of_first_week_day', 'report__facility__facility_level')
 
