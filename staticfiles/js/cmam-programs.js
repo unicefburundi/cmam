@@ -4,17 +4,9 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
     // in out reports
     $http.get("/cmam/inoutreport/")
     .then(function (response) {
-        $scope.lesobjets =  response.data;
-        console.log(response.data);
-        var total_debut_semaine = 0;
-        $.each(response.data, function () {
-            total_debut_semaine += this.total_debut_semaine;
-            }
-        );
-        console.log(total_debut_semaine);
         var weeks = {},
             columns = {},
-            sumCols = ['total_debut_semaine','ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i','gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o'];
+            sumCols = ['total_debut_semaine','ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i','gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o'], data = response.data;
 
         $.each(data, function(index, obj) {
             if (!weeks[obj['week']]) {
@@ -34,7 +26,9 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 }
             });
         });
-    });
+            console.log(weeks, sumCols, columns);
+            $scope.lesobjets =  weeks;
+        });
 
         // province
         $http.get("/bdiadmin/province/")

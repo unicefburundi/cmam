@@ -192,24 +192,24 @@
                           <th>Transferts iterne</th>
                         </tr>
                       </thead>
-                      <tbody ng-init="total_debut_semainea = 0; ptba = 0 ; oedemesa=0; rechutea=0; readmissiona=0; transfert_interne_ia=0; gueria=0; decesa=0; abandona=0; non_repondanta=0; Admissionsa=0; dechargea=0; Fina=0">
+                      <tbody ng-init="total_debut_semainea = 0; ptba = 0 ; oedemesa=0; rechutea=0; readmissiona=0; transfert_interne_ia=0; gueria=0; decesa=0; abandona=0; non_repondanta=0; transfert_interne_oa=0; Admissionsa=0; dechargea=0; Fina=0">
                         {% verbatim %}
-                        <tr ng-repeat="x in lesobjets track by $index">
-                          <td>{{x.week}}</td>
-                          <td ng-init="$parent.total_debut_semainea = $parent.total_debut_semainea + x.total_debut_semaine " >{{x.total_debut_semaine || 0}}</td>
-                          <td ng-init="$parent.ptba = $parent.ptba + x.ptb ">{{x.ptb || 0}}</td>
-                          <td ng-init="$parent.oedemesa = $parent.oedemesa + x.oedemes ">{{x.oedemes || 0}}</td>
-                          <td ng-init="$parent.rechutea = $parent.rechutea + x.rechute ">{{x.rechute || 0}}</td>
-                          <td ng-init="$parent.readmissiona = $parent.readmissiona + x.readmission ">{{x.readmission || 0}}</td>
-                          <td ng-init="$parent.transfert_interne_ia = $parent.transfert_interne_ia + x.transfert_interne ">{{x.transfert_interne_i || 0}}</td>
-                          <td ng-init="$parent.Admissionsa = $parent.Admissionsa + x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne ">{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne || 0}}</td>
-                          <td ng-init="$parent.gueria = $parent.gueria + x.gueri ">{{x.gueri || 0}}</td>
-                          <td ng-init="$parent.decesa = $parent.decesa + x.deces ">{{x.deces || 0}}</td>
-                          <td ng-init="$parent.abandona = $parent.abandona + x.abandon ">{{x.abandon || 0}}</td>
-                          <td ng-init="$parent.non_repondanta = $parent.non_repondanta + x.non_repondant ">{{x.non_repondant || 0}}</td>
-                          <td ng-init="$parent.non_repondanta = $parent.non_repondanta + x.non_repondant ">{{x.non_repondant || 0}}</td>
-                          <td ng-init="$parent.dechargea = $parent.dechargea + x.gueri + x.deces + x.abandon + x.non_repondant ">{{x.gueri + x.deces + x.abandon + x.non_repondant || 0}}</td>
-                          <td ng-init="$parent.Fina = $parent.Fina + (x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant)">{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant) || 0}}</td>
+                        <tr ng-repeat="(x, y) in lesobjets track by $index">
+                          <td>{{x}}</td>
+                          <td ng-init="$parent.total_debut_semainea = $parent.total_debut_semainea + y.total_debut_semaine " >{{y.total_debut_semaine || 0}}</td>
+                          <td ng-init="$parent.ptba = $parent.ptba + y.ptb ">{{y.ptb || 0}}</td>
+                          <td ng-init="$parent.oedemesa = $parent.oedemesa + y.oedemes ">{{y.oedemes || 0}}</td>
+                          <td ng-init="$parent.rechutea = $parent.rechutea + y.rechute ">{{y.rechute || 0}}</td>
+                          <td ng-init="$parent.readmissiona = $parent.readmissiona + y.readmission ">{{y.readmission || 0}}</td>
+                          <td ng-init="$parent.transfert_interne_ia = $parent.transfert_interne_ia + y.transfert_interne ">{{y.transfert_interne_i || 0}}</td>
+                          <td ng-init="$parent.Admissionsa = $parent.Admissionsa + y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne ">{{y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne || 0}}</td>
+                          <td ng-init="$parent.gueria = $parent.gueria + y.gueri ">{{y.gueri || 0}}</td>
+                          <td ng-init="$parent.decesa = $parent.decesa + y.deces ">{{y.deces || 0}}</td>
+                          <td ng-init="$parent.abandona = $parent.abandona + y.abandon ">{{y.abandon || 0}}</td>
+                          <td ng-init="$parent.non_repondanta = $parent.non_repondanta + y.non_repondant ">{{y.non_repondant || 0}}</td>
+                          <td ng-init="$parent.transfert_interne_oa = $parent.transfert_interne_oa + y.transfert_interne_o ">{{y.transfert_interne_o || 0}}</td>
+                          <td ng-init="$parent.dechargea = $parent.dechargea + y.gueri + y.deces + y.abandon + y.non_repondant ">{{y.gueri + y.deces + y.abandon + y.non_repondant || 0}}</td>
+                          <td ng-init="$parent.Fina = $parent.Fina + (y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant)">{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant) || 0}}</td>
                         </tr>
                         <tr class="success">
                           <td><b>Weeks</b></td>
@@ -224,7 +224,7 @@
                           <td><b>{{decesa}}</b></td>
                           <td><b>{{abandona}}</b></td>
                           <td><b>{{non_repondanta}}</b></td>
-                          <td><b>{{non_repondanta}}</b></td>
+                          <td><b>{{transfert_interne_oa}}</b></td>
                           <td><b>{{dechargea}}</b></td>
                           <td><b>{{Fina}}</b></td>
                         </tr>
@@ -312,23 +312,23 @@
                           <th>Non repondant</th>
                         </tr>
                       </thead>
-                      <tbody ng-init="total_debut_semaine = 0; ptb = 0 ; oedemes=0; rechute=0; readmission=0; transfert_interne=0; gueri=0; deces=0; abandon=0; non_repondant=0; Admissions=0; decharge=0; Fin=0">
+                      <tbody ng-init="total_debut_semaine = 0; ptb = 0 ; oedemes=0; rechute=0; readmission=0; gueri=0; deces=0; abandon=0; non_repondant=0; Admissions=0; decharge=0; Fin=0; transfert_interne_i=0">
                         {% verbatim %}
-                        <tr ng-repeat="x in lesobjets track by $index">
-                          <td>{{x.week}}</td>
-                          <td ng-init="$parent.total_debut_semaine = $parent.total_debut_semaine + x.total_debut_semaine " >{{x.total_debut_semaine || 0}}</td>
-                          <td ng-init="$parent.ptb = $parent.ptb + x.ptb ">{{x.ptb || 0}}</td>
-                          <td ng-init="$parent.oedemes = $parent.oedemes + x.oedemes ">{{x.oedemes || 0}}</td>
-                          <td ng-init="$parent.rechute = $parent.rechute + x.rechute ">{{x.rechute || 0}}</td>
-                          <td ng-init="$parent.readmission = $parent.readmission + x.readmission ">{{x.readmission || 0}}</td>
-                          <td ng-init="$parent.transfert_interne = $parent.transfert_interne + x.transfert_interne ">{{x.transfert_interne || 0}}</td>
-                          <td ng-init="$parent.Admissions = $parent.Admissions + x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne ">{{x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne || 0}}</td>
-                          <td ng-init="$parent.gueri = $parent.gueri + x.gueri ">{{x.gueri || 0}}</td>
-                          <td ng-init="$parent.deces = $parent.deces + x.deces ">{{x.deces || 0}}</td>
-                          <td ng-init="$parent.abandon = $parent.abandon + x.abandon ">{{x.abandon || 0}}</td>
-                          <td ng-init="$parent.non_repondant = $parent.non_repondant + x.non_repondant ">{{x.non_repondant || 0}}</td>
-                          <td ng-init="$parent.decharge = $parent.decharge + x.gueri + x.deces + x.abandon + x.non_repondant ">{{x.gueri + x.deces + x.abandon + x.non_repondant || 0}}</td>
-                          <td ng-init="$parent.Fin = $parent.Fin + (x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant)">{{(x.total_debut_semaine + x.ptb + x.oedemes + x.rechute + x.readmission + x.transfert_interne) - (x.gueri + x.deces + x.abandon + x.non_repondant) || 0}}</td>
+                        <tr ng-repeat="(x, y) in lesobjets track by $index">
+                          <td>{{x}}</td>
+                          <td ng-init="$parent.total_debut_semaine = $parent.total_debut_semaine + y.total_debut_semaine " >{{y.total_debut_semaine || 0}}</td>
+                          <td ng-init="$parent.ptb = $parent.ptb + y.ptb ">{{y.ptb || 0}}</td>
+                          <td ng-init="$parent.oedemes = $parent.oedemes + y.oedemes ">{{y.oedemes || 0}}</td>
+                          <td ng-init="$parent.rechute = $parent.rechute + y.rechute ">{{y.rechute || 0}}</td>
+                          <td ng-init="$parent.readmission = $parent.readmission + y.readmission ">{{y.readmission || 0}}</td>
+                          <td ng-init="$parent.transfert_interne_i = $parent.transfert_interne_i + y.transfert_interne_i ">{{y.transfert_interne_i || 0}}</td>
+                          <td ng-init="$parent.Admissions = $parent.Admissions + y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne ">{{y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne || 0}}</td>
+                          <td ng-init="$parent.gueri = $parent.gueri + y.gueri ">{{y.gueri || 0}}</td>
+                          <td ng-init="$parent.deces = $parent.deces + y.deces ">{{y.deces || 0}}</td>
+                          <td ng-init="$parent.abandon = $parent.abandon + y.abandon ">{{y.abandon || 0}}</td>
+                          <td ng-init="$parent.non_repondant = $parent.non_repondant + y.non_repondant ">{{y.non_repondant || 0}}</td>
+                          <td ng-init="$parent.decharge = $parent.decharge + y.gueri + y.deces + y.abandon + y.non_repondant ">{{y.gueri + y.deces + y.abandon + y.non_repondant || 0}}</td>
+                          <td ng-init="$parent.Fin = $parent.Fin + (y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant)">{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant) || 0}}</td>
                         </tr>
                         <tr class="success">
                           <td><b>Weeks</b></td>
@@ -337,7 +337,7 @@
                           <td><b>{{oedemes}}</b></td>
                           <td><b>{{rechute}}</b></td>
                           <td><b>{{readmission}}</b></td>
-                          <td><b>{{transfert_interne}}</b></td>
+                          <td><b>{{transfert_interne_i}}</b></td>
                           <td><b>{{Admissions}}</b></td>
                           <td><b>{{gueri}}</b></td>
                           <td><b>{{deces}}</b></td>

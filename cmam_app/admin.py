@@ -94,8 +94,8 @@ class ReportAdminResource(resources.ModelResource):
 class ReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReportAdminResource
     list_display = ('facility', 'reporting_date', 'text', 'category')
-    search_fields = ('facility', 'reporting_date', 'text', 'category')
-    list_filter = ( 'category', 'facility__facility_level')
+    search_fields = ('facility__name', 'reporting_date', 'text', 'category', 'reporting_date')
+    list_filter = ( 'category', 'facility__facility_level', 'reporting_date')
 
 class IncomingPatientsReportAdminResource(resources.ModelResource):
     class Meta:
