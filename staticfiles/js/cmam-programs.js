@@ -26,7 +26,9 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 }
             });
         });
+        console.log(columns);
         $scope.lescds =  weeks;
+        $scope.sommecds = columns;
         });
 
     $http.get("/cmam/inoutreport/?report__facility__facility_level__name=Hospital")
@@ -53,7 +55,9 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 }
             });
         });
-            $scope.leshopitaux =  weeks;
+
+        $scope.leshopitaux =  weeks;
+        $scope.sommehopitaux = columns;
         });
 
         // province

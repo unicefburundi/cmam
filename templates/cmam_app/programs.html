@@ -53,6 +53,7 @@
       <!-- /.navbar-header -->
 
       <ul class="nav navbar-top-links navbar-right">
+        {% if user.is_authenticated %}
         <li>
           <a class="page-scroll" href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
         </li>
@@ -62,7 +63,6 @@
         <li>
           <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
         </li>
-        {% if user.is_authenticated %}
         <li>
           <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
         </li>
@@ -115,7 +115,9 @@
                   <div class="row" >
                     <div class="col-md-3">
                       <h3>Taux de guerison</h3>
-                      <h1 id="taux_de_guerison_general_sta">0%</h1>
+                      <h1 >{% verbatim %}
+                        {{((sommecds.gueri/(sommecds.gueri+sommecds.deces+sommecds.abandon))*100).toFixed(2) | number: 0}}
+                      {% endverbatim %}%</h1>
                       <table class="table bg-warning">
                         <thead>
                           <tr>
@@ -125,15 +127,17 @@
                         </thead>
                         <tbody>
                           <tr>
-                            <td>0%</td>
-                            <td>0%</td>
+                            <td></td>
+                            <td></td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
                     <div class="col-md-3">
                     <h3 >Taux de deces</h3>
-                    <h1 id="taux_de_deces_general_sta">0%</h1>
+                    <h1 >{% verbatim %}
+                        {{((sommecds.deces/(sommecds.gueri+sommecds.deces+sommecds.abandon))*100).toFixed(2) | number: 0}}
+                      {% endverbatim %}%</h1>
                     <table class="table bg-danger">
                       <thead>
                         <tr>
@@ -143,15 +147,17 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>0%</td>
-                          <td>0%</td>
+                          <td></td>
+                          <td></td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                   <div class="col-md-3">
                     <h3>Taux d'abandon</h3>
-                    <h1 id="taux_d_abandon_general_sta">0%</h1>
+                    <h1 >{% verbatim %}
+                        {{((sommecds.abandon/(sommecds.gueri+sommecds.deces+sommecds.abandon))*100).toFixed(2) | number: 0}}
+                      {% endverbatim %}%</h1>
                     <table class="table bg-info">
                       <thead>
                         <tr>
@@ -161,8 +167,8 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>0%</td>
-                          <td>0%</td>
+                          <td></td>
+                          <td></td>
                         </tr>
                       </tbody>
                     </table>
@@ -236,7 +242,9 @@
                   <div class="row" >
                     <div class="col-md-3">
                       <h3>Taux de guerison</h3>
-                      <h1 id="taux_de_guerison_general_sst">0%</h1>
+                      <h1 >{% verbatim %}
+                        {{((sommehopitaux.gueri/(sommehopitaux.gueri+sommehopitaux.deces+sommehopitaux.abandon))*100).toFixed(2) | number: 0}}
+                      {% endverbatim %}%</h1>
                       <table class="table bg-warning">
                         <thead>
                           <tr>
@@ -246,15 +254,17 @@
                         </thead>
                         <tbody>
                           <tr>
-                            <td>0%</td>
-                            <td>0%</td>
+                            <td></td>
+                            <td></td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
                     <div class="col-md-3">
                     <h3>Taux de deces</h3>
-                    <h1 id="taux_de_deces_general_sst">0%</h1>
+                    <h1 >{% verbatim %}
+                        {{((sommehopitaux.deces/(sommehopitaux.gueri+sommehopitaux.deces+sommehopitaux.abandon))*100).toFixed(2) | number: 0}}
+                      {% endverbatim %}%</h1>
                     <table class="table bg-danger">
                       <thead>
                         <tr>
@@ -264,15 +274,17 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>0%</td>
-                          <td>0%</td>
+                          <td></td>
+                          <td></td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                   <div class="col-md-3">
                     <h3>Taux d'abandon</h3>
-                    <h1 id="taux_d_abandon_general_sst">0%</h1>
+                    <h1>{% verbatim %}
+                        {{((sommehopitaux.abandon/(sommehopitaux.gueri+sommehopitaux.deces+sommehopitaux.abandon))*100).toFixed(2) | number: 0}}
+                      {% endverbatim %}%</h1>
                     <table class="table bg-info">
                       <thead>
                         <tr>
@@ -282,8 +294,8 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>18%</td>
-                          <td>40%</td>
+                          <td></td>
+                          <td></td>
                         </tr>
                       </tbody>
                     </table>

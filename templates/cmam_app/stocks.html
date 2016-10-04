@@ -53,6 +53,7 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
+              {% if user.is_authenticated %}
               <li>
                 <a class="page-scroll" href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
               </li>
@@ -62,7 +63,6 @@
               <li>
                 <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
               </li>
-              {% if user.is_authenticated %}
               <li>
                 <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
               </li>
