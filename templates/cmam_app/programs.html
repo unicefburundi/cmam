@@ -28,11 +28,11 @@
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
-  <script src="{% static "js/angular.min.js" %}"></script>
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script src="{% static "js/angular.min.js" %}"></script>
 </head>
 
 <body ng-app="ProgramApp">
@@ -106,295 +106,307 @@
             <h1 class="page-header">Community-based Management of Acute Malnutrition</h1>
             {% block container %}
             <div class="container"  >
-                <ul class="nav nav-tabs">
-                  <li class="active"><a href="#STA" data-toggle="tab">STA</a></li>
-                  <li ><a href="#SST" data-toggle="tab">SST</a></li>
-                </ul>
-                <div class="tab-content" >
-                  <div class="tab-pane active" id="STA">
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#STA" data-toggle="tab">STA</a></li>
+                <li ><a href="#SST" data-toggle="tab">SST</a></li>
+              </ul>
+              <div class="tab-content" >
+                <div class="tab-pane active" id="STA">
                   <div class="row" >
                     <div class="col-md-3">
                       <h3>Taux de guerison</h3>
                       <h1 >{% verbatim %}
-                        {{((sommecds.gueri/(sommecds.gueri+sommecds.deces+sommecds.abandon))*100).toFixed(2) | number: 0}}
-                      {% endverbatim %}%</h1>
-                      <table class="table bg-warning">
-                        <thead>
-                          <tr>
-                            <th>Province</th>
-                            <th>District</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td></td>
-                            <td></td>
-                          </tr>
-                        </tbody>
-                      </table>
+                        {{((cdsgnrl.gueri/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
+                        {% endverbatim %}%</h1>
+                        <table class="table bg-warning">
+                          <thead>
+                            <tr>
+                              <th>Province</th>
+                              <th>District</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{% verbatim %}
+                        {{((cdsprov.gueri/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
+                        {% endverbatim %}%</td>
+                              <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="col-md-3">
+                        <h3 >Taux de deces</h3>
+                        <h1 >{% verbatim %}
+                          {{((cdsgnrl.deces/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
+                          {% endverbatim %}%</h1>
+                          <table class="table bg-danger">
+                            <thead>
+                              <tr>
+                                <th>Province</th>
+                                <th>District</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>{% verbatim %}
+                          {{((cdsprov.deces/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
+                          {% endverbatim %}%</td>
+                                <td></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="col-md-3">
+                          <h3>Taux d'abandon</h3>
+                          <h1 >{% verbatim %}
+                            {{((cdsgnrl.abandon/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
+                            {% endverbatim %}%</h1>
+                            <table class="table bg-info">
+                              <thead>
+                                <tr>
+                                  <th>Province</th>
+                                  <th>District</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>{% verbatim %}
+                            {{((cdsprov.abandon/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
+                            {% endverbatim %}%</td>
+                                  <td></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <table  class="table fixed table-bordered table-hover">
+                          <thead class="thead-default">
+                            <tr>
+                              <th rowspan="2">Week</th>
+                              <th rowspan="2">Total debut semaine</th>
+                              <th colspan="3">Nouvelles Admissions</th>
+                              <th rowspan="2">Re-admission après Abandon</th>
+                              <th rowspan="2">Transfert interne</th>
+                              <th rowspan="2">Total Admissions</th>
+                              <th colspan="5">Sorties</th>
+                              <th rowspan="2">Total decharge</th>
+                              <th rowspan="2">Total Fin semaine</th>
+                            </tr>
+                            <tr>
+                              <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
+                              <th>Oeudeme</th>
+                              <th>Rechute</th>
+                              <th>Gueri</th>
+                              <th>Deces</th>
+                              <th>Abandon</th>
+                              <th>Non repondant</th>
+                              <th>Transfert iterne</th>
+                            </tr>
+                          </thead>
+                          <tbody >
+                            {% verbatim %}
+                            <tr ng-repeat="(x, y) in lescds track by $index">
+                              <td>{{x}}</td>
+                              <td>{{y.total_debut_semaine}}</td>
+                              <td>{{y.ptb}}</td>
+                              <td>{{y.oedemes}}</td>
+                              <td>{{y.rechute }}</td>
+                              <td>{{y.readmission }}</td>
+                              <td>{{y.transfert_interne_i }}</td>
+                              <td>{{y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne_i }}</td>
+                              <td>{{y.gueri }}</td>
+                              <td>{{y.deces }}</td>
+                              <td>{{y.abandon }}</td>
+                              <td>{{y.non_repondant }}</td>
+                              <td>{{y.transfert_interne_o }}</td>
+                              <td>{{y.gueri + y.deces + y.abandon + y.non_repondant + y.transfert_interne_o }}</td>
+                              <td>{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne_i) - (y.gueri + y.deces + y.abandon + y.non_repondant +y.transfert_interne_0) }}</td>
+                            </tr>
+                            <tr class="success">
+                              <td><b>Weeks</b></td>
+                              <td><b>{{sommecds.total_debut_semaine}}</b> </td>
+                              <td><b>{{sommecds.ptb}}</b></td>
+                              <td><b>{{sommecds.oedemes}}</b></td>
+                              <td><b>{{sommecds.rechute}}</b></td>
+                              <td><b>{{sommecds.readmission}}</b></td>
+                              <td><b>{{sommecds.transfert_interne_i}}</b></td>
+                              <td><b>{{sommecds.total_debut_semaine + sommecds.ptb + sommecds.oedemes + sommecds.rechute + sommecds.readmission + sommecds.transfert_interne_i }}</b></td>
+                              <td><b>{{sommecds.gueri}}</b></td>
+                              <td><b>{{sommecds.deces}}</b></td>
+                              <td><b>{{sommecds.abandon}}</b></td>
+                              <td><b>{{sommecds.non_repondant}}</b></td>
+                              <td><b>{{sommecds.transfert_interne_o}}</b></td>
+                              <td><b>{{sommecds.gueri + sommecds.deces + sommecds.abandon + sommecds.non_repondant + sommecds.transfert_interne_o }}</b></td>
+                              <td><b>{{(sommecds.total_debut_semaine + sommecds.ptb + sommecds.oedemes + sommecds.rechute + sommecds.readmission + sommecds.transfert_interne_i) - (sommecds.gueri + sommecds.deces + sommecds.abandon + sommecds.non_repondant +sommecds.transfert_interne_o)}}</b></td>
+                            </tr>
+                            {% endverbatim %}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="tab-pane " id="SST">
+                        <div class="row" >
+                          <div class="col-md-3">
+                            <h3>Taux de guerison</h3>
+                            <h1 >{% verbatim %}
+                              {{((hopitauxgnrl.gueri/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
+                              {% endverbatim %}%</h1>
+                              <table class="table bg-warning">
+                                <thead>
+                                  <tr>
+                                    <th>Province</th>
+                                    <th>District</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>{% verbatim %}
+                              {{((hopitauxprov.gueri/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
+                              {% endverbatim %}%</td>
+                                    <td></td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="col-md-3">
+                              <h3>Taux de deces</h3>
+                              <h1 >{% verbatim %}
+                                {{((hopitauxgnrl.deces/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
+                                {% endverbatim %}%</h1>
+                                <table class="table bg-danger">
+                                  <thead>
+                                    <tr>
+                                      <th>Province</th>
+                                      <th>District</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>{% verbatim %}
+                                {{((hopitauxprov.deces/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
+                                {% endverbatim %}%</td>
+                                      <td></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div class="col-md-3">
+                                <h3>Taux d'abandon</h3>
+                                <h1>{% verbatim %}
+                                  {{((hopitauxgnrl.abandon/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
+                                  {% endverbatim %}%</h1>
+                                  <table class="table bg-info">
+                                    <thead>
+                                      <tr>
+                                        <th>Province</th>
+                                        <th>District</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td >{% verbatim %}
+                                  {{((hopitauxprov.abandon/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
+                                  {% endverbatim %}%</td>
+                                        <td></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              <table  class="table fixed table-bordered table-hover">
+                                <thead class="thead-default">
+                                  <tr>
+                                    <th rowspan="2">Week</th>
+                                    <th rowspan="2">Total debut de semaine</th>
+                                    <th colspan="3">Nouvelles Admissions</th>
+                                    <th rowspan="2">Re-admission après Abandon (&lt;2mois)</th>
+                                    <th rowspan="2">Transfert interne</th>
+                                    <th rowspan="2">Total des Admissions</th>
+                                    <th colspan="4">Sorties</th>
+                                    <th rowspan="2">Total decharge</th>
+                                    <th rowspan="2">Total Fin de semaine</th>
+                                  </tr>
+                                  <tr>
+                                    <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
+                                    <th>Oeudeme</th>
+                                    <th>Rechute</th>
+                                    <th>Traité avec succès</th>
+                                    <th>Deces</th>
+                                    <th>Abandons</th>
+                                    <th>Non repondant</th>
+                                  </tr>
+                                </thead>
+                                <tbody >
+                                  {% verbatim %}
+                                  <tr ng-repeat="(x, y) in leshopitaux track by $index">
+                                    <td>{{x}}</td>
+                                    <td>{{y.total_debut_semaine}}</td>
+                                    <td>{{y.ptb}}</td>
+                                    <td>{{y.oedemes}}</td>
+                                    <td>{{y.rechute}}</td>
+                                    <td>{{y.readmission}}</td>
+                                    <td>{{y.transfert_interne_i}}</td>
+                                    <td>{{y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne }}</td>
+                                    <td>{{y.gueri}}</td>
+                                    <td>{{y.deces}}</td>
+                                    <td>{{y.abandon}}</td>
+                                    <td>{{y.non_repondant}}</td>
+                                    <td>{{y.gueri + y.deces + y.abandon + y.non_repondant }}</td>
+                                    <td>{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant)}}</td>
+                                  </tr>
+                                  <tr class="success">
+                                    <td><b>Weeks</b></td>
+                                    <td><b>{{sommehopitaux.total_debut_semaine}}</b> </td>
+                                    <td><b>{{sommehopitaux.ptb}}</b></td>
+                                    <td><b>{{sommehopitaux.oedemes}}</b></td>
+                                    <td><b>{{sommehopitaux.rechute}}</b></td>
+                                    <td><b>{{sommehopitaux.readmission}}</b></td>
+                                    <td><b>{{sommehopitaux.transfert_interne_i}}</b></td>
+                                    <td><b>{{sommehopitaux.total_debut_semaine + sommehopitaux.ptb + sommehopitaux.oedemes + sommehopitaux.rechute + sommehopitaux.readmission + sommehopitaux.transfert_interne }}</b></td>
+                                    <td><b>{{sommehopitaux.gueri}}</b></td>
+                                    <td><b>{{sommehopitaux.deces}}</b></td>
+                                    <td><b>{{sommehopitaux.abandon}}</b></td>
+                                    <td><b>{{sommehopitaux.non_repondant}}</b></td>
+                                    <td><b>{{sommehopitaux.gueri + sommehopitaux.deces + sommehopitaux.abandon + sommehopitaux.non_repondant}}</b></td>
+                                    <td><b>{{(sommehopitaux.total_debut_semaine + sommehopitaux.ptb + sommehopitaux.oedemes + sommehopitaux.rechute + sommehopitaux.readmission + sommehopitaux.transfert_interne_i) - (sommehopitaux.gueri + sommehopitaux.deces + sommehopitaux.abandon + sommehopitaux.non_repondant)}}</b></td>
+                                  </tr>
+                                  {% endverbatim %}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endblock container %}
                     </div>
-                    <div class="col-md-3">
-                    <h3 >Taux de deces</h3>
-                    <h1 >{% verbatim %}
-                        {{((sommecds.deces/(sommecds.gueri+sommecds.deces+sommecds.abandon))*100).toFixed(2) | number: 0}}
-                      {% endverbatim %}%</h1>
-                    <table class="table bg-danger">
-                      <thead>
-                        <tr>
-                          <th>Province</th>
-                          <th>District</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <!-- /.col-lg-12 -->
                   </div>
-                  <div class="col-md-3">
-                    <h3>Taux d'abandon</h3>
-                    <h1 >{% verbatim %}
-                        {{((sommecds.abandon/(sommecds.gueri+sommecds.deces+sommecds.abandon))*100).toFixed(2) | number: 0}}
-                      {% endverbatim %}%</h1>
-                    <table class="table bg-info">
-                      <thead>
-                        <tr>
-                          <th>Province</th>
-                          <th>District</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <!-- /.row -->
                 </div>
-                    <table  class="table fixed table-bordered table-hover">
-                      <thead class="thead-default">
-                        <tr>
-                          <th rowspan="2">Week</th>
-                          <th rowspan="2">Total debut de semaine</th>
-                          <th colspan="3">Nouvelles Admissions</th>
-                          <th rowspan="2">Re-admission après Abandon</th>
-                          <th rowspan="2">Transfert interne</th>
-                          <th rowspan="2">Total des Admissions</th>
-                          <th colspan="5">Sorties</th>
-                          <th rowspan="2">Total decharge</th>
-                          <th rowspan="2">Total Fin de semaine</th>
-                        </tr>
-                        <tr>
-                          <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
-                          <th>Oeudeme</th>
-                          <th>Rechute</th>
-                          <th>Gueri</th>
-                          <th>Deces</th>
-                          <th>Abandons</th>
-                          <th>Non repondant</th>
-                          <th>Transferts iterne</th>
-                        </tr>
-                      </thead>
-                      <tbody ng-init="total_debut_semainea = 0; ptba = 0 ; oedemesa=0; rechutea=0; readmissiona=0; transfert_interne_ia=0; gueria=0; decesa=0; abandona=0; non_repondanta=0; transfert_interne_oa=0; Admissionsa=0; dechargea=0; Fina=0">
-                        {% verbatim %}
-                        <tr ng-repeat="(x, y) in lescds track by $index">
-                          <td>{{x}}</td>
-                          <td ng-init="$parent.total_debut_semainea = $parent.total_debut_semainea + y.total_debut_semaine " >{{y.total_debut_semaine || 0}}</td>
-                          <td ng-init="$parent.ptba = $parent.ptba + y.ptb ">{{y.ptb || 0}}</td>
-                          <td ng-init="$parent.oedemesa = $parent.oedemesa + y.oedemes ">{{y.oedemes || 0}}</td>
-                          <td ng-init="$parent.rechutea = $parent.rechutea + y.rechute ">{{y.rechute || 0}}</td>
-                          <td ng-init="$parent.readmissiona = $parent.readmissiona + y.readmission ">{{y.readmission || 0}}</td>
-                          <td ng-init="$parent.transfert_interne_ia = $parent.transfert_interne_ia + y.transfert_interne ">{{y.transfert_interne_i || 0}}</td>
-                          <td ng-init="$parent.Admissionsa = $parent.Admissionsa + y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne ">{{y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne || 0}}</td>
-                          <td ng-init="$parent.gueria = $parent.gueria + y.gueri ">{{y.gueri || 0}}</td>
-                          <td ng-init="$parent.decesa = $parent.decesa + y.deces ">{{y.deces || 0}}</td>
-                          <td ng-init="$parent.abandona = $parent.abandona + y.abandon ">{{y.abandon || 0}}</td>
-                          <td ng-init="$parent.non_repondanta = $parent.non_repondanta + y.non_repondant ">{{y.non_repondant || 0}}</td>
-                          <td ng-init="$parent.transfert_interne_oa = $parent.transfert_interne_oa + y.transfert_interne_o ">{{y.transfert_interne_o || 0}}</td>
-                          <td ng-init="$parent.dechargea = $parent.dechargea + y.gueri + y.deces + y.abandon + y.non_repondant ">{{y.gueri + y.deces + y.abandon + y.non_repondant || 0}}</td>
-                          <td ng-init="$parent.Fina = $parent.Fina + (y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant)">{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant) || 0}}</td>
-                        </tr>
-                        <tr class="success">
-                          <td><b>Weeks</b></td>
-                          <td><b>{{total_debut_semainea}}</b> </td>
-                          <td><b>{{ptba}}</b></td>
-                          <td><b>{{oedemesa}}</b></td>
-                          <td><b>{{rechutea}}</b></td>
-                          <td><b>{{readmissiona}}</b></td>
-                          <td><b>{{transfert_interne_ia}}</b></td>
-                          <td><b>{{Admissionsa}}</b></td>
-                          <td><b>{{gueria}}</b></td>
-                          <td><b>{{decesa}}</b></td>
-                          <td><b>{{abandona}}</b></td>
-                          <td><b>{{non_repondanta}}</b></td>
-                          <td><b>{{transfert_interne_oa}}</b></td>
-                          <td><b>{{dechargea}}</b></td>
-                          <td><b>{{Fina}}</b></td>
-                        </tr>
-                        {% endverbatim %}
-                        </tbody>
-                    </table>
-                  </div>
-                  <div class="tab-pane " id="SST">
-                  <div class="row" >
-                    <div class="col-md-3">
-                      <h3>Taux de guerison</h3>
-                      <h1 >{% verbatim %}
-                        {{((sommehopitaux.gueri/(sommehopitaux.gueri+sommehopitaux.deces+sommehopitaux.abandon))*100).toFixed(2) | number: 0}}
-                      {% endverbatim %}%</h1>
-                      <table class="table bg-warning">
-                        <thead>
-                          <tr>
-                            <th>Province</th>
-                            <th>District</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td></td>
-                            <td></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="col-md-3">
-                    <h3>Taux de deces</h3>
-                    <h1 >{% verbatim %}
-                        {{((sommehopitaux.deces/(sommehopitaux.gueri+sommehopitaux.deces+sommehopitaux.abandon))*100).toFixed(2) | number: 0}}
-                      {% endverbatim %}%</h1>
-                    <table class="table bg-danger">
-                      <thead>
-                        <tr>
-                          <th>Province</th>
-                          <th>District</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="col-md-3">
-                    <h3>Taux d'abandon</h3>
-                    <h1>{% verbatim %}
-                        {{((sommehopitaux.abandon/(sommehopitaux.gueri+sommehopitaux.deces+sommehopitaux.abandon))*100).toFixed(2) | number: 0}}
-                      {% endverbatim %}%</h1>
-                    <table class="table bg-info">
-                      <thead>
-                        <tr>
-                          <th>Province</th>
-                          <th>District</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                   <table  class="table fixed table-bordered table-hover">
-                      <thead class="thead-default">
-                        <tr>
-                          <th rowspan="2">Week</th>
-                          <th rowspan="2">Total debut de semaine</th>
-                          <th colspan="3">Nouvelles Admissions</th>
-                          <th rowspan="2">Re-admission après Abandon (&lt;2mois)</th>
-                          <th rowspan="2">Transfert interne</th>
-                          <th rowspan="2">Total des Admissions</th>
-                          <th colspan="4">Sorties</th>
-                          <th rowspan="2">Total decharge</th>
-                          <th rowspan="2">Total Fin de semaine</th>
-                        </tr>
-                        <tr>
-                          <th>P/T&lt;-3z,70%, PB&lt;115mm ou PB&lt;180mm </th>
-                          <th>Oeudeme</th>
-                          <th>Rechute</th>
-                          <th>Traité avec succès</th>
-                          <th>Deces</th>
-                          <th>Abandons</th>
-                          <th>Non repondant</th>
-                        </tr>
-                      </thead>
-                      <tbody ng-init="total_debut_semaine = 0; ptb = 0 ; oedemes=0; rechute=0; readmission=0; gueri=0; deces=0; abandon=0; non_repondant=0; Admissions=0; decharge=0; Fin=0; transfert_interne_i=0">
-                        {% verbatim %}
-                        <tr ng-repeat="(x, y) in leshopitaux track by $index">
-                          <td>{{x}}</td>
-                          <td ng-init="$parent.total_debut_semaine = $parent.total_debut_semaine + y.total_debut_semaine " >{{y.total_debut_semaine || 0}}</td>
-                          <td ng-init="$parent.ptb = $parent.ptb + y.ptb ">{{y.ptb || 0}}</td>
-                          <td ng-init="$parent.oedemes = $parent.oedemes + y.oedemes ">{{y.oedemes || 0}}</td>
-                          <td ng-init="$parent.rechute = $parent.rechute + y.rechute ">{{y.rechute || 0}}</td>
-                          <td ng-init="$parent.readmission = $parent.readmission + y.readmission ">{{y.readmission || 0}}</td>
-                          <td ng-init="$parent.transfert_interne_i = $parent.transfert_interne_i + y.transfert_interne_i ">{{y.transfert_interne_i || 0}}</td>
-                          <td ng-init="$parent.Admissions = $parent.Admissions + y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne ">{{y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne || 0}}</td>
-                          <td ng-init="$parent.gueri = $parent.gueri + y.gueri ">{{y.gueri || 0}}</td>
-                          <td ng-init="$parent.deces = $parent.deces + y.deces ">{{y.deces || 0}}</td>
-                          <td ng-init="$parent.abandon = $parent.abandon + y.abandon ">{{y.abandon || 0}}</td>
-                          <td ng-init="$parent.non_repondant = $parent.non_repondant + y.non_repondant ">{{y.non_repondant || 0}}</td>
-                          <td ng-init="$parent.decharge = $parent.decharge + y.gueri + y.deces + y.abandon + y.non_repondant ">{{y.gueri + y.deces + y.abandon + y.non_repondant || 0}}</td>
-                          <td ng-init="$parent.Fin = $parent.Fin + (y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant)">{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant) || 0}}</td>
-                        </tr>
-                        <tr class="success">
-                          <td><b>Weeks</b></td>
-                          <td><b>{{total_debut_semaine}}</b> </td>
-                          <td><b>{{ptb}}</b></td>
-                          <td><b>{{oedemes}}</b></td>
-                          <td><b>{{rechute}}</b></td>
-                          <td><b>{{readmission}}</b></td>
-                          <td><b>{{transfert_interne_i}}</b></td>
-                          <td><b>{{Admissions}}</b></td>
-                          <td><b>{{gueri}}</b></td>
-                          <td><b>{{deces}}</b></td>
-                          <td><b>{{abandon}}</b></td>
-                          <td><b>{{non_repondant}}</b></td>
-                          <td><b>{{decharge}}</b></td>
-                          <td><b>{{Fin}}</b></td>
-                        </tr>
-                        {% endverbatim %}
-                        </tbody>
-                    </table>
-                  </div>
+                <!-- /.container-fluid -->
               </div>
-              </div>
+              <!-- /#page-wrapper -->
+
             </div>
-          {% endblock container %}
-          </div>
-          <!-- /.col-lg-12 -->
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </div>
-    <!-- /#page-wrapper -->
+            <!-- /#wrapper -->
+            <footer class="container-fluid">
+              <p class="text-right ">©2016 UNICEF Burundi</p>
+            </footer>
 
-  </div>
-  <!-- /#wrapper -->
-  <footer class="container-fluid">
-    <p class="text-right ">©2016 UNICEF Burundi</p>
-  </footer>
+            <!-- jQuery -->
+            <script src="{% static "js/libs/jquery.min.js" %}"></script>
 
-      <!-- jQuery -->
-      <script src="{% static "js/libs/jquery.min.js" %}"></script>
+            <!-- Bootstrap Core JavaScript -->
+            <script src="{% static "js/bootstrap.min.js" %}"></script>
 
-      <!-- Bootstrap Core JavaScript -->
-      <script src="{% static "js/bootstrap.min.js" %}"></script>
+            <!-- Metis Menu Plugin JavaScript -->
+            <script src="{% static "vendor/metisMenu/metisMenu.min.js" %}"></script>
 
-      <!-- Metis Menu Plugin JavaScript -->
-      <script src="{% static "vendor/metisMenu/metisMenu.min.js" %}"></script>
+            <!-- Custom Theme JavaScript -->
+            <script src="{% static "js/sb-admin-2.js" %}"></script>
 
-      <!-- Custom Theme JavaScript -->
-      <script src="{% static "js/sb-admin-2.js" %}"></script>
+            <!-- CMAM based Js -->
+            <script src="{% static "js/cmam-programs.js" %}"></script>
+          </body>
 
-      <!-- CMAM based Js -->
-      <script src="{% static "js/cmam-programs.js" %}"></script>
-  </body>
-
-</html>
+          </html>

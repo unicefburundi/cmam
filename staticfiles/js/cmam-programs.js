@@ -27,6 +27,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
             });
         });
         $scope.lescds =  weeks;
+        $scope.cdsgnrl = columns;
         $scope.sommecds = columns;
         });
 
@@ -56,6 +57,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
         });
 
         $scope.leshopitaux =  weeks;
+        $scope.hopitauxgnrl =  columns;
         $scope.sommehopitaux = columns;
         });
 
@@ -103,6 +105,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                     });
 
                     $scope.leshopitaux =  weeks;
+                    $scope.hopitauxprov =  columns;
                     $scope.sommehopitaux = columns;
               });
                 // update cds
@@ -132,6 +135,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                             });
                         });
                         $scope.lescds =  weeks;
+                        $scope.cdsprov =  columns;
                         $scope.sommecds = columns;
                         });
             }
