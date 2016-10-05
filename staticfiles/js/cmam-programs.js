@@ -69,6 +69,11 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
 
         $scope.update_province = function () {
             var province = $scope.province;
+            if (province.code <2){
+                console.log("0"+province.code + " short");
+            } else {
+                console.log(province);
+            }
             if ($scope.province) {
 
                 //update districts
