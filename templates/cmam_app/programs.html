@@ -130,7 +130,9 @@
                               <td>{% verbatim %}
                         {{((cdsprov.gueri/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
                         {% endverbatim %}%</td>
-                              <td></td>
+                              <td>{% verbatim %}
+                        {{((cdsdistr.gueri/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
+                        {% endverbatim %}%</td>
                             </tr>
                           </tbody>
                         </table>
@@ -152,7 +154,9 @@
                                 <td>{% verbatim %}
                           {{((cdsprov.deces/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
                           {% endverbatim %}%</td>
-                                <td></td>
+                                <td>{% verbatim %}
+                          {{((cdsdistr.deces/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
+                          {% endverbatim %}%</td>
                               </tr>
                             </tbody>
                           </table>
@@ -174,7 +178,9 @@
                                   <td>{% verbatim %}
                             {{((cdsprov.abandon/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
                             {% endverbatim %}%</td>
-                                  <td></td>
+                                  <td>{% verbatim %}
+                            {{((cdsdistr.abandon/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
+                            {% endverbatim %}%</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -263,7 +269,9 @@
                                     <td>{% verbatim %}
                               {{((hopitauxprov.gueri/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
                               {% endverbatim %}%</td>
-                                    <td></td>
+                                    <td>{% verbatim %}
+                              {{((hopitauxdistr.gueri/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
+                              {% endverbatim %}%</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -285,7 +293,9 @@
                                       <td>{% verbatim %}
                                 {{((hopitauxprov.deces/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
                                 {% endverbatim %}%</td>
-                                      <td></td>
+                                      <td>{% verbatim %}
+                                {{((hopitauxdistr.deces/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
+                                {% endverbatim %}%</td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -307,7 +317,9 @@
                                         <td >{% verbatim %}
                                   {{((hopitauxprov.abandon/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
                                   {% endverbatim %}%</td>
-                                        <td></td>
+                                        <td>{% verbatim %}
+                                  {{((hopitauxdistr.abandon/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
+                                  {% endverbatim %}%</td>
                                       </tr>
                                     </tbody>
                                   </table>
