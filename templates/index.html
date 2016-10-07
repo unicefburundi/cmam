@@ -53,6 +53,7 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
+                {% if user.is_authenticated %}
                 <li>
                     <a class="page-scroll" href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
                 </li>
@@ -62,7 +63,6 @@
                 <li>
                     <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
                 </li>
-                {% if user.is_authenticated %}
                         <li>
                             <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
                         </li>
@@ -120,89 +120,18 @@
                               <div class="container" ng-controller="myCtrl">
                               <ul class="nav nav-tabs">
                                 <li  class="active">
-                                  <a href="#sst" data-toggle="tab">SST</a>
+                                  <a href="#sta" data-toggle="tab">STA</a>
                                 </li>
                                 <li >
-                                  <a href="#sta" data-toggle="tab">STA</a>
+                                  <a href="#sst" data-toggle="tab">SST</a>
                                 </li>
                               </ul>
                               <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="sst">
-                                      <div class="col-md-5">
-                                        <div class="row">
-                                          <div class="col-md-8">
-                                            <table id="datatable" style="display: none;">
-                                              <thead>
-                                                <tr>
-                                                  <th><br>
-                                                  </th>
-                                                  <th>Admission</th>
-                                                  <th>Sorties</th>
-                                                  <th>Total fin de semaine</th>
-                                                </tr>
-                                              </thead>
-                                              <tbody>
-                                                <tr>
-                                                  <th>S1/2016</th>
-                                                  <td>31</td>
-                                                  <td>11</td>
-                                                  <td>54</td>
-                                                </tr>
-                                                <tr>
-                                                  <th>S2/2016</th>
-                                                  <td>24</td>
-                                                  <td>10</td>
-                                                  <td>31</td>
-                                                </tr>
-                                                <tr>
-                                                  <th>S3/2016</th>
-                                                  <td>50</td>
-                                                  <td>11</td>
-                                                  <td>24</td>
-                                                </tr>
-                                                <tr>
-                                                  <th>S4/2016</th>
-                                                  <td>10</td>
-                                                  <td>18</td>
-                                                  <td>43</td>
-                                                </tr>
-                                                <tr>
-                                                  <th>S5/2016</th>
-                                                  <td>58</td>
-                                                  <td>20</td>
-                                                  <td>44</td>
-                                                </tr>
-                                              </tbody>
-                                            </table>
-                                            <table id="datatable2">
-                                            <tbody >
-                                          {% verbatim %}
-                                            <tr ng-repeat="x in cds">
-                                              <th>{{ x.name }}</th>
-                                              <td class="avrg">{{ x.code}}</td>
-                                            </tr>
-                                          {% endverbatim %}
-                                        </tbody>
-                                          </table>
-                                        </div>
-                                        <div class="col-md-4">
-                                          <span class="lead">Taux de rapportage</span>
-                                          <h2 id="taux_rapportag"></h2>
-                                        </div>
-                                      </div>
-                                    </div>
-                                      <div class="col-md-7">
-                                        <div id="container" style="margin: 0 auto"></div>
-                                        <hr>
-                                        <div class="row">
-                                          <div >
-                                            <div id="container2" style="margin: 0 auto"></div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="sta">
+                                    <div class="tab-pane fade active" id="sta">
                                       STA
+                                    </div>
+                                    <div class="tab-pane fade" id="sst">
+                                      SST
                                     </div>
                               </div>
                             </div>
