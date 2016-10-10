@@ -24,6 +24,31 @@ function getsum(response){
     return [weeks, columns];
 }
 
+function getsum2(response){
+    var weeks = {},
+        columns = {},
+        sumCols = ['gueri', 'deces', 'abandon'], data = response.data;
+
+        $.each(data, function(index, obj) {
+            if (!weeks[obj['week']]) {
+                weeks[obj['week']] = {};
+            }
+            $.each(sumCols, function (index, col) {
+                if (!weeks[obj['week']][col]) {
+                    weeks[obj['week']][col] = 0;
+                }
+                if (!columns[col]) {
+                    columns[col] = 0;
+                }
+                var val = parseFloat(obj[col]);
+                if (!isNaN(val)) {
+                    weeks[obj['week']][col] += val;
+                    columns[col] += val;
+                }
+            });
+        });
+    return [weeks, columns];
+}
 
 var app = angular.module('myApp', []);
 
@@ -90,13 +115,39 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 
 app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
 // in out reports
-    $http.get("/cmam/inoutreport/?report__facility__facility_level__name=CDS")
+    $http.get("/cmam/outsum/")
     .then(function (response) {
-         var sums = getsum(response);
-        console.log(sums);
-        $scope.lescds =  sums[0];
-        $scope.cdsgnrl = sums[1];
-        $scope.sommecds = sums[1];
-    });
+        var sums = getsum2(response);
+        var gueris = [], decess =[], abandons = [], weeks=[];
 
+        $.each(sums[0], function (index, obj) {
+          // body...
+          var somme_taux = obj.gueri + obj.deces + obj.abandon;
+          var taux_guerison=(obj.gueri/somme_taux*100), taux_deces=(obj.deces/somme_taux*100), taux_abandon=(obj.abandon/somme_taux*100);
+          gueris.push(taux_guerison);
+          decess.push(taux_deces);
+          abandons.push(taux_abandon);
+          weeks.push(index);
+        });
+        console.log(gueris);
+        var donnees = [{data: gueris, name: "Geuri", type: 'column'}, {data: decess, type: 'column',name: "Deces"}, {data: abandons, type: 'column',name: "Abandons"}];
+
+        var myChart = Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Evolution'
+            },
+            xAxis: {
+                categories: weeks
+            },
+            yAxis: {
+                title: {
+                    text: '%'
+                }
+            },
+            series: donnees
+        });
+    });
 }]);

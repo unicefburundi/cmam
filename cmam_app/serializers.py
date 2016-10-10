@@ -4,6 +4,8 @@ from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from bdiadmin.serializers import ProvinceSerializer
 from bdiadmin.models import Province, District, CDS
+from datetime import datetime
+
 
 class ProductSerializer(serializers.ModelSerializer):
     """ Serializer to represent the Product model """
@@ -97,3 +99,18 @@ class InOutSerialiser(serializers.Serializer):
     abandon = serializers.IntegerField(default=0)
     non_repondant = serializers.IntegerField(default=0)
     transfert_interne_o = serializers.IntegerField(default=0)
+
+
+class SumOutSerialiser(serializers.ModelSerializer):
+    week = serializers.SerializerMethodField()
+    gueri = serializers.IntegerField(default=0)
+    deces = serializers.IntegerField(default=0)
+    abandon = serializers.IntegerField(default=0)
+
+    class Meta:
+        model = OutgoingPatientsReport
+        fields = ('gueri','deces','abandon', "week")
+
+    def get_week(self, obj):
+        return "W{0}".format(obj.date_of_first_week_day.strftime("%W"))
+

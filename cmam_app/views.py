@@ -169,3 +169,10 @@ class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
         return self.get_queryList()
+
+class SumOutgoingViewset(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to view or edit district.
+    """
+    queryset = OutgoingPatientsReport.objects.all()
+    serializer_class = SumOutSerialiser
