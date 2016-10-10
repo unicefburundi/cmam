@@ -1,3 +1,7 @@
+function sortObject(o) {
+    return Object.keys(o).sort().reduce((r, k) => (r[k] = o[k], r), {});
+}
+
 function getsum(response){
     var weeks = {},
         columns = {},
@@ -21,8 +25,10 @@ function getsum(response){
                 }
             });
         });
+    weeks = sortObject(weeks);
     return [weeks, columns];
 }
+
 
 var app = angular.module('ProgramApp', []);
 
