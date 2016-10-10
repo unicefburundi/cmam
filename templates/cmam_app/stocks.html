@@ -301,9 +301,9 @@
                                     <tr ng-repeat="x in cds" ng-if="x.code.length === 6">
                                         <th>{{ x.name }}</th>
                                         <th>{{ x.code }}</th>
-                                        <td>{{ x.ATPE.reception }}</td>
-                                        <td>{{ x.ATPE.sortie }}</td>
-                                        <td>{{ x.ATPE.reception - x.ATPE.sortie }}</td>
+                                        <td>{{ ((x.ATPE.reception)/150).toFixed(2) }}</td>
+                                        <td>{{ ((x.ATPE.sortie)/150).toFixed(2) }}</td>
+                                        <td>{{ ((x.ATPE.reception - x.ATPE.sortie)/150).toFixed(2) }}</td>
                                     </tr>
                                     {% endverbatim %}
                                   </tbody>
@@ -325,9 +325,9 @@
                                     <tr ng-repeat="x in cds" ng-if="x.code.length === 7">
                                         <th>{{ x.name }}</th>
                                         <th>{{ x.code }}</th>
-                                        <td>{{ x.ATPE.reception }}</td>
-                                        <td>{{ x.ATPE.sortie }}</td>
-                                        <td>{{ x.ATPE.reception - x.ATPE.sortie }}</td>
+                                        <td>{{ ((x.ATPE.reception)/150).toFixed(2) }}</td>
+                                        <td>{{ ((x.ATPE.sortie)/150).toFixed(2) }}</td>
+                                        <td>{{ ((x.ATPE.reception - x.ATPE.sortie)/150).toFixed(2) }}</td>
                                     </tr>
                                     {% endverbatim %}
                                   </tbody>

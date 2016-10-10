@@ -130,17 +130,17 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
           // body...
           var somme_taux = obj.gueri + obj.deces + obj.abandon;
           var taux_guerison=(obj.gueri/somme_taux*100), taux_deces=(obj.deces/somme_taux*100), taux_abandon=(obj.abandon/somme_taux*100);
-          gueris.push(taux_guerison);
-          decess.push(taux_deces);
-          abandons.push(taux_abandon);
+          gueris.push(Math.round(taux_guerison));
+          decess.push(Math.round(taux_deces));
+          abandons.push(Math.round(taux_abandon));
           weeks.push(index);
         });
-        console.log(gueris);
-        var donnees = [{data: gueris, name: "Taux de geurison"}, {data: decess,name: "Taux de deces"}, {data: abandons, name: "Taux d'Abandons"}];
+        var donnees = [{data: gueris, name: "Taux de guerison"}, {data: decess,name: "Taux de deces"}, {data: abandons, name: "Taux d'abandons"}];
+        console.log(donnees);
 
         var myChart = Highcharts.chart('container_sta', {
             chart: {
-                type: 'line'
+                type: 'spline'
             },
             title: {
                 text: 'Evolution par semaine des taux au niveau STA'
@@ -149,12 +149,12 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
                 categories: weeks
             },
             plotOptions: {
-                line: {
+                spline: {
                     dataLabels: {
                         enabled: true
                     },
-                    enableMouseTracking: false
-                }
+                    enableMouseTracking: true
+                },
             },
             yAxis: {
                 title: {
@@ -174,23 +174,31 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
             // body...
             var somme_taux = obj.gueri + obj.deces + obj.abandon;
             var taux_guerison= ~~(obj.gueri/somme_taux*100), taux_deces= ~~(obj.deces/somme_taux*100), taux_abandon= ~~(obj.abandon/somme_taux*100);
-            gueris.push(taux_guerison);
-            decess.push(taux_deces);
-            abandons.push(taux_abandon);
+            gueris.push(Math.round(taux_guerison));
+            decess.push(Math.round(taux_deces));
+            abandons.push(Math.round(taux_abandon));
             weeks.push(index);
           });
-          console.log(gueris);
-          var donnees = [{data: gueris, name: "Taus de geurison", type: 'column'}, {data: decess, type: 'column',name: "Taux de Deces"}, {data: abandons, type: 'column',name: "Taux d'Abandons"}];
+          var donnees = [{data: gueris, name: "Taus de guerison"}, {data: decess,name: "Taux de deces"}, {data: abandons,name: "Taux d'abandons"}];
+          // console.log(donnees);
 
           var myChart = Highcharts.chart('container_sst', {
               chart: {
-                  type: 'column'
+                  type: 'spline'
               },
               title: {
                   text: 'Evolution par semaine des taux au niveau SST'
               },
               xAxis: {
                   categories: weeks
+              },
+              plotOptions: {
+                  spline: {
+                      dataLabels: {
+                          enabled: true
+                      },
+                      enableMouseTracking: true
+                  }
               },
               yAxis: {
                   title: {
