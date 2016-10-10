@@ -103,13 +103,10 @@ class InOutSerialiser(serializers.Serializer):
 
 class SumOutSerialiser(serializers.ModelSerializer):
     week = serializers.SerializerMethodField()
-    gueri = serializers.IntegerField(default=0)
-    deces = serializers.IntegerField(default=0)
-    abandon = serializers.IntegerField(default=0)
 
     class Meta:
         model = OutgoingPatientsReport
-        fields = ('gueri','deces','abandon', "week")
+        fields = ('gueri','deces','abandon', "week",)
 
     def get_week(self, obj):
         return "W{0}".format(obj.date_of_first_week_day.strftime("%W"))

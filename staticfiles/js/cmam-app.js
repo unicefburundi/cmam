@@ -114,8 +114,8 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 
 
 app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
-// in out reports
-    $http.get("/cmam/outsum/")
+    //  out reports CDS
+    $http.get("/cmam/outsum/?report__facility__facility_level__name=CDS")
     .then(function (response) {
         var sums = getsum2(response);
         var gueris = [], decess =[], abandons = [], weeks=[];
@@ -132,12 +132,12 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
         console.log(gueris);
         var donnees = [{data: gueris, name: "Geuri", type: 'column'}, {data: decess, type: 'column',name: "Deces"}, {data: abandons, type: 'column',name: "Abandons"}];
 
-        var myChart = Highcharts.chart('container', {
+        var myChart = Highcharts.chart('container_sta', {
             chart: {
                 type: 'column'
             },
             title: {
-                text: 'Evolution'
+                text: 'Evolution par semaine des taux au niveau STA'
             },
             xAxis: {
                 categories: weeks
@@ -150,4 +150,40 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
             series: donnees
         });
     });
+    // Out reports Hospital
+    $http.get("/cmam/outsum/?report__facility__facility_level__name=Hospital")
+      .then(function (response) {
+          var sums = getsum2(response);
+          var gueris = [], decess =[], abandons = [], weeks=[];
+
+          $.each(sums[0], function (index, obj) {
+            // body...
+            var somme_taux = obj.gueri + obj.deces + obj.abandon;
+            var taux_guerison= ~~(obj.gueri/somme_taux*100), taux_deces= ~~(obj.deces/somme_taux*100), taux_abandon= ~~(obj.abandon/somme_taux*100);
+            gueris.push(taux_guerison);
+            decess.push(taux_deces);
+            abandons.push(taux_abandon);
+            weeks.push(index);
+          });
+          console.log(gueris);
+          var donnees = [{data: gueris, name: "Geuri", type: 'column'}, {data: decess, type: 'column',name: "Deces"}, {data: abandons, type: 'column',name: "Abandons"}];
+
+          var myChart = Highcharts.chart('container_sst', {
+              chart: {
+                  type: 'column'
+              },
+              title: {
+                  text: 'Evolution par semaine des taux au niveau SST'
+              },
+              xAxis: {
+                  categories: weeks
+              },
+              yAxis: {
+                  title: {
+                      text: '%'
+                  }
+              },
+              series: donnees
+          });
+      });
 }]);

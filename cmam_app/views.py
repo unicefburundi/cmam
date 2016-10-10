@@ -176,3 +176,6 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     """
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = SumOutSerialiser
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, )
+    filter_fields = ('report__facility__facility_level__name', )
+    search_fields = ('^report__facility__id_facility',)
