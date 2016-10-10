@@ -1,4 +1,32 @@
+function getsum(response){
+    var weeks = {},
+        columns = {},
+        sumCols = ['total_debut_semaine','ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i','gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o'], data = response.data;
+
+        $.each(data, function(index, obj) {
+            if (!weeks[obj['week']]) {
+                weeks[obj['week']] = {};
+            }
+            $.each(sumCols, function (index, col) {
+                if (!weeks[obj['week']][col]) {
+                    weeks[obj['week']][col] = 0;
+                }
+                if (!columns[col]) {
+                    columns[col] = 0;
+                }
+                var val = parseFloat(obj[col]);
+                if (!isNaN(val)) {
+                    weeks[obj['week']][col] += val;
+                    columns[col] += val;
+                }
+            });
+        });
+    return [weeks, columns];
+}
+
+
 var app = angular.module('myApp', []);
+
 app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         // products
         $http.get("/cmam/products/")
@@ -59,22 +87,16 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         };
 }]);
 
-app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
-    $http.get("/cmam/inoutreport/")
+
+app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
+// in out reports
+    $http.get("/cmam/inoutreport/?report__facility__facility_level__name=CDS")
     .then(function (response) {
-      $scope.lesobjets =  response.data;
+         var sums = getsum(response);
+        console.log(sums);
+        $scope.lescds =  sums[0];
+        $scope.cdsgnrl = sums[1];
+        $scope.sommecds = sums[1];
     });
 
-    $http({
-        url: '/cmam/inoutreport/',
-        method: "POST",
-        data: { 'code' : 2 },
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    })
-    .then(function(response) {
-            // success
-    },
-    function(response) { // optional
-            // failed
-    });
 }]);

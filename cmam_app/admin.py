@@ -131,6 +131,27 @@ class OutgoingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
     def type(self, obj):
         return obj.report.facility.facility_level
 
+class TransfertAdminRessource(resources.ModelResource):
+    class Meta:
+        model = ProductsTranferReport
+        fields = ("sortie", "produit", "quantite_donnee", "sortie__destination", "sortie__date_de_sortie")
+
+class TransfertProductAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = TransfertAdminRessource
+    list_display = ("sortie", "produit", "quantite_donnee",)
+    search_fields = ("produit",)
+    list_filter = ("sortie__report__facility__facility_level", "sortie__date_de_sortie")
+
+class ReceptionAdminRessource(resources.ModelResource):
+    class Meta:
+        model = ProductsReceptionReport
+        fields = ("reception","produit","quantite_recue",)
+
+class ReceptionProductAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = ReceptionAdminRessource
+    list_display = ("reception","produit","quantite_recue",)
+    search_fields = ("reception__date_de_reception",)
+    list_filter = ("reception__date_de_reception",)
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Facility, FacilityAdmin)
@@ -141,8 +162,8 @@ admin.site.register(Report, ReportAdmin)
 admin.site.register(Sortie)
 admin.site.register(Reception)
 admin.site.register(StockOutReport)
-admin.site.register(ProductsReceptionReport)
-admin.site.register(ProductsTranferReport)
+admin.site.register(ProductsReceptionReport, ReceptionProductAdmin)
+admin.site.register(ProductsTranferReport, TransfertProductAdmin)
 admin.site.register(IncomingPatientsReport, IncomingPatientsReportAdmin)
 admin.site.register(OutgoingPatientsReport, OutgoingPatientsReportAdmin)
 admin.site.register(StockReport)

@@ -109,7 +109,7 @@ class Sortie(models.Model):
     destination = models.ForeignKey(Facility)
 
     def __unicode__(self):
-        return "On {0} , products sent operation to {1} done".format(self.date_de_sortie, self.destination.name)
+        return "On {0}, products sent operation to {1} done".format(self.date_de_sortie, self.destination.name)
 
     class Meta:
         ordering = ('date_de_sortie',)
