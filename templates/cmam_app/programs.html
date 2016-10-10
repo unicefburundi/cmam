@@ -212,7 +212,7 @@
                           </thead>
                           <tbody >
                             {% verbatim %}
-                            <tr ng-repeat="(x, y) in lescds track by $index">
+                            <tr ng-repeat="(x, y) in lescds  ">
                               <td>{{x}}</td>
                               <td>{{y.total_debut_semaine}}</td>
                               <td>{{y.ptb}}</td>
@@ -350,7 +350,7 @@
                                 </thead>
                                 <tbody >
                                   {% verbatim %}
-                                  <tr ng-repeat="(x, y) in leshopitaux track by $index">
+                                  <tr ng-repeat="(x, y) in leshopitaux ">
                                     <td>{{x}}</td>
                                     <td>{{y.total_debut_semaine}}</td>
                                     <td>{{y.ptb}}</td>

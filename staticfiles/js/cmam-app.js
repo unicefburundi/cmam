@@ -1,3 +1,7 @@
+function sortObject(o) {
+    return Object.keys(o).sort().reduce((r, k) => (r[k] = o[k], r), {});
+}
+
 function getsum(response){
     var weeks = {},
         columns = {},
@@ -21,6 +25,7 @@ function getsum(response){
                 }
             });
         });
+    weeks = sortObject(weeks);
     return [weeks, columns];
 }
 
@@ -47,6 +52,7 @@ function getsum2(response){
                 }
             });
         });
+    weeks = sortObject(weeks);
     return [weeks, columns];
 }
 
@@ -130,17 +136,25 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
           weeks.push(index);
         });
         console.log(gueris);
-        var donnees = [{data: gueris, name: "Geuri", type: 'column'}, {data: decess, type: 'column',name: "Deces"}, {data: abandons, type: 'column',name: "Abandons"}];
+        var donnees = [{data: gueris, name: "Taux de geurison"}, {data: decess,name: "Taux de deces"}, {data: abandons, name: "Taux d'Abandons"}];
 
         var myChart = Highcharts.chart('container_sta', {
             chart: {
-                type: 'column'
+                type: 'line'
             },
             title: {
                 text: 'Evolution par semaine des taux au niveau STA'
             },
             xAxis: {
                 categories: weeks
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
             },
             yAxis: {
                 title: {
@@ -166,7 +180,7 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
             weeks.push(index);
           });
           console.log(gueris);
-          var donnees = [{data: gueris, name: "Geuri", type: 'column'}, {data: decess, type: 'column',name: "Deces"}, {data: abandons, type: 'column',name: "Abandons"}];
+          var donnees = [{data: gueris, name: "Taus de geurison", type: 'column'}, {data: decess, type: 'column',name: "Taux de Deces"}, {data: abandons, type: 'column',name: "Taux d'Abandons"}];
 
           var myChart = Highcharts.chart('container_sst', {
               chart: {
