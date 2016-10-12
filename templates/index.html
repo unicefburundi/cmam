@@ -86,11 +86,6 @@
                             <label>Year</label>
                             <select class="form-control"  ng-model="dashboard.year" ng-options="x for x in years track by x" ng-change="update_years()"></select>
                           </div>
-                          <!-- week -->
-                          <div id="week-group" class="form-group">
-                            <label>Week</label>
-                            <select class="form-control"  ng-model="dashboard.week" ng-options="x for x in weeks track by x" ng-change="update_weeks()"></select>
-                          </div>
 
                           <!-- Province -->
                           <div id="province-group" class="form-group">
@@ -102,6 +97,11 @@
                           <div id="district-group" class="form-group">
                             <label>District</label>
                             <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+                          </div>
+                          <!-- week -->
+                          <div id="week-group" class="form-group">
+                            <label>Week</label>
+                            <select class="form-control"  ng-model="dashboard.week" ng-options="x for x in weeks track by x" ng-change="update_weeks()"></select>
                           </div>
                         </form>
                         {% endblock search_form %}

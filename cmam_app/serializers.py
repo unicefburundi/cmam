@@ -2,7 +2,7 @@ from rest_framework import serializers
 from cmam_app.models import *
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
-from bdiadmin.serializers import ProvinceSerializer
+from bdiadmin.serializers import ProvinceSerializer, CDSSerializer
 from bdiadmin.models import Province, District, CDS
 from datetime import datetime
 
@@ -35,17 +35,11 @@ class ProvinceDistrictsSerializer(ProvinceSerializer):
 
     def get_districts(self, obj):
         districts = District.objects.filter(province__code=obj.code).values('name', 'code')
-        if self.context.get('product'):
-            for d in districts:
-                product = int(self.context.get('product'))
-                d['reception'] = ProductsReceptionReport.objects.filter(produit=product, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
-                d['sortie'] = ProductsTranferReport.objects.filter(produit=product, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
-        else:
-            for d in districts:
-                for p in Product.objects.all():
-                    d[p.designation] = {}
-                    d[p.designation]['reception'] = ProductsReceptionReport.objects.filter(produit=p, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
-                    d[p.designation]['sortie'] = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
+        for d in districts:
+            for p in Product.objects.all():
+                d[p.designation] = {}
+                d[p.designation]['reception'] = ProductsReceptionReport.objects.filter(produit=p, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
+                d[p.designation]['sortie'] = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
         return districts
 
 class DistrictCDSSerializer(ProvinceSerializer):
@@ -58,19 +52,31 @@ class DistrictCDSSerializer(ProvinceSerializer):
 
     def get_cds(self, obj):
         cds = CDS.objects.filter(district__code=obj.code).values('name', 'code')
-        if self.context.get('product'):
-            for d in cds:
-                product = int(self.context.get('product'))
-                d['reception'] = ProductsReceptionReport.objects.filter(produit=product, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
-                d['sortie'] = ProductsTranferReport.objects.filter(produit=product, sortie__report__facility__id_facility=d['code'] ).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
-        else:
-            for d in cds:
-                for p in Product.objects.all():
-                    d[p.designation] = {}
-                    d[p.designation]['reception'] = ProductsReceptionReport.objects.filter(produit=p, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
-                    d[p.designation]['sortie'] = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
+        for d in cds:
+            for p in Product.objects.all():
+                d[p.designation] = {}
+                d[p.designation]['reception'] = ProductsReceptionReport.objects.filter(produit=p, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
+                d[p.designation]['sortie'] = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
 
         return cds
+
+class CDSSerializers(serializers.ModelSerializer):
+    products = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CDS
+        fields = ( "products", "name", "code")
+
+    def get_products(self,obj):
+        cds = CDS.objects.filter(code=obj.code).values('name', 'code')
+        for d in cds:
+            for p in Product.objects.all():
+                d[p.designation] = {}
+                d[p.designation]['reception'] = ProductsReceptionReport.objects.filter(produit=p, reception__report__facility__id_facility=d['code'] ).aggregate(reception=Coalesce( Sum('quantite_recue'), 0))['reception']
+                d[p.designation]['sortie'] = ProductsTranferReport.objects.filter(produit=p, sortie__report__facility__id_facility=d['code']).aggregate(sortie=Coalesce( Sum('quantite_donnee'), 0))['sortie']
+
+        return cds
+
 
 class IncomingPatientSerializer(serializers.ModelSerializer):
 

@@ -33,6 +33,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script src="{% static "js/angular.min.js" %}"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.8/angular-sanitize.min.js"></script>
       </head>
 
       <body ng-app="StockApp">
@@ -89,6 +90,12 @@
                       <div id="district-group" class="form-group">
                         <label>District</label>
                         <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+                      </div>
+
+                      <!-- CDS -->
+                      <div id="cds-group" class="form-group">
+                        <label>CDS</label>
+                        <select class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
                       </div>
                     </form>
                     {% endblock search_form %}
@@ -223,6 +230,7 @@
                           </div>
                         </div>
                       </div>
+                      <p ng-bind-html="messageAMX"></p>
                     </div>
                   {% endblock amx %}
 

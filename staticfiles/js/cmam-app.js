@@ -59,11 +59,10 @@ function getsum2(response){
 var app = angular.module('myApp', []);
 
 app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
-        // products
-        $http.get("/cmam/products/")
+        // years
+        $http.get("/cmam/get_year/")
         .then(function (response) {
-          $scope.produits = response.data;
-          $scope.disto = 2;
+          $scope.years = response.data;
         });
 
         // province
@@ -74,9 +73,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 
           $scope.update_province = function () {
             var province = $scope.dashboard.province;
-            $(".cds").hide();
-            $(".district").show();
-            if ($scope.produits) {
+            if (province) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
                     $scope.districts = response.data.districts;
@@ -86,24 +83,15 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
           // district
         $scope.update_district = function () {
             var district = $scope.dashboard.district;
-            if ($scope.dashboard.province) {
+            if (district) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
                   $scope.cds = response.data.cds;
-                  $(".cds").show();
 
               });
-              }
+            }
         };
-        // Datepicker
-        $scope.debut = '19/03/2013';
-        $scope.fin = '19/03/2013';
 
-        // years
-        $http.get("/cmam/get_year/")
-        .then(function (response) {
-          $scope.years = response.data;
-        });
 
         // weeks
         $http.get("/cmam/get_week/")
@@ -136,7 +124,6 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
           weeks.push(index);
         });
         var donnees = [{data: gueris, name: "Taux de guerison"}, {data: decess,name: "Taux de deces"}, {data: abandons, name: "Taux d'abandons"}];
-        console.log(donnees);
 
         var myChart = Highcharts.chart('container_sta', {
             chart: {

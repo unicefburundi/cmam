@@ -81,7 +81,7 @@ class ReportAdminResource(resources.ModelResource):
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
             return CDS.objects.get(code = report.facility.id_facility).district.province.name
         elif report.facility.facility_level.name in ["District"]:
-            return District.objects.get(code = int(report.facility.id_facility)).province.name
+            return District.objects.get(code = report.facility.id_facility).province.name
         elif report.facility.facility_level.name in ["Province"]:
             return report.facility.name
         return

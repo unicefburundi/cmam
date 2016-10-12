@@ -71,14 +71,6 @@ class ProvinceDistrictViewSet(viewsets.ModelViewSet):
     queryset = Province.objects.all()
     serializer_class = ProvinceDistrictsSerializer
 
-    # For get provinces
-    @detail_route(methods=['get'], url_path='(?P<product>\d+)')
-    def update_product(self, request, pk, product=None):
-        """ Updates the object identified by the pk ans add the product """
-        queryset = Province.objects.filter(pk=pk)
-        serializer = ProvinceDistrictsSerializer(queryset, many=True, context={'product': product})
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
 class DistrictCDSViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit district.
@@ -87,13 +79,16 @@ class DistrictCDSViewSet(viewsets.ModelViewSet):
     serializer_class = DistrictCDSSerializer
     lookup_field = 'code'
 
-    # For get districts
-    @detail_route(methods=['get'], url_path='(?P<product>\d+)')
-    def update_product(self, request, code, product=None):
-        """ Updates the object identified by the pk ans add the product """
-        queryset = District.objects.filter(code=code)
-        serializer = DistrictCDSSerializer(queryset, many=True, context={'product': product})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class CDSCDSViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to view or edit district.
+    """
+    queryset = CDS.objects.all()
+    serializer_class = CDSSerializers
+    lookup_field = 'code'
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, )
+    filter_fields = ('code', 'district__code', 'district__province__code' )
+    search_fields = ('^code',)
 
 class IncomingViewset(viewsets.ModelViewSet):
     """
@@ -179,3 +174,4 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, )
     filter_fields = ('report__facility__facility_level__name', )
     search_fields = ('^report__facility__id_facility',)
+
