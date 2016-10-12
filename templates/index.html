@@ -98,6 +98,13 @@
                             <label>District</label>
                             <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
                           </div>
+
+                          <!-- CDS -->
+                          <div id="cds-group" class="form-group">
+                            <label>CDS</label>
+                            <select class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
+                          </div>
+
                           <!-- week -->
                           <div id="week-group" class="form-group">
                             <label>Week</label>

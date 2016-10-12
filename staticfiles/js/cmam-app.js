@@ -86,12 +86,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
             if (district) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
-                  $scope.cds = response.data.cds;
+                  $scope.cdss = response.data.cds;
 
               });
             }
         };
 
+        // district
+        $scope.update_district = function () {
+            var district = $scope.dashboard.cds;
+            if (district) {
+              $http.get("/cmam/districts/" + district.code + "/" )
+                .then(function (response) {
+                  $scope.cdss = response.data.cds;
+              });
+            }
+        };
 
         // weeks
         $http.get("/cmam/get_week/")
