@@ -1,7 +1,9 @@
+// sorting json
 function sortObject(o) {
     return Object.keys(o).sort().reduce((r, k) => (r[k] = o[k], r), {});
 }
 
+// sum of jsons
 function getsum(response){
     var weeks = {},
         columns = {},
@@ -54,6 +56,22 @@ function getsum2(response){
         });
     weeks = sortObject(weeks);
     return [weeks, columns];
+}
+// produce data for Highcharts
+function highcharts_data(sums) {
+   var gueris = [], decess =[], abandons = [], weeks=[];
+
+        $.each(sums, function (index, obj) {
+          // body...
+          var somme_taux = obj.gueri + obj.deces + obj.abandon;
+          var taux_guerison=(obj.gueri/somme_taux*100), taux_deces=(obj.deces/somme_taux*100), taux_abandon=(obj.abandon/somme_taux*100);
+          gueris.push(Math.round(taux_guerison));
+          decess.push(Math.round(taux_deces));
+          abandons.push(Math.round(taux_abandon));
+          weeks.push(index);
+        });
+        var donnees = [{data: gueris, name: "Taux de guerison"}, {data: decess,name: "Taux de deces"}, {data: abandons, name: "Taux d'abandons"}];
+      return [donnees, weeks];
 }
 
 var app = angular.module('myApp', []);
@@ -122,19 +140,7 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
     $http.get("/cmam/outsum/?report__facility__facility_level__name=CDS")
     .then(function (response) {
         var sums = getsum2(response);
-        var gueris = [], decess =[], abandons = [], weeks=[];
-
-        $.each(sums[0], function (index, obj) {
-          // body...
-          var somme_taux = obj.gueri + obj.deces + obj.abandon;
-          var taux_guerison=(obj.gueri/somme_taux*100), taux_deces=(obj.deces/somme_taux*100), taux_abandon=(obj.abandon/somme_taux*100);
-          gueris.push(Math.round(taux_guerison));
-          decess.push(Math.round(taux_deces));
-          abandons.push(Math.round(taux_abandon));
-          weeks.push(index);
-        });
-        var donnees = [{data: gueris, name: "Taux de guerison"}, {data: decess,name: "Taux de deces"}, {data: abandons, name: "Taux d'abandons"}];
-
+        var lesdonnees = highcharts_data(sums[0]);
         var myChart = Highcharts.chart('container_sta', {
             chart: {
                 type: 'spline'
@@ -143,14 +149,14 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
                 text: 'Evolution par semaine des taux au niveau STA'
             },
             xAxis: {
-                categories: weeks
+                categories: lesdonnees[1]
             },
             plotOptions: {
                 spline: {
                     dataLabels: {
                         enabled: true
                     },
-                    enableMouseTracking: true
+                    enableMouseTracking: false
                 },
             },
             yAxis: {
@@ -158,27 +164,14 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
                     text: '%'
                 }
             },
-            series: donnees
+            series: lesdonnees[0]
         });
     });
     // Out reports Hospital
     $http.get("/cmam/outsum/?report__facility__facility_level__name=Hospital")
       .then(function (response) {
           var sums = getsum2(response);
-          var gueris = [], decess =[], abandons = [], weeks=[];
-
-          $.each(sums[0], function (index, obj) {
-            // body...
-            var somme_taux = obj.gueri + obj.deces + obj.abandon;
-            var taux_guerison= ~~(obj.gueri/somme_taux*100), taux_deces= ~~(obj.deces/somme_taux*100), taux_abandon= ~~(obj.abandon/somme_taux*100);
-            gueris.push(Math.round(taux_guerison));
-            decess.push(Math.round(taux_deces));
-            abandons.push(Math.round(taux_abandon));
-            weeks.push(index);
-          });
-          var donnees = [{data: gueris, name: "Taus de guerison"}, {data: decess,name: "Taux de deces"}, {data: abandons,name: "Taux d'abandons"}];
-          // console.log(donnees);
-
+          var lesdonnees = highcharts_data(sums[0]);
           var myChart = Highcharts.chart('container_sst', {
               chart: {
                   type: 'spline'
@@ -187,14 +180,14 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
                   text: 'Evolution par semaine des taux au niveau SST'
               },
               xAxis: {
-                  categories: weeks
+                  categories: lesdonnees[1]
               },
               plotOptions: {
                   spline: {
                       dataLabels: {
                           enabled: true
                       },
-                      enableMouseTracking: true
+                      enableMouseTracking: false
                   }
               },
               yAxis: {
@@ -202,7 +195,7 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
                       text: '%'
                   }
               },
-              series: donnees
+              series: lesdonnees[0]
           });
       });
 }]);
