@@ -29,6 +29,7 @@ app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
                   $scope.cds = response.data.cds;
+                  console.log($scope.cds);
                   $scope.cdss = response.data.cds;
                   $(".cds").show();
               });
@@ -40,8 +41,8 @@ app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
             if (cds) {
               $http.get("/cmam/cdss/" + cds['code'] + "/" )
                 .then(function (response) {
-                  $scope.cdsproducts = response.data.products;
-                  console.log(response.data.products);
+                  $scope.cds = response.data.products;
+                  console.log(response.data.products[0]);
               });
               }
         };
