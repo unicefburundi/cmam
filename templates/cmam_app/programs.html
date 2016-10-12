@@ -90,6 +90,12 @@
                   <label>District</label>
                   <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
                 </div>
+
+                <!-- CDS -->
+                  <div id="cds-group" class="form-group">
+                    <label>CDS</label>
+                    <select class="form-control"  ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
+                  </div>
               </form>
               {% endblock search_form %}
             </li>
@@ -113,16 +119,17 @@
               <div class="tab-content" >
                 <div class="tab-pane active" id="STA">
                   <div class="row" >
-                    <div class="col-md-3">
+                    <div class="col-md-4 text-success">
                       <h3>Taux de guerison</h3>
                       <h1 >{% verbatim %}
                         {{((cdsgnrl.gueri/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
                         {% endverbatim %}%</h1>
-                        <table class="table bg-warning">
+                        <table class="table bg-success">
                           <thead>
                             <tr>
                               <th>Province</th>
                               <th>District</th>
+                              <th>CDS</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -133,11 +140,14 @@
                               <td>{% verbatim %}
                         {{((cdsdistr.gueri/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
                         {% endverbatim %}%</td>
+                              <td>{% verbatim %}
+                        {{((cdscds.gueri/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
+                        {% endverbatim %}%</td>
                             </tr>
                           </tbody>
                         </table>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-4 text-danger">
                         <h3 >Taux de deces</h3>
                         <h1 >{% verbatim %}
                           {{((cdsgnrl.deces/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
@@ -147,6 +157,7 @@
                               <tr>
                                 <th>Province</th>
                                 <th>District</th>
+                                <th>CDS</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -157,11 +168,14 @@
                                 <td>{% verbatim %}
                           {{((cdsdistr.deces/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
                           {% endverbatim %}%</td>
+                                <td>{% verbatim %}
+                          {{((cdscds.deces/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
+                          {% endverbatim %}%</td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4 text-info">
                           <h3>Taux d'abandon</h3>
                           <h1 >{% verbatim %}
                             {{((cdsgnrl.abandon/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
@@ -171,6 +185,7 @@
                                 <tr>
                                   <th>Province</th>
                                   <th>District</th>
+                                  <th>CDS</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -180,6 +195,9 @@
                             {% endverbatim %}%</td>
                                   <td>{% verbatim %}
                             {{((cdsdistr.abandon/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
+                            {% endverbatim %}%</td>
+                                  <td>{% verbatim %}
+                            {{((cdscds.abandon/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
                             {% endverbatim %}%</td>
                                 </tr>
                               </tbody>
@@ -252,16 +270,17 @@
                       </div>
                       <div class="tab-pane " id="SST">
                         <div class="row" >
-                          <div class="col-md-3">
+                          <div class="col-md-4 text-success">
                             <h3>Taux de guerison</h3>
                             <h1 >{% verbatim %}
                               {{((hopitauxgnrl.gueri/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
                               {% endverbatim %}%</h1>
-                              <table class="table bg-warning">
+                              <table class="table bg-success">
                                 <thead>
                                   <tr>
                                     <th>Province</th>
                                     <th>District</th>
+                                    <th>Hopital</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -272,11 +291,14 @@
                                     <td>{% verbatim %}
                               {{((hopitauxdistr.gueri/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
                               {% endverbatim %}%</td>
+                              <td>{% verbatim %}
+                              {{((hopitauxcds.gueri/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
+                              {% endverbatim %}%</td>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4 text-danger">
                               <h3>Taux de deces</h3>
                               <h1 >{% verbatim %}
                                 {{((hopitauxgnrl.deces/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
@@ -286,6 +308,7 @@
                                     <tr>
                                       <th>Province</th>
                                       <th>District</th>
+                                      <th>Hopital</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -296,11 +319,14 @@
                                       <td>{% verbatim %}
                                 {{((hopitauxdistr.deces/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
                                 {% endverbatim %}%</td>
+                                <td>{% verbatim %}
+                                {{((hopitauxcds.deces/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
+                                {% endverbatim %}%</td>
                                     </tr>
                                   </tbody>
                                 </table>
                               </div>
-                              <div class="col-md-3">
+                              <div class="col-md-4 text-info">
                                 <h3>Taux d'abandon</h3>
                                 <h1>{% verbatim %}
                                   {{((hopitauxgnrl.abandon/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
@@ -310,6 +336,7 @@
                                       <tr>
                                         <th>Province</th>
                                         <th>District</th>
+                                        <th>Hopital</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -319,6 +346,9 @@
                                   {% endverbatim %}%</td>
                                         <td>{% verbatim %}
                                   {{((hopitauxdistr.abandon/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
+                                  {% endverbatim %}%</td>
+                                  <td>{% verbatim %}
+                                  {{((hopitauxcds.abandon/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
                                   {% endverbatim %}%</td>
                                       </tr>
                                     </tbody>

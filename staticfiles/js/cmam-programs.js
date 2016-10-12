@@ -58,13 +58,11 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
 
         $scope.update_province = function () {
             var province = $scope.province;
-            if (province.code <2){
-                console.log("0"+province.code + " short");
-            } else {
-                console.log(province);
-            }
             if ($scope.province) {
-
+                $scope.cdscds =  0;
+                $scope.hopitauxcds =  0;
+                $scope.cdsdistr =  0;
+                $scope.hopitauxdistr =  0;
                 //update districts
                 $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
@@ -97,25 +95,49 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
               $http.get("/cmam/districts/" + district.code + "/" )
               .then(function (response) {
                   $scope.cds = response.data.cds;
+                  $scope.cdss = response.data.cds;
               });
-
-              // update cds
-              $http.get("/cmam/inoutreport/?search=" + district.code+ "&report__facility__facility_level__name=CDS")
+            $scope.cdscds =  0;
+            $scope.hopitauxcds =  0;
+            // update cds
+            $http.get("/cmam/inoutreport/?search=" + district.code+ "&report__facility__facility_level__name=CDS")
+            .then(function (response) {
+                var sums = getsum(response);
+                $scope.lescds =  sums[0];
+                $scope.cdsdistr =  sums[1];
+                $scope.sommecds = sums[1];
+            });
+            // update hopitaux
+            $http.get("/cmam/inoutreport/?search=" + district.code+ "&report__facility__facility_level__name=Hospital")
+            .then(function (response) {
+                var sums = getsum(response);
+                $scope.leshopitaux =  sums[0];
+                $scope.hopitauxdistr =  sums[1];
+                $scope.sommehopitaux = sums[1];
+            });
+          }
+      };
+        // CDS
+        $scope.update_cds = function () {
+            var cds = $scope.cds;
+            if (cds) {
+                // update cds
+                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&report__facility__facility_level__name=CDS")
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.lescds =  sums[0];
-                    $scope.cdsdistr =  sums[1];
+                    $scope.cdscds =  sums[1];
                     $scope.sommecds = sums[1];
                 });
-              // update hopitaux
-              $http.get("/cmam/inoutreport/?search=" + district.code+ "&report__facility__facility_level__name=Hospital")
+                // update hopitaux
+                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&report__facility__facility_level__name=Hospital")
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.leshopitaux =  sums[0];
-                    $scope.hopitauxdistr =  sums[1];
+                    $scope.hopitauxcds =  sums[1];
                     $scope.sommehopitaux = sums[1];
                 });
-          }
-      };
+              }
+        };
   }]);
 
