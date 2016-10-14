@@ -101,6 +101,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
           // district
         $scope.update_district = function () {
             var district = $scope.dashboard.district;
+            console.log(district);
             if (district) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
@@ -110,13 +111,13 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
             }
         };
 
-        // district
-        $scope.update_district = function () {
-            var district = $scope.dashboard.cds;
-            if (district) {
-              $http.get("/cmam/districts/" + district.code + "/" )
+        // cds
+        $scope.update_cds = function () {
+            var cds = $scope.dashboard.cds;
+            if (cds) {
+              $http.get("/cmam/cdss/" + cds.code + "/" )
                 .then(function (response) {
-                  $scope.cdss = response.data.cds;
+                  $scope.cds = response.data;
               });
             }
         };
