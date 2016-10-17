@@ -43,15 +43,15 @@ class CollineAdmin(ExportMixin, admin.ModelAdmin):
 class ProfileUserResource(resources.ModelResource):
     class Meta:
         model = ProfileUser
-        fields = ('user', 'telephone')
+        fields = ('user__email', 'telephone', 'level', 'user__username')
 
 class ProfileUserAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ProfileUserResource
-    search_fields = ('user', 'telephone')
-    list_display = ('name', 'email', 'telephone')
+    search_fields = ('user', 'telephone', 'level')
+    list_display = ('name', 'email', 'telephone', 'level')
 
     def name(self, obj):
-        return obj.user.name
+        return obj.user.username
 
     def email(self, obj):
         return obj.user.email
