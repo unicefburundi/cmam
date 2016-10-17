@@ -94,6 +94,7 @@ class ReportAdminResource(resources.ModelResource):
 class ReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReportAdminResource
     list_display = ('facility', 'reporting_date', 'text', 'category')
+    date_hierarchy = 'reporting_date'
     search_fields = ('facility__name', 'reporting_date', 'text', 'category', 'reporting_date')
     list_filter = ( 'category', 'facility__facility_level', 'reporting_date')
 
@@ -105,6 +106,7 @@ class IncomingPatientsReportAdminResource(resources.ModelResource):
 class IncomingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = IncomingPatientsReportAdminResource
     list_display = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne_i','date_of_first_week_day', 'facility', 'type')
+    date_hierarchy = 'date_of_first_week_day'
     search_fields = ('date_of_first_week_day', )
     list_filter = ( 'date_of_first_week_day', 'report__facility__facility_level')
 
@@ -122,6 +124,7 @@ class OutgoingPatientsReportAdminResource(resources.ModelResource):
 class OutgoingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = OutgoingPatientsReportAdminResource
     list_display = ('gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o', 'date_of_first_week_day', 'facility', 'type')
+    date_hierarchy = 'date_of_first_week_day'
     search_fields = ('date_of_first_week_day', )
     list_filter = ( 'date_of_first_week_day', 'report__facility__facility_level')
 

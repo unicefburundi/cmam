@@ -57,12 +57,10 @@ function getsum2(response){
     weeks = sortObject(weeks);
     return [weeks, columns];
 }
-// produce data for Highcharts
-function highcharts_data(sums) {
+// produce data for taux chart
+function highchart_data_taux(sums) {
    var gueris = [], decess =[], abandons = [], weeks=[];
-
         $.each(sums, function (index, obj) {
-          // body...
           var somme_taux = obj.gueri + obj.deces + obj.abandon;
           var taux_guerison=(obj.gueri/somme_taux*100), taux_deces=(obj.deces/somme_taux*100), taux_abandon=(obj.abandon/somme_taux*100);
           gueris.push(Math.round(taux_guerison));
@@ -74,80 +72,37 @@ function highcharts_data(sums) {
       return [donnees, weeks];
 }
 
-var app = angular.module('myApp', []);
-
-app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
-        // years
-        $http.get("/cmam/get_year/")
-        .then(function (response) {
-          $scope.years = response.data;
+// produce data for tendances chart
+function highchart_data_tendance(sums) {
+   var admissions = [], sorties =[], fin_semaine = [], weeks=[];
+        $.each(sums, function (index, obj) {
+          var somme_admissions = obj.total_debut_semaine + obj.ptb + obj.oedemes + obj.rechute + obj.readmission + obj.transfert_interne_i
+        ;
+          var somme_sorties = obj.gueri + obj.deces + obj.abandon + obj.non_repondant + obj.transfert_interne_o;
+          var somme_fin = somme_admissions - somme_sorties;
+          admissions.push(Math.round(somme_admissions));
+          sorties.push(Math.round(somme_sorties));
+          fin_semaine.push(Math.round(somme_fin));
+          weeks.push(index);
         });
+        var donnees = [{data: admissions, name: "Admissions"}, {data: sorties,name: "Sorties"}, {data: fin_semaine, type: 'spline', name: "Total fin de semaine", marker: {lineWidth: 2, lineColor: Highcharts.getOptions().colors[3], fillColor: 'white'}}];
+      return [donnees, weeks];
+}
 
-        // province
-        $http.get("/bdiadmin/province/")
-          .then(function (response) {
-              $scope.provinces = response.data;
-          });
-
-          $scope.update_province = function () {
-            var province = $scope.dashboard.province;
-            if (province) {
-              $http.get("/cmam/provinces/" + province.code + "/" )
-                .then(function (response) {
-                    $scope.districts = response.data.districts;
-              });
-            }
-        };
-          // district
-        $scope.update_district = function () {
-            var district = $scope.dashboard.district;
-            console.log(district);
-            if (district) {
-              $http.get("/cmam/districts/" + district.code + "/" )
-                .then(function (response) {
-                  $scope.cdss = response.data.cds;
-
-              });
-            }
-        };
-
-        // cds
-        $scope.update_cds = function () {
-            var cds = $scope.dashboard.cds;
-            if (cds) {
-              $http.get("/cmam/cdss/" + cds.code + "/" )
-                .then(function (response) {
-                  $scope.cds = response.data;
-              });
-            }
-        };
-
-        // weeks
-        $http.get("/cmam/get_week/")
-        .then(function (response) {
-          $scope.weeks = response.data;
-        });
-
-        $scope.update_years = function () {
-        };
-
-        $scope.update_weeks = function () {
-        };
-}]);
-
-
-app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
-    //  out reports CDS
-    $http.get("/cmam/outsum/?report__facility__facility_level__name=CDS")
-    .then(function (response) {
-        var sums = getsum2(response);
-        var lesdonnees = highcharts_data(sums[0]);
-        var myChart = Highcharts.chart('container_sta', {
+// Draw chart for taux
+function draw_taux_chart(response, id, texte) {
+  var sums = getsum2(response);
+        var lesdonnees = highchart_data_taux(sums[0]);
+        var sta_chart = Highcharts.chart(id, {
             chart: {
                 type: 'spline'
             },
+            credits: {
+                text : "Unicef Burundi",
+                href: "http://cmam.unicefburundi.org"
+            },
             title: {
-                text: 'Evolution par semaine des taux au niveau STA'
+                text: texte
             },
             xAxis: {
                 categories: lesdonnees[1]
@@ -167,36 +122,220 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
             },
             series: lesdonnees[0]
         });
+}
+
+// Draw chart for taux
+function draw_tendance_chart(response, id, texte) {
+  var sums = getsum(response);
+        var lesdonnees = highchart_data_tendance(sums[0]);
+        var sta_chart = Highcharts.chart(id, {
+            chart: {
+                type: 'column'
+            },
+            credits: {
+                text : "Unicef Burundi",
+                href: "http://cmam.unicefburundi.org"
+            },
+            title: {
+                text: texte
+            },
+            xAxis: {
+                categories: lesdonnees[1],
+                crosshair: true
+            },
+            plotOptions: {
+                column: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                },
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of patients'
+                }
+            },
+            series: lesdonnees[0]
+        });
+}
+
+// Variables
+ var  url_gen_taux_sta = "/cmam/outsum/?report__facility__facility_level__name=CDS",
+        url_gen_taux_sst="/cmam/outsum/?report__facility__facility_level__name=Hospital",
+        url_gen_tendance_sta = "/cmam/inoutreport/?report__facility__facility_level__name=CDS",
+        url_gen_tendance_sst="/cmam/inoutreport/?report__facility__facility_level__name=Hospital",
+        texte_taux_sta='Evolution des taux au niveau STA',
+        texte_taux_sst='Evolution des taux au niveau SST',
+        texte_tendance_sta='Evolution des tendances au niveau STA',
+        texte_tendance_sst='Evolution des tendances au niveau SST',
+        id_taux_sst='taux_sst',
+        id_taux_sta='taux_sta',
+        id_tendance_sta="tendance_sta",
+        id_tendance_sst="tendance_sst";
+
+
+var app = angular.module('myApp', []);
+
+app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+        // years
+        $http.get("/cmam/get_year/")
+        .then(function (response) {
+          $scope.years = response.data;
+        });
+
+        // province
+        $http.get("/bdiadmin/province/")
+          .then(function (response) {
+              $scope.provinces = response.data;
+        });
+
+        $scope.update_province = function () {
+            var province = $scope.dashboard.province;
+            if (province) {
+              $http.get("/cmam/provinces/" + province.code + "/" )
+                .then(function (response) {
+                    $scope.districts = response.data.districts;
+              });
+              //  out reports CDS
+              $http.get(url_gen_taux_sta + "&search=" + province.code)
+                .then(function (response) {
+                  return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
+              });
+              // Out reports Hospital
+              $http.get(url_gen_taux_sst + "&search=" + province.code)
+                .then(function (response) {
+                  return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
+                });
+              //  tendance reports CDS
+              $http.get(url_gen_tendance_sta + "&search=" + province.code)
+                .then(function (response) {
+                  return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
+              });
+              // tendance reports Hospital
+              $http.get(url_gen_tendance_sst + "&search=" + province.code)
+                .then(function (response) {
+                  return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
+                });
+            }
+        };
+          // district
+        $scope.update_district = function () {
+            var district = $scope.dashboard.district;
+            if (district) {
+              $http.get("/cmam/districts/" + district.code + "/" )
+                .then(function (response) {
+                  $scope.cdss = response.data.cds;
+              });
+              //  out reports CDS
+              $http.get(url_gen_taux_sta + "&search=" + district.code)
+              .then(function (response) {
+                  return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
+              });
+              // Out reports Hospital
+              $http.get(url_gen_taux_sst + "&search=" + district.code)
+                .then(function (response) {
+                  return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
+                });
+              //  tendance reports CDS
+              $http.get(url_gen_tendance_sta + "&search=" + district.code)
+                .then(function (response) {
+                  return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
+              });
+              // tendance reports Hospital
+              $http.get(url_gen_tendance_sst + "&search=" + district.code)
+                .then(function (response) {
+                  return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
+                });
+            }
+        };
+
+        // cds
+        $scope.update_cds = function () {
+            var cds = $scope.dashboard.cds;
+            if (cds) {
+              $http.get("/cmam/cdss/" + cds.code + "/" )
+                .then(function (response) {
+                  $scope.cds = response.data;
+              });
+              //  out reports CDS
+              $http.get(url_gen_taux_sta + "&search=" + cds.code)
+              .then(function (response) {
+                  return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
+              });
+              // Out reports Hospital
+              $http.get(url_gen_taux_sst + "&search=" + cds.code)
+                .then(function (response) {
+                  return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
+                });
+              //  tendance reports CDS
+              $http.get(url_gen_tendance_sta + "&search=" + cds.code)
+                .then(function (response) {
+                  return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
+              });
+              // tendance reports Hospital
+              $http.get(url_gen_tendance_sst + "&search=" + cds.code)
+                .then(function (response) {
+                  return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
+                });
+            }
+        };
+
+        // weeks
+        $http.get("/cmam/get_week/")
+        .then(function (response) {
+          $scope.weeks = response.data;
+        });
+
+        $scope.update_years = function () {
+          //  out reports CDS
+          $http.get(url_gen_taux_sta)
+          .then(function (response) {
+              return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
+          });
+          //  tendance reports CDS
+          $http.get(url_gen_tendance_sta )
+          .then(function (response) {
+              return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
+          });
+          // Out reports Hospital
+          $http.get(url_gen_taux_sst)
+            .then(function (response) {
+              return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
+            });
+          //  tendance reports Hospital
+          $http.get(url_gen_tendance_sst )
+          .then(function (response) {
+              return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
+          });
+        };
+
+        $scope.update_weeks = function () {
+        };
+}]);
+
+
+
+
+app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
+    //  out reports CDS
+    $http.get(url_gen_taux_sta)
+    .then(function (response) {
+        return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
+    });
+    //  tendance reports CDS
+    $http.get(url_gen_tendance_sta )
+    .then(function (response) {
+        return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
     });
     // Out reports Hospital
-    $http.get("/cmam/outsum/?report__facility__facility_level__name=Hospital")
+    $http.get(url_gen_taux_sst)
       .then(function (response) {
-          var sums = getsum2(response);
-          var lesdonnees = highcharts_data(sums[0]);
-          var myChart = Highcharts.chart('container_sst', {
-              chart: {
-                  type: 'spline'
-              },
-              title: {
-                  text: 'Evolution par semaine des taux au niveau SST'
-              },
-              xAxis: {
-                  categories: lesdonnees[1]
-              },
-              plotOptions: {
-                  spline: {
-                      dataLabels: {
-                          enabled: true
-                      },
-                      enableMouseTracking: false
-                  }
-              },
-              yAxis: {
-                  title: {
-                      text: '%'
-                  }
-              },
-              series: lesdonnees[0]
-          });
+        return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
       });
+    //  tendance reports Hospital
+    $http.get(url_gen_tendance_sst )
+    .then(function (response) {
+        return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
+    });
 }]);

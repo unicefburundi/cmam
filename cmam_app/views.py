@@ -86,7 +86,6 @@ class CDSCDSViewSet(viewsets.ModelViewSet):
     queryset = CDS.objects.all()
     serializer_class = CDSSerializers
     lookup_field = 'code'
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, )
     filter_fields = ('code', 'district__code', 'district__province__code' )
     search_fields = ('^code',)
 
@@ -106,8 +105,7 @@ class OutgoingViewset(viewsets.ModelViewSet):
 
 class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
     serializer_class = InOutSerialiser
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, )
-    filter_fields = ('report__facility__facility_level__name', )
+    filter_fields = ('report__facility__facility_level__name', 'date_of_first_week_day')
     search_fields = ('^report__facility__id_facility',)
 
     queryList = (
@@ -171,7 +169,6 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     """
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = SumOutSerialiser
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, )
     filter_fields = ('report__facility__facility_level__name', )
     search_fields = ('^report__facility__id_facility',)
 

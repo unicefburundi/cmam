@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'django_tables2',
     'drf_multiple_model',
+    'django_filters',
     'djng',
     'bdiadmin',
     'cmam_app'
@@ -150,7 +151,8 @@ LOGIN_REDIRECT_URL = reverse_lazy("home")
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend', 'rest_framework.filters.SearchFilter',)
 }
 
 FAKER_LOCALE = None     # settings.LANGUAGE_CODE is loaded
