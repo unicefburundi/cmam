@@ -1,0 +1,35 @@
+{% load staticfiles %}
+{% include 'material/includes/material_css.html' %}
+    <script src="{% static 'material/js/jquery-2.2.0.js' %}"></script>
+{% include 'material/includes/material_js.html' %}
+
+<div class="container">
+    {% if object_list %}
+    <div class="col-md-8">
+    <table class="table table-bordered" >
+            <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Email</th>
+                    <th>Telephone</th>
+                </tr>
+            </thead>
+    {% for profile in object_list %}
+            <tr>
+                    <td><a href="{% url 'bdiadmin:edit_profile' profile.user.id %}" class="btn btn_link">{{ profile.level}}</a></td>
+                    <td>{{ profile.user.last_name }}</td>
+                    <td>{{ profile.user.first_name }}</td>
+                    <td>{{ profile.user.email }}</td>
+                    <td>{{ profile.telephone }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% else %}
+
+    <p>No profiles found!!! :(</p>
+{% endif %}
+
+</div>

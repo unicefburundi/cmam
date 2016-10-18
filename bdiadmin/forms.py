@@ -2,8 +2,7 @@ from django import forms
 from bdiadmin.models import *
 from django.conf import settings
 from django.utils.translation import ugettext as _
-
-User = settings.AUTH_USER_MODEL
+from django.contrib.auth.models import User
 
 
 class ProvinceForm(forms.ModelForm):
@@ -21,7 +20,7 @@ class CollineForm(forms.ModelForm):
         model = Colline
         fields = ('commune','name', 'code')
 
-class UserProfileForm(forms.ModelForm):
+class ProfileUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
