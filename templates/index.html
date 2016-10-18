@@ -65,12 +65,17 @@
                 <li>
                     <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
                 </li>
-                        <li>
-                            <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
-                        </li>
+                {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'bdiadmin:profile' %}"><i class="fa fa-users"></i>{% trans " Profiles" %}</a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
+                </li>
                 {% else %}
                     <li>
-                        <a class="page-scroll" href="{% url 'login' %}?next=/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
+                        <a class="page-scroll" href="{% url 'login' %}?next=/dashboard/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
                     </li>
                 {% endif %}
         </ul>
