@@ -65,12 +65,17 @@
                 <li>
                     <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
                 </li>
-                        <li>
-                            <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
-                        </li>
+                {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'bdiadmin:profile' %}"><i class="fa fa-users"></i>{% trans " Profiles" %}</a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
+                </li>
                 {% else %}
                     <li>
-                        <a class="page-scroll" href="{% url 'login' %}?next=/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
+                        <a class="page-scroll" href="{% url 'login' %}?next=/dashboard/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
                     </li>
                 {% endif %}
         </ul>
@@ -103,12 +108,6 @@
                           <div id="cds-group" class="form-group">
                             <label>CDS</label>
                             <select class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
-                          </div>
-
-                          <!-- week -->
-                          <div id="week-group" class="form-group">
-                            <label>Week</label>
-                            <select class="form-control"  ng-model="dashboard.week" ng-options="x for x in weeks track by x" ng-change="update_weeks()"></select>
                           </div>
                         </form>
                         {% endblock search_form %}
