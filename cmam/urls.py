@@ -3,7 +3,8 @@ from django.contrib import admin
 from django.contrib.auth import views
 
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^cmam/', include('cmam_app.urls')),
     url(r'^bdiadmin/', include('bdiadmin.urls', namespace='bdiadmin', app_name='bdiadmin')),
@@ -12,5 +13,5 @@ urlpatterns = patterns('',
     url(r'^login/$', views.login, {'template_name': 'login.html'}, name="login"),
     url(r'^logout/$', views.logout, {'template_name': 'login.html'}, name="logout"),
     url(r'^$', 'cmam_app.views.landing'),
-    )
+)
 

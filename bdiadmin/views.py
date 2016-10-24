@@ -10,12 +10,14 @@ from django.contrib.auth.decorators import login_required
 from django.forms.models import inlineformset_factory
 from django.views.generic import ListView
 from django.core.exceptions import PermissionDenied
+from cmam_app.utils import get_adminqueryset
+
 
 @json_view
 def get_district(request, pk):
-
+    districts = get_adminqueryset(request, District.objects.filter(province=pk).values('id', 'name'))
     district = []
-    for i in District.objects.filter(province=pk).values('id', 'name'):
+    for i in districts:
         district.append({i['id']: i['name']})
     return JsonResponse(json.dumps(district), safe=False)
 
@@ -27,12 +29,17 @@ class ProvinceViewSet(viewsets.ModelViewSet):
     queryset = Province.objects.all()
     serializer_class = ProvinceSerializer
 
+    def get_queryset(self):
+        return get_adminqueryset(self.request, self.queryset)
+
+
 class DistrictViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit products.
     """
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
+
 
 @login_required
 def edit_user(request, pk):

@@ -9,9 +9,7 @@ from cmam_app.serializers import *
 from bdiadmin.models import Province, District
 from django.views.generic.edit import FormView
 from cmam_app.forms import SortiesForm
-from rest_framework.response import Response
-from drf_multiple_model.mixins import MultipleModelMixin, Query
-from datetime import datetime
+from cmam_app.utils import get_adminqueryset, get_reportqueryset
 
 
 @login_required
@@ -36,17 +34,17 @@ def landing(request):
     return render(request, 'landing_page.html')
 
 
-@login_required(login_url="login/")
+@login_required(login_url="/login/")
 def home(request):
     return render(request, "landing_page.html")
 
 
-@login_required(login_url="login/")
+@login_required(login_url="/login/")
 def dashboard(request):
     return render(request, "index.html")
 
 
-@login_required(login_url="login/")
+@login_required(login_url="/login/")
 def programs(request):
     return render(request, "cmam_app/programs.html")
 
@@ -75,6 +73,9 @@ class ProvinceDistrictViewSet(viewsets.ModelViewSet):
     queryset = Province.objects.all()
     serializer_class = ProvinceDistrictsSerializer
 
+    def get_queryset(self):
+        return get_adminqueryset(self.request, self.queryset)
+
 
 class DistrictCDSViewSet(viewsets.ModelViewSet):
     """
@@ -83,6 +84,9 @@ class DistrictCDSViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = DistrictCDSSerializer
     lookup_field = 'code'
+
+    def get_queryset(self):
+        return get_adminqueryset(self.request, self.queryset)
 
 
 class CDSCDSViewSet(viewsets.ModelViewSet):
@@ -94,6 +98,9 @@ class CDSCDSViewSet(viewsets.ModelViewSet):
     lookup_field = 'code'
     filter_fields = ('code', 'district__code', 'district__province__code')
     search_fields = ('^code',)
+
+    def get_queryset(self):
+        return get_adminqueryset(self.request, self.queryset)
 
 
 class IncomingViewset(viewsets.ModelViewSet):
@@ -118,6 +125,9 @@ class InOutViewset(viewsets.ModelViewSet):
     filter_fields = ('facility__facility_level__name', 'date_of_first_week_day')
     search_fields = ('^facility__id_facility',)
 
+    def get_queryset(self):
+        return get_reportqueryset(self.request, self.queryset)
+
 
 class SumOutgoingViewset(viewsets.ModelViewSet):
     """
@@ -127,3 +137,6 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     serializer_class = SumOutSerialiser
     filter_fields = ('report__facility__facility_level__name', )
     search_fields = ('^report__facility__id_facility',)
+
+    def get_queryset(self):
+        return get_reportqueryset(self.request, self.queryset)
