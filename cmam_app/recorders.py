@@ -13,7 +13,7 @@ HOSPITAL_SYNONYMS = ['HOSPITAL', 'HOPITAL', 'SST']
 def send_sms_through_rapidpro(args):
     ''' This function sends messages through rapidpro. Contact(s) and the message to send to them must be in args['data'] '''
     url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
-    token = getattr(settings,'TOKEN','')
+    token = getattr(settings, 'TOKEN', '')
 
     data = args['data']
 

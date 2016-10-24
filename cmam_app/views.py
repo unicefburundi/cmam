@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -8,12 +9,10 @@ from cmam_app.serializers import *
 from bdiadmin.models import Province, District
 from django.views.generic.edit import FormView
 from cmam_app.forms import SortiesForm
-from rest_framework.decorators import detail_route
 from rest_framework.response import Response
-from rest_framework import status
 from drf_multiple_model.mixins import MultipleModelMixin, Query
-from rest_framework import filters
 from datetime import datetime
+
 
 @login_required
 def get_year(request):
@@ -22,6 +21,7 @@ def get_year(request):
     for d in dates:
         years[d.year] = d.year
     return JsonResponse(years, safe=False)
+
 
 @login_required
 def get_week(request):
@@ -40,13 +40,16 @@ def landing(request):
 def home(request):
     return render(request, "landing_page.html")
 
+
 @login_required(login_url="login/")
 def dashboard(request):
     return render(request, "index.html")
 
+
 @login_required(login_url="login/")
 def programs(request):
     return render(request, "cmam_app/programs.html")
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
@@ -64,12 +67,14 @@ class StockView(FormView):
     template_name = 'cmam_app/stocks.html'
     form_class = SortiesForm
 
+
 class ProvinceDistrictViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit province.
     """
     queryset = Province.objects.all()
     serializer_class = ProvinceDistrictsSerializer
+
 
 class DistrictCDSViewSet(viewsets.ModelViewSet):
     """
@@ -79,6 +84,7 @@ class DistrictCDSViewSet(viewsets.ModelViewSet):
     serializer_class = DistrictCDSSerializer
     lookup_field = 'code'
 
+
 class CDSCDSViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit district.
@@ -86,8 +92,9 @@ class CDSCDSViewSet(viewsets.ModelViewSet):
     queryset = CDS.objects.all()
     serializer_class = CDSSerializers
     lookup_field = 'code'
-    filter_fields = ('code', 'district__code', 'district__province__code' )
+    filter_fields = ('code', 'district__code', 'district__province__code')
     search_fields = ('^code',)
+
 
 class IncomingViewset(viewsets.ModelViewSet):
     """
@@ -96,12 +103,14 @@ class IncomingViewset(viewsets.ModelViewSet):
     queryset = IncomingPatientsReport.objects.all()
     serializer_class = IncomingPatientSerializer
 
+
 class OutgoingViewset(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit district.
     """
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = OutgoingPatientSerializer
+
 
 class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
     serializer_class = InOutSerialiser
@@ -111,7 +120,7 @@ class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
     queryList = (
         (IncomingPatientsReport.objects.all(), IncomingPatientSerializer),
         (OutgoingPatientsReport.objects.all(), OutgoingPatientSerializer),
-        )
+    )
 
     def list(self, request, *args, **kwargs):
         queryList = self.get_queryList()
@@ -149,7 +158,6 @@ class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
             return Response({'data': results})
         income = results[0]['incomingpatientsreport']
         outgon = results[1]['outgoingpatientsreport']
-
         for i in income:
             i['week'] = "W{0}".format(datetime.strptime(i['date_of_first_week_day'], "%Y-%m-%d").strftime("%W"))
             for o in outgon:
@@ -163,6 +171,7 @@ class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
     def get_queryset(self, *args, **kwargs):
         return self.get_queryList()
 
+
 class SumOutgoingViewset(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit district.
@@ -171,4 +180,3 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     serializer_class = SumOutSerialiser
     filter_fields = ('report__facility__facility_level__name', )
     search_fields = ('^report__facility__id_facility',)
-
