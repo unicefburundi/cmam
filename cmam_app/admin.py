@@ -181,10 +181,23 @@ class PatientReportsAdminRessource(resources.ModelResource):
 
 class PatientReportsAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = PatientReportsAdminRessource
-    list_display = ('week', 'date_of_first_week_day', "facility", 'gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o', 'total_debut_semaine', 'ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i')
+    list_display = ('week', "facility", 'total_debut_semaine', 'ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i', 'gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o', )
     date_hierarchy = 'date_of_first_week_day'
     search_fields = ("facility",)
     list_filter = ("facility__facility_level", "week")
+
+
+class ProductStockReportAdminRessource(resources.ModelResource):
+    class Meta:
+        model = ProductStockReport
+        fields = ("stock_report", "proproductduit", "quantite_en_stock",)
+
+
+class ProductStockReportAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = ProductStockReportAdminRessource
+    list_display = ("stock_report", "product", "quantite_en_stock",)
+    search_fields = ("stock_report",)
+    list_filter = ("product",)
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Facility, FacilityAdmin)
@@ -199,7 +212,7 @@ admin.site.register(ProductsTranferReport, TransfertProductAdmin)
 admin.site.register(IncomingPatientsReport, IncomingPatientsReportAdmin)
 admin.site.register(OutgoingPatientsReport, OutgoingPatientsReportAdmin)
 admin.site.register(StockReport)
-admin.site.register(ProductStockReport)
+admin.site.register(ProductStockReport, ProductStockReportAdmin)
 admin.site.register(Temporary)
 admin.site.register(FacilityType)
 admin.site.register(FacilityTypeProduct)

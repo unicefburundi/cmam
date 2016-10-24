@@ -163,8 +163,8 @@ function draw_tendance_chart(response, id, texte) {
 // Variables
  var  url_gen_taux_sta = "/cmam/outsum/?report__facility__facility_level__name=CDS",
         url_gen_taux_sst="/cmam/outsum/?report__facility__facility_level__name=Hospital",
-        url_gen_tendance_sta = "/cmam/inoutreport/?report__facility__facility_level__name=CDS",
-        url_gen_tendance_sst="/cmam/inoutreport/?report__facility__facility_level__name=Hospital",
+        url_gen_tendance_sta = "/cmam/inoutreport/?facility__facility_level__name=CDS",
+        url_gen_tendance_sst="/cmam/inoutreport/?facility__facility_level__name=Hospital",
         texte_taux_sta='Evolution des taux au niveau STA',
         texte_taux_sst='Evolution des taux au niveau SST',
         texte_tendance_sta='Evolution des tendances au niveau STA',
