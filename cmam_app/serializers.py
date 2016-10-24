@@ -107,6 +107,7 @@ class InOutSerialiser(serializers.Serializer):
     abandon = serializers.IntegerField(default=0)
     non_repondant = serializers.IntegerField(default=0)
     transfert_interne_o = serializers.IntegerField(default=0)
+    facility = serializers.CharField()
 
 
 class SumOutSerialiser(serializers.ModelSerializer):

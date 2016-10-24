@@ -112,64 +112,11 @@ class OutgoingViewset(viewsets.ModelViewSet):
     serializer_class = OutgoingPatientSerializer
 
 
-class InOutViewset(MultipleModelMixin, viewsets.ModelViewSet):
+class InOutViewset(viewsets.ModelViewSet):
     serializer_class = InOutSerialiser
-    filter_fields = ('report__facility__facility_level__name', 'date_of_first_week_day')
-    search_fields = ('^report__facility__id_facility',)
-
-    queryList = (
-        (IncomingPatientsReport.objects.all(), IncomingPatientSerializer),
-        (OutgoingPatientsReport.objects.all(), OutgoingPatientSerializer),
-    )
-
-    def list(self, request, *args, **kwargs):
-        queryList = self.get_queryList()
-        # import ipdb; ipdb.set_trace()
-        # Iterate through the queryList, run each queryset and serialize the data
-        results = []
-        for query in queryList:
-            if not isinstance(query, Query):
-                query = Query.new_from_tuple(query)
-            # Run the queryset through Django Rest Framework filters
-            queryset = query.queryset.all()
-            queryset = self.filter_queryset(queryset)
-
-            # If there is a user-defined filter, run that too.
-            if query.filter_fn is not None:
-                queryset = query.filter_fn(queryset, request, *args, **kwargs)
-
-            # Run the paired serializer
-            context = self.get_serializer_context()
-            data = query.serializer(queryset, many=True, context=context).data
-
-            results = self.format_data(data, query, results)
-
-        if self.flat:
-            # Sort by given attribute, if sorting_attribute is provided
-            if self.sorting_field:
-                results = self.queryList_sort(results)
-
-            # Return paginated results if pagination is enabled
-            page = self.paginate_queryList(results)
-            if page is not None:
-                return self.get_paginated_response(page)
-
-        if request.accepted_renderer.format == 'html':
-            return Response({'data': results})
-        income = results[0]['incomingpatientsreport']
-        outgon = results[1]['outgoingpatientsreport']
-        for i in income:
-            i['week'] = "W{0}".format(datetime.strptime(i['date_of_first_week_day'], "%Y-%m-%d").strftime("%W"))
-            for o in outgon:
-                o['week'] = "W{0}".format(datetime.strptime(o['date_of_first_week_day'], "%Y-%m-%d").strftime("%W"))
-                if i['date_of_first_week_day'] == o['date_of_first_week_day']:
-                    i.update(o)
-                    outgon.remove(o)
-        results = income + outgon
-        return Response(results)
-
-    def get_queryset(self, *args, **kwargs):
-        return self.get_queryList()
+    queryset = PatientReports.objects.all()
+    filter_fields = ('facility__facility_level__name', 'date_of_first_week_day')
+    search_fields = ('^facility__id_facility',)
 
 
 class SumOutgoingViewset(viewsets.ModelViewSet):

@@ -34,7 +34,7 @@ var app = angular.module('ProgramApp', []);
 
 app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
     // in out reports
-    $http.get("/cmam/inoutreport/?report__facility__facility_level__name=CDS")
+    $http.get("/cmam/inoutreport/?facility__facility_level__name=CDS")
     .then(function (response) {
          var sums = getsum(response);
         $scope.lescds =  sums[0];
@@ -42,7 +42,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.sommecds = sums[1];
     });
 
-    $http.get("/cmam/inoutreport/?report__facility__facility_level__name=Hospital")
+    $http.get("/cmam/inoutreport/?facility__facility_level__name=Hospital")
     .then(function (response) {
         var sums = getsum(response);
         $scope.leshopitaux =  sums[0];
@@ -70,7 +70,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 });
 
                 // update hopitaux
-                $http.get("/cmam/inoutreport/?search=" + province.code+ "&report__facility__facility_level__name=Hospital")
+                $http.get("/cmam/inoutreport/?search=" + province.code+ "&facility__facility_level__name=Hospital")
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.leshopitaux =  sums[0];
@@ -78,7 +78,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                     $scope.sommehopitaux = sums[1];
                 });
                 // update cds
-                $http.get("/cmam/inoutreport/?search=" + province.code+ "&report__facility__facility_level__name=CDS")
+                $http.get("/cmam/inoutreport/?search=" + province.code+ "&facility__facility_level__name=CDS")
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.lescds =  sums[0];
@@ -100,7 +100,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.cdscds =  0;
             $scope.hopitauxcds =  0;
             // update cds
-            $http.get("/cmam/inoutreport/?search=" + district.code+ "&report__facility__facility_level__name=CDS")
+            $http.get("/cmam/inoutreport/?search=" + district.code+ "&facility__facility_level__name=CDS")
             .then(function (response) {
                 var sums = getsum(response);
                 $scope.lescds =  sums[0];
@@ -108,7 +108,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 $scope.sommecds = sums[1];
             });
             // update hopitaux
-            $http.get("/cmam/inoutreport/?search=" + district.code+ "&report__facility__facility_level__name=Hospital")
+            $http.get("/cmam/inoutreport/?search=" + district.code+ "&facility__facility_level__name=Hospital")
             .then(function (response) {
                 var sums = getsum(response);
                 $scope.leshopitaux =  sums[0];
@@ -122,7 +122,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
             var cds = $scope.cds;
             if (cds) {
                 // update cds
-                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&report__facility__facility_level__name=CDS")
+                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&facility__facility_level__name=CDS")
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.lescds =  sums[0];
@@ -130,7 +130,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                     $scope.sommecds = sums[1];
                 });
                 // update hopitaux
-                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&report__facility__facility_level__name=Hospital")
+                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&facility__facility_level__name=Hospital")
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.leshopitaux =  sums[0];
