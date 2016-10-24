@@ -69,7 +69,8 @@ def edit_user(request, pk):
             "formset": formset,
         })
     else:
-        raise PermissionDenied
+        return HttpResponseRedirect('/bdiadmin/profile/')
+
 
 class ProfileUserListView(ListView):
     model = ProfileUser

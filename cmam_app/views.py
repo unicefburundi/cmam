@@ -110,6 +110,9 @@ class IncomingViewset(viewsets.ModelViewSet):
     queryset = IncomingPatientsReport.objects.all()
     serializer_class = IncomingPatientSerializer
 
+    def get_queryset(self):
+        return get_reportqueryset(self.request, self.queryset)
+
 
 class OutgoingViewset(viewsets.ModelViewSet):
     """
@@ -117,6 +120,9 @@ class OutgoingViewset(viewsets.ModelViewSet):
     """
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = OutgoingPatientSerializer
+
+    def get_queryset(self):
+        return get_reportqueryset(self.request, self.queryset)
 
 
 class InOutViewset(viewsets.ModelViewSet):
