@@ -44,3 +44,26 @@ table.table
 .divTableBody {
     display: table-row-group;
 }
+
+.sidebar {
+  width: 12%;
+}
+
+#taux_sst {
+    position: relative;
+    width: 50%;
+}
+
+#tendance_sst{
+    position: relative;
+    width: 50%;  
+}
+.highcharts-root{
+    position: relative;
+    width: 100% !important;  
+}
+
+.highcharts-container{
+    position: relative;
+    width: 100% !important;  
+}
