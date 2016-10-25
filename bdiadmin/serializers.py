@@ -8,11 +8,13 @@ class ProvinceSerializer(serializers.ModelSerializer):
         model = Province
         fields = ("name", "code")
 
+
 class DistrictSerializer(serializers.ModelSerializer):
     """ Serializer to represent the District model """
     class Meta:
         model = District
         fields = ("name", "code", "province")
+
 
 class CDSSerializer(serializers.ModelSerializer):
     """ Serializer to represent the District model """

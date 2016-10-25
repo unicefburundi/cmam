@@ -56,10 +56,6 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-    def get_context_data(self, **kwargs):
-        context = super(ProductViewSet, self).get_context_data(**kwargs)
-        return context
-
 
 class StockView(FormView):
     template_name = 'cmam_app/stocks.html'

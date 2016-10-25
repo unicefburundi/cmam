@@ -1,10 +1,11 @@
 var app = angular.module('StockApp', ['ngSanitize']);
+
 app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
-        // products
-        $http.get("/cmam/products/")
-        .then(function (response) {
-          $scope.produits = response.data;
-        });
+        // // products
+        // $http.get("/cmam/products/")
+        // .then(function (response) {
+        //   $scope.etablissements = response.data;
+        // });
 
         // province
         $http.get("/bdiadmin/province/")
@@ -13,24 +14,22 @@ app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
           });
           $scope.update_province = function () {
             var province = $scope.dashboard.province;
-            $(".cds").hide();
-            $(".district").show();
-            if ($scope.produits) {
+            if (province) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
-                    $scope.districts = response.data.districts;
+                    $scope.etablissements = response.data.etablissements;
+                    $scope.districts = response.data.etablissements;
               });
             }
         };
           // district
         $scope.update_district = function () {
             var district = $scope.dashboard.district;
-            if ($scope.dashboard.province) {
+            if (district) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
-                  $scope.cds = response.data.cds;
-                  $scope.cdss = response.data.cds;
-                  $(".cds").show();
+                  $scope.etablissements = response.data.etablissements;
+                  $scope.cdss = response.data.etablissements;
               });
               }
         };
@@ -40,7 +39,7 @@ app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
             if (cds) {
               $http.get("/cmam/cdss/" + cds.code + "/" )
                 .then(function (response) {
-                  $scope.cds = response.data.products;
+                  $scope.etablissements = response.data.etablissements;
               });
               }
         };

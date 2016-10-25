@@ -7,8 +7,8 @@ router.register(r'province', ProvinceViewSet)
 router.register(r'district', DistrictViewSet)
 
 
-
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^', include(router.urls)),
     url(r'^get_district/(?P<pk>\d+)/$', get_district, name='get_district'),
     url(r'^profile/(?P<pk>\d+)/$', edit_user, name='edit_profile'),
