@@ -123,11 +123,9 @@ def check_number_of_values(args):
         args['info_to_contact'] = "Exception. Aucun produit n est attache au niveau '"+the_current_facility_level.name+"'"
         return
 
-
     number_of_attached_products = attached_products.count()
-    # import ipdb; ipdb.set_trace()
 
-    if(args['message_type']=='STOCK_RECU' or args['message_type']=='STOCK_RECU_M'):
+    if(args['message_type']=='STOCK_RECU' or args['message_type'] == 'STOCK_RECU_M'):
         number_of_common_values = 2
         number_of_mandatory_values = number_of_common_values + number_of_attached_products
         if len(args['text'].split(' ')) < number_of_mandatory_values:
