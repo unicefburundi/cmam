@@ -195,7 +195,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
             if (province) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
-                    $scope.districts = response.data.districts;
+                    $scope.districts = response.data.etablissements;
               });
               //  out reports CDS
               $http.get(url_gen_taux_sta + "&search=" + province.code)
@@ -225,7 +225,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
             if (district) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
-                  $scope.cdss = response.data.cds;
+                  $scope.cdss = response.data.etablissements;
               });
               //  out reports CDS
               $http.get(url_gen_taux_sta + "&search=" + district.code)

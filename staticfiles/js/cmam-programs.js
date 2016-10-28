@@ -66,7 +66,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 //update districts
                 $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
-                    $scope.districts = response.data.districts;
+                    $scope.districts = response.data.etablissements;
                 });
 
                 // update hopitaux
@@ -94,8 +94,8 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
             if ($scope.district) {
               $http.get("/cmam/districts/" + district.code + "/" )
               .then(function (response) {
-                  $scope.cds = response.data.cds;
-                  $scope.cdss = response.data.cds;
+                  $scope.cds = response.data.etablissements;
+                  $scope.cdss = response.data.etablissements;
               });
             $scope.cdscds =  0;
             $scope.hopitauxcds =  0;
