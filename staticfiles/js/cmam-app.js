@@ -187,8 +187,15 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         // province
         $http.get("/bdiadmin/province/")
           .then(function (response) {
-              $scope.provinces = response.data;
-        });
+            if (response.data.length > 0) {
+                $scope.provinces = response.data;
+              } else {
+                $http.get("/cmam/districts/")
+                .then(function (response) {
+                    $scope.districts = response.data;
+                });
+              }
+            });
 
         $scope.update_province = function () {
             var province = $scope.dashboard.province;
@@ -280,12 +287,6 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                 });
             }
         };
-
-        // weeks
-        $http.get("/cmam/get_week/")
-        .then(function (response) {
-          $scope.weeks = response.data;
-        });
 
         $scope.update_years = function () {
           //  out reports CDS

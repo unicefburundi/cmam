@@ -53,7 +53,15 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
         // province
         $http.get("/bdiadmin/province/")
         .then(function (response) {
-            $scope.provinces = response.data;
+            if (response.data.length > 0) {
+                $scope.provinces = response.data;
+            } else {
+                $http.get("/cmam/districts/")
+                .then(function (response) {
+                    $scope.districts = response.data;
+                    console.log(response.data);
+                });
+            }
         });
 
         $scope.update_province = function () {
