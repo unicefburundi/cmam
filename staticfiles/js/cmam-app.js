@@ -190,6 +190,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
             if (response.data.length > 0) {
                 $scope.provinces = response.data;
               } else {
+                $("#province-group").hide();
                 $http.get("/bdiadmin/district/")
                 .then(function (response) {
                     $scope.districts = response.data;

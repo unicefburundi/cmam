@@ -56,10 +56,10 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
             if (response.data.length > 0) {
                 $scope.provinces = response.data;
             } else {
+                $("#province-group").hide();
                 $http.get("/cmam/districts/")
                 .then(function (response) {
                     $scope.districts = response.data;
-                    console.log(response.data);
                 });
             }
         });
