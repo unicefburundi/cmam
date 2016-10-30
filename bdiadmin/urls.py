@@ -1,10 +1,11 @@
 from django.conf.urls import patterns, url, include
-from bdiadmin.views import get_district, DistrictViewSet, ProvinceViewSet, edit_user, ProfileUserListView
+from bdiadmin.views import get_district, DistrictViewSet, ProvinceViewSet, edit_user, ProfileUserListView, CDSViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'province', ProvinceViewSet)
 router.register(r'district', DistrictViewSet)
+router.register(r'cdss', CDSViewSet)
 
 
 urlpatterns = patterns(

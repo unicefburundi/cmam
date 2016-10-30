@@ -15,6 +15,7 @@ def get_adminqueryset(request, queryset, **kwargs):
             queryset = queryset.filter(code__startswith=profile.level)
             return queryset
 
+
 @login_required(login_url="/login/")
 def get_reportqueryset(request, queryset, **kwargs):
     if request.user.is_superuser:

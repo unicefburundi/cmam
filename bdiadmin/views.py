@@ -1,6 +1,6 @@
 from jsonview.decorators import json_view
 from bdiadmin.models import District, Province, ProfileUser
-from bdiadmin.serializers import ProvinceSerializer, DistrictSerializer
+from bdiadmin.serializers import ProvinceSerializer, DistrictSerializer, CDSSerializer
 from django.http import JsonResponse
 import json
 from django.shortcuts import render, HttpResponseRedirect
@@ -9,7 +9,6 @@ from bdiadmin.forms import *
 from django.contrib.auth.decorators import login_required
 from django.forms.models import inlineformset_factory
 from django.views.generic import ListView
-from django.core.exceptions import PermissionDenied
 from cmam_app.utils import get_adminqueryset
 
 
@@ -40,6 +39,19 @@ class DistrictViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
 
+    def get_queryset(self):
+        return get_adminqueryset(self.request, self.queryset)
+
+
+class CDSViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to view or edit products.
+    """
+    queryset = CDS.objects.all()
+    serializer_class = CDSSerializer
+
+    def get_queryset(self):
+        return get_adminqueryset(self.request, self.queryset)
 
 @login_required
 def edit_user(request, pk):

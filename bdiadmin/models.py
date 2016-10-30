@@ -26,10 +26,6 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         ProfileUser.objects.create(user=instance)
 
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     # profile = ProfileUser.objects.create(user=instance)
-#     instance.save()
 
 class Province(models.Model):
     '''In this model, we will store burundi provinces'''
@@ -46,11 +42,12 @@ class Province(models.Model):
     class Meta:
         ordering = ('name',)
 
+
 class Commune(models.Model):
     '''In this model, we will store burundi communes'''
     province = models.ForeignKey(Province)
-    name = models.CharField(_('name'),unique=True, max_length=20)
-    code = models.CharField(max_length=6,unique=True, blank=True, null=True)
+    name = models.CharField(_('name'), unique=True, max_length=20)
+    code = models.CharField(max_length=6, unique=True, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -61,6 +58,7 @@ class Commune(models.Model):
 
     class Meta:
         ordering = ('name',)
+
 
 class Colline(models.Model):
     '''In this model, we will store burundi colline'''
@@ -78,17 +76,19 @@ class Colline(models.Model):
     class Meta:
         ordering = ('name',)
 
+
 class District(models.Model):
     '''In this model, we will store districts'''
     province = models.ForeignKey(Province, verbose_name='province')
     name = models.CharField(_('nom'), unique=True, max_length=40)
-    code = models.CharField(max_length=4,unique=True)
+    code = models.CharField(max_length=4, unique=True)
 
     def __unicode__(self):
         return self.name
 
     class Meta:
         ordering = ('name',)
+
 
 class CDS(models.Model):
     STATUS_CHOICES = (
@@ -101,7 +101,7 @@ class CDS(models.Model):
         ('HPrv', 'HPrive'),
     )
     district = models.ForeignKey(District)
-    name = models.CharField( max_length=40)
+    name = models.CharField(max_length=40)
     code = models.CharField(unique=True, max_length=7)
     status = models.CharField(max_length=5, choices=STATUS_CHOICES, blank=True, null=True, help_text=_('Either Public, Conf, Ass, Prive  or Hospital status.'))
 
