@@ -1,0 +1,18 @@
+{% extends "bdiadmin/profileuser_list.html" %}
+
+{% block content %}
+<div class="col s12 m8 offset-m2">
+  <div class="card">
+    <div class="card-content">
+        <h2 class="flow-text">Create user</h2>
+        <form action="." method="POST" class="padding">
+            {% csrf_token %} 
+            <div class="divider"></div>
+            {{ form.as_p }}
+            <button type="submit" class="btn-floating btn-large waves-light waves-effect"><i class="large material-icons">done</i></button>
+            <a href="#" onclick="window.history.back(); return false;" title="Cancel" class="btn-floating waves-effect waves-light red"><i class="material-icons">history</i></a>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock content %}

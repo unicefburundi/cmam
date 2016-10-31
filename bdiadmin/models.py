@@ -10,16 +10,17 @@ from django.dispatch import receiver
 
 User = settings.AUTH_USER_MODEL
 
+
 class ProfileUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # The additional attributes we wish to include.
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message=
-    _("Phone number in the format: '+999999999'. Up to 15 digits allowed."))
-    level = models.CharField(default='', blank=True,help_text=_('The facility attached to this user.'), max_length=7)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message=_("Phone number in the format: '+999999999'. Up to 15 digits allowed."))
+    level = models.CharField(default='', blank=True, help_text=_('The facility attached to this user.'), max_length=7)
     telephone = models.CharField(_('telephone'), validators=[phone_regex], blank=True, help_text=_('The telephone to contact you.'), max_length=16)
 
     def __unicode__(self):
         return "{1} on {0}".format(self.user.email, self.user.username)
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -29,8 +30,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 class Province(models.Model):
     '''In this model, we will store burundi provinces'''
-    name = models.CharField(_('name'),unique=True, max_length=20)
-    code = models.CharField(max_length=6,unique=True, blank=True, null=True)
+    name = models.CharField(_('name'), unique=True, max_length=20)
+    code = models.CharField(max_length=6, unique=True, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -64,7 +65,7 @@ class Colline(models.Model):
     '''In this model, we will store burundi colline'''
     commune = models.ForeignKey(Commune)
     name = models.CharField(_('name'), max_length=30)
-    code = models.CharField(max_length=6,unique=True, blank=True, null=True)
+    code = models.CharField(max_length=6, unique=True, blank=True, null=True)
 
     def __unicode__(self):
         return self.name

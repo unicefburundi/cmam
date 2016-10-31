@@ -8,8 +8,10 @@ from rest_framework import viewsets
 from bdiadmin.forms import *
 from django.contrib.auth.decorators import login_required
 from django.forms.models import inlineformset_factory
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 from cmam_app.utils import get_adminqueryset
+from django.contrib.auth.models import User
+from django.shortcuts import render_to_response
 
 
 @json_view
@@ -87,3 +89,31 @@ def edit_user(request, pk):
 class ProfileUserListView(ListView):
     model = ProfileUser
     paginate_by = 25
+
+
+class ProfileUserCreateView(CreateView):
+    model = ProfileUser
+    form_class = ProfileUserForm
+
+    def get_success_url(self):
+        return HttpResponseRedirect('/bdiadmin/profile/')
+
+    def form_valid(self, form, **kwargs):
+        user_form = UserCreateForm(self.request.POST)
+        if user_form.is_valid:
+            new_user = user_form.save()
+            profile = ProfileUser.objects.get(user=new_user)
+            profile.telephone = form.cleaned_data['telephone']
+            profile.level = form.cleaned_data['level']
+            profile.save()
+            form.send_email(self.request)
+            return self.get_success_url()
+        else:
+            return HttpResponseRedirect('/bdiadmin/profile/')
+
+    def form_invalid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
+
+        
