@@ -52,7 +52,8 @@ INSTALLED_APPS = (
     'django_filters',
     'djng',
     'bdiadmin',
-    'cmam_app'
+    'cmam_app',
+    'authtools'
 )
 
 MIDDLEWARE_CLASSES = (

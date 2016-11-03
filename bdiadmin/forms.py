@@ -79,11 +79,12 @@ class ProfileUserForm(forms.ModelForm):
             assert reset_form.is_valid()
             reset_form.save(
                 request=request,
+                from_email="cmam.burundi@gmail.com",
                 use_https=request.is_secure(),
                 subject_template_name='bdiadmin/account_creation_subject.txt',
                 email_template_name='bdiadmin/account_creation_email.html',
             )
-            messages.success(request, _('Profile created and mail sent to{0}.').format(self.cleaned_data['email']))
+            messages.success(request, _('Profile created and mail sent to {0}.').format(self.cleaned_data['email']))
         except:
             messages.warning(request, _('Profil created, but unable to send mail to {0}.').format(self.cleaned_data['email']))
             pass

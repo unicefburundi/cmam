@@ -7,6 +7,7 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^cmam/', include('cmam_app.urls')),
+    url(r'^accounts/', include('authtools.urls')),
     url(r'^bdiadmin/', include('bdiadmin.urls', namespace='bdiadmin', app_name='bdiadmin')),
     url(r'^home/$', 'cmam_app.views.home', name='home'),
     url(r'^dashboard/$', 'cmam_app.views.dashboard', name='dashboard'),
