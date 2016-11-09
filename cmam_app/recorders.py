@@ -203,7 +203,6 @@ def check_if_is_reporter(args):
     args['info_to_contact'] = " Le bureau d affectation de ce rapporteur est connu "
 
 
-
 def check_date_is_valid(args):
     ''' This function checks if a given date is valid '''
     given_date = ""
@@ -227,9 +226,7 @@ def check_date_is_valid(args):
         args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Verifier si vous avez mis chaque valeur dans sa place. Pour corriger, reenvoyez un message commencant par "+args['mot_cle']
         return
 
-
     sent_date = given_date[0:2]+"-"+given_date[2:4]+"-20"+given_date[4:]
-
     sent_date_without_dash = sent_date.replace("-","")
     try:
         date_sent = datetime.datetime.strptime(sent_date_without_dash, "%d%m%Y").date()
@@ -238,7 +235,7 @@ def check_date_is_valid(args):
         args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Verifier si vous avez mis chaque valeur dans sa place. Pour corriger, reenvoyez un message commencant par "+args['mot_cle']
         return
 
-    args['sent_date'] =  date_sent
+    args['sent_date'] = date_sent
 
     if date_sent > datetime.datetime.now().date():
         #The reporter can not report for a future date
@@ -277,7 +274,6 @@ def check_date_is_monday(args):
         args['info_to_contact'] = "Exception. Pas de date trouvee pour la verification."
         return
 
-
     sent_date = given_date[0:2]+"-"+given_date[2:4]+"-20"+given_date[4:]
 
     sent_date_without_dash = sent_date.replace("-","")
@@ -288,12 +284,13 @@ def check_date_is_monday(args):
         args['valide'] = False
         args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Verifier si vous avez mis chaque valeur dans sa place. Pour corriger, reenvoyez un message commencant par "+args['mot_cle']
         return
-
     the_day = date_sent.weekday()
-
     if the_day == 0:
         args['valide'] = True
         args['info_to_contact'] = "La date envoyee est pour lundi"
+    if datetime.datetime.today().strftime("%W") == date_sent.strftime("%W"):
+        args['valide'] = False
+        args['info_to_contact'] = "Erreur. La date ne peut pas etre celle de la semaine courante. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
     else:
         args['valide'] = False
         args['info_to_contact'] = "Erreur. La date envoyee n est pas pour lundi. Pour corriger, reenvoyez un message corrige et commencant par le mot cle "+args['mot_cle']
