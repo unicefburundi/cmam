@@ -122,7 +122,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12">
-            <h1 class="page-header">Community-based Management of Acute Malnutrition</h1>
+            <h1 class="page-header">{% trans "Community-based Management of Acute Malnutrition" %}</h1>
             {% block container %}
             <div class="container"  >
               <ul class="nav nav-tabs">
@@ -133,7 +133,7 @@
                 <div class="tab-pane active" id="STA">
                   <div class="row" >
                     <div class="col-md-4 text-success">
-                      <h3>Taux de guerison</h3>
+                      <h3>{% trans "Rate of healing" %}</h3>
                       <h1 >{% verbatim %}
                         {{((cdsgnrl.gueri/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
                         {% endverbatim %}%</h1>
@@ -161,7 +161,7 @@
                         </table>
                       </div>
                       <div class="col-md-4 text-danger">
-                        <h3 >Taux de deces</h3>
+                        <h3 >{% trans "Death rate" %}</h3>
                         <h1 >{% verbatim %}
                           {{((cdsgnrl.deces/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
                           {% endverbatim %}%</h1>
@@ -189,7 +189,7 @@
                           </table>
                         </div>
                         <div class="col-md-4 text-info">
-                          <h3>Taux d'abandon</h3>
+                          <h3>    </h3>
                           <h1 >{% verbatim %}
                             {{((cdsgnrl.abandon/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
                             {% endverbatim %}%</h1>
@@ -284,7 +284,7 @@
                       <div class="tab-pane " id="SST">
                         <div class="row" >
                           <div class="col-md-4 text-success">
-                            <h3>Taux de guerison</h3>
+                            <h3>{% trans "Rate of healing" %}</h3>
                             <h1 >{% verbatim %}
                               {{((hopitauxgnrl.gueri/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
                               {% endverbatim %}%</h1>
@@ -312,7 +312,7 @@
                               </table>
                             </div>
                             <div class="col-md-4 text-danger">
-                              <h3>Taux de deces</h3>
+                              <h3>{% trans "Death rate" %}</h3>
                               <h1 >{% verbatim %}
                                 {{((hopitauxgnrl.deces/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
                                 {% endverbatim %}%</h1>
@@ -340,7 +340,7 @@
                                 </table>
                               </div>
                               <div class="col-md-4 text-info">
-                                <h3>Taux d'abandon</h3>
+                                <h3>{% trans "Dropout rate" %}</h3>
                                 <h1>{% verbatim %}
                                   {{((hopitauxgnrl.abandon/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
                                   {% endverbatim %}%</h1>

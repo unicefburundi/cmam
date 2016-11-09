@@ -11,7 +11,6 @@ from django.forms.models import inlineformset_factory
 from django.views.generic import ListView, CreateView
 from cmam_app.utils import get_adminqueryset
 from django.contrib.auth.models import User
-from django.shortcuts import render_to_response
 
 
 @json_view
@@ -54,6 +53,7 @@ class CDSViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return get_adminqueryset(self.request, self.queryset)
+
 
 @login_required
 def edit_user(request, pk):

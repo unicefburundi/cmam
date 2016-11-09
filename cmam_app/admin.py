@@ -183,7 +183,7 @@ class PatientReportsAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = PatientReportsAdminRessource
     list_display = ('week', "facility", 'total_debut_semaine', 'ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i', 'gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o', )
     date_hierarchy = 'date_of_first_week_day'
-    search_fields = ("facility",)
+    search_fields = ("facility__name",)
     list_filter = ("facility__facility_level", "week")
 
 
