@@ -120,6 +120,13 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
 
+from django.utils.translation import ugettext_lazy as _
+
+LANGUAGES = (
+    ('fr-Fr', _('French')),
+    ('en-Us', _('English')),
+)
+
 USE_TZ = True
 
 SITE_ID = 1
