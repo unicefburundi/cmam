@@ -281,12 +281,12 @@ def check_date_is_monday(args):
         args['info_to_contact'] = "Erreur. La date indiquee n est pas valide. Verifier si vous avez mis chaque valeur dans sa place. Pour corriger, reenvoyez un message commencant par " + args['mot_cle']
         return
     the_day = date_sent.weekday()
-    if the_day == 0:
-        args['valide'] = True
-        args['info_to_contact'] = "La date envoyee est pour lundi"
     if datetime.datetime.today().strftime("%W") == date_sent.strftime("%W"):
         args['valide'] = False
         args['info_to_contact'] = "Erreur. La date ne peut pas etre celle de la semaine courante. Pour corriger, reenvoyez un message corrige et commencant par le mot cle " + args['mot_cle']
+    elif the_day == 0:
+        args['valide'] = True
+        args['info_to_contact'] = "La date envoyee est pour lundi"
     else:
         args['valide'] = False
         args['info_to_contact'] = "Erreur. La date envoyee n est pas pour lundi. Pour corriger, reenvoyez un message corrige et commencant par le mot cle " + args['mot_cle']
