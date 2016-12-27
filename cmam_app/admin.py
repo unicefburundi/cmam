@@ -15,7 +15,7 @@ class ProductAdminResource(resources.ModelResource):
 class ProductAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ProductAdminResource
     list_display = ('designation', 'general_measuring_unit', 'dose_par_semaine', 'quantite_en_stock_central')
-    search_fields = ('designation', 'general_measuring_unit' )
+    search_fields = ('designation', 'general_measuring_unit')
     list_filter = ('dose_par_semaine',)
 
 
@@ -29,7 +29,7 @@ class FacilityAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = FacilityAdminResource
     list_display = ('id_facility', 'name', 'facility_level')
     search_fields = ('id_facility', 'name')
-    list_filter = ( 'facility_level',)
+    list_filter = ('facility_level',)
 
 
 class StockAdminResource(resources.ModelResource):
@@ -42,7 +42,7 @@ class StockAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = StockAdminResource
     list_display = ('id_facility', 'product', 'quantity')
     search_fields = ('id_facility', 'product')
-    list_filter = ( 'product',)
+    list_filter = ('product',)
 
 
 class ReporterAdminResource(resources.ModelResource):
@@ -55,7 +55,7 @@ class ReporterAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReporterAdminResource
     list_display = ('facility', 'phone_number', 'supervisor_phone_number')
     search_fields = ('facility', 'phone_number', 'supervisor_phone_number')
-    list_filter = ( 'facility__facility_level__name',)
+    list_filter = ('facility__facility_level__name',)
 
 
 class ReportAdminResource(resources.ModelResource):
@@ -88,7 +88,7 @@ class ReportAdminResource(resources.ModelResource):
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
             return CDS.objects.get(code=report.facility.id_facility).district.province.name
         elif report.facility.facility_level.name in ["District"]:
-            return District.objects.get(code = report.facility.id_facility).province.name
+            return District.objects.get(code=report.facility.id_facility).province.name
         elif report.facility.facility_level.name in ["Province"]:
             return report.facility.name
         return
@@ -104,21 +104,21 @@ class ReportAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ('facility', 'reporting_date', 'text', 'category')
     date_hierarchy = 'reporting_date'
     search_fields = ('facility__name', 'reporting_date', 'text', 'category', 'reporting_date')
-    list_filter = ( 'category', 'facility__facility_level', 'reporting_date')
+    list_filter = ('category', 'facility__facility_level', 'reporting_date')
 
 
 class IncomingPatientsReportAdminResource(resources.ModelResource):
     class Meta:
         model = IncomingPatientsReport
-        fields = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne_i','date_of_first_week_day', 'report__reporting_date', 'report__text', 'report__category', 'report__facility', 'report__facility__facility_level')
+        fields = ('total_debut_semaine', 'ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i', 'date_of_first_week_day', 'report__reporting_date', 'report__text', 'report__category', 'report__facility', 'report__facility__facility_level')
 
 
 class IncomingPatientsReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = IncomingPatientsReportAdminResource
-    list_display = ('total_debut_semaine', 'ptb','oedemes','rechute','readmission','transfert_interne_i','date_of_first_week_day', 'facility', 'type')
+    list_display = ('total_debut_semaine', 'ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i', 'date_of_first_week_day', 'facility', 'type')
     date_hierarchy = 'date_of_first_week_day'
     search_fields = ('date_of_first_week_day', )
-    list_filter = ( 'date_of_first_week_day', 'report__facility__facility_level')
+    list_filter = ('date_of_first_week_day', 'report__facility__facility_level')
 
     def facility(self, obj):
         return obj.report.facility
