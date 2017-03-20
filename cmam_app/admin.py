@@ -85,8 +85,14 @@ class ReportAdminResource(resources.ModelResource):
         return report.facility.facility_level.name
 
     def dehydrate_province(self, report):
+        # import ipdb; ipdb.set_trace()
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
-            return CDS.objects.get(code=report.facility.id_facility).district.province.name
+            try:
+                name = CDS.objects.get(code=report.facility.id_facility).district.province.name
+            except Exception as e:
+                print report.facility.id_facility , e
+            else:
+                return name
         elif report.facility.facility_level.name in ["District"]:
             return District.objects.get(code=report.facility.id_facility).province.name
         elif report.facility.facility_level.name in ["Province"]:
@@ -103,7 +109,7 @@ class ReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReportAdminResource
     list_display = ('facility', 'reporting_date', 'text', 'category')
     date_hierarchy = 'reporting_date'
-    search_fields = ('facility__name', 'reporting_date', 'text', 'category', 'reporting_date')
+    search_fields = ('facility__name', 'reporting_date', 'text', 'category',)
     list_filter = ('category', 'facility__facility_level', 'reporting_date')
 
 
@@ -199,12 +205,26 @@ class ProductStockReportAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ("stock_report",)
     list_filter = ("product",)
 
+
+class SortieAdminRessource(resources.ModelResource):
+    class Meta:
+        model = Sortie
+        fields = ("report__text", "date_de_sortie", "destination__id_facility", )
+
+
+class SortieAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = SortieAdminRessource
+    list_display = (("report", "date_de_sortie", "destination",))
+    search_fields = ("report",)
+    list_filter = ("destination",)
+    date_hierarchy = 'date_de_sortie'
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Facility, FacilityAdmin)
 admin.site.register(Stock, StockAdmin)
 admin.site.register(Reporter, ReporterAdmin)
 admin.site.register(Report, ReportAdmin)
-admin.site.register(Sortie)
+admin.site.register(Sortie, SortieAdmin)
 admin.site.register(Reception)
 admin.site.register(StockOutReport)
 admin.site.register(ProductsReceptionReport, ReceptionProductAdmin)

@@ -137,8 +137,8 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     """
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = SumOutSerialiser
-    filter_fields = ('report__facility__facility_level__name', )
+    filter_fields = ('report__facility__facility_level__name', 'date_of_first_week_day' )
     search_fields = ('^report__facility__id_facility',)
 
-    def get_queryset(self):
-        return get_reportqueryset(self.request, self.queryset)
+    # def get_queryset(self):
+    #     return get_reportqueryset(self.request, self.queryset)

@@ -122,7 +122,7 @@ class SumOutSerialiser(serializers.ModelSerializer):
 
     class Meta:
         model = OutgoingPatientsReport
-        fields = ('gueri','deces','abandon', "week",)
+        fields = ('gueri', 'deces', 'abandon', "week",)
 
     def get_week(self, obj):
         return "W{0}".format(obj.date_of_first_week_day.strftime("%W"))

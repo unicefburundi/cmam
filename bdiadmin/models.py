@@ -102,8 +102,8 @@ class CDS(models.Model):
         ('HPrv', 'HPrive'),
     )
     district = models.ForeignKey(District)
-    name = models.CharField(max_length=40)
-    code = models.CharField(unique=True, max_length=7)
+    name = models.CharField(max_length=100)
+    code = models.CharField(unique=True, max_length=9)
     status = models.CharField(max_length=5, choices=STATUS_CHOICES, blank=True, null=True, help_text=_('Either Public, Conf, Ass, Prive  or Hospital status.'))
 
     def __unicode__(self):
