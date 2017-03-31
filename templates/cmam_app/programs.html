@@ -63,8 +63,21 @@
         <li>
           <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
         </li>
-        <li>
-          <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-user"></span> 
+                <strong>{{user}}</strong>
+                <span class="glyphicon glyphicon-chevron-down"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="{% url 'bdiadmin:profile' %}"><i class="fa fa-users"></i>{% trans " Profiles" %}</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
+                </li>
+            </ul>
         </li>
         {% else %}
         <li>
@@ -90,6 +103,12 @@
                   <label>District</label>
                   <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
                 </div>
+
+                <!-- CDS -->
+                  <div id="cds-group" class="form-group">
+                    <label>CDS</label>
+                    <select class="form-control"  ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
+                  </div>
               </form>
               {% endblock search_form %}
             </li>
@@ -103,7 +122,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12">
-            <h1 class="page-header">Community-based Management of Acute Malnutrition</h1>
+            <h1 class="page-header">{% trans "Community-based Management of Acute Malnutrition" %}</h1>
             {% block container %}
             <div class="container"  >
               <ul class="nav nav-tabs">
@@ -113,16 +132,17 @@
               <div class="tab-content" >
                 <div class="tab-pane active" id="STA">
                   <div class="row" >
-                    <div class="col-md-3">
-                      <h3>Taux de guerison</h3>
+                    <div class="col-md-4 text-success">
+                      <h3>{% trans "Rate of healing" %}</h3>
                       <h1 >{% verbatim %}
                         {{((cdsgnrl.gueri/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
                         {% endverbatim %}%</h1>
-                        <table class="table bg-warning">
+                        <table class="table bg-success">
                           <thead>
                             <tr>
                               <th>Province</th>
                               <th>District</th>
+                              <th>CDS</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -133,12 +153,15 @@
                               <td>{% verbatim %}
                         {{((cdsdistr.gueri/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
                         {% endverbatim %}%</td>
+                              <td>{% verbatim %}
+                        {{((cdscds.gueri/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
+                        {% endverbatim %}%</td>
                             </tr>
                           </tbody>
                         </table>
                       </div>
-                      <div class="col-md-3">
-                        <h3 >Taux de deces</h3>
+                      <div class="col-md-4 text-danger">
+                        <h3 >{% trans "Death rate" %}</h3>
                         <h1 >{% verbatim %}
                           {{((cdsgnrl.deces/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
                           {% endverbatim %}%</h1>
@@ -147,6 +170,7 @@
                               <tr>
                                 <th>Province</th>
                                 <th>District</th>
+                                <th>CDS</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -157,12 +181,15 @@
                                 <td>{% verbatim %}
                           {{((cdsdistr.deces/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
                           {% endverbatim %}%</td>
+                                <td>{% verbatim %}
+                          {{((cdscds.deces/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
+                          {% endverbatim %}%</td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
-                        <div class="col-md-3">
-                          <h3>Taux d'abandon</h3>
+                        <div class="col-md-4 text-info">
+                          <h3>{% trans "Dropout rate" %}</h3>
                           <h1 >{% verbatim %}
                             {{((cdsgnrl.abandon/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
                             {% endverbatim %}%</h1>
@@ -171,6 +198,7 @@
                                 <tr>
                                   <th>Province</th>
                                   <th>District</th>
+                                  <th>CDS</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -180,6 +208,9 @@
                             {% endverbatim %}%</td>
                                   <td>{% verbatim %}
                             {{((cdsdistr.abandon/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
+                            {% endverbatim %}%</td>
+                                  <td>{% verbatim %}
+                            {{((cdscds.abandon/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
                             {% endverbatim %}%</td>
                                 </tr>
                               </tbody>
@@ -220,7 +251,7 @@
                               <td>{{y.rechute }}</td>
                               <td>{{y.readmission }}</td>
                               <td>{{y.transfert_interne_i }}</td>
-                              <td>{{y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne_i }}</td>
+                              <td>{{y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne_i }}</td>
                               <td>{{y.gueri }}</td>
                               <td>{{y.deces }}</td>
                               <td>{{y.abandon }}</td>
@@ -231,20 +262,20 @@
                             </tr>
                             <tr class="success">
                               <td><b>Weeks</b></td>
-                              <td><b>{{sommecds.total_debut_semaine || 0}}</b> </td>
+                              <td><b></b> </td>
                               <td><b>{{sommecds.ptb || 0}}</b></td>
                               <td><b>{{sommecds.oedemes || 0}}</b></td>
                               <td><b>{{sommecds.rechute || 0}}</b></td>
                               <td><b>{{sommecds.readmission || 0}}</b></td>
                               <td><b>{{sommecds.transfert_interne_i || 0}}</b></td>
-                              <td><b>{{sommecds.total_debut_semaine + sommecds.ptb + sommecds.oedemes + sommecds.rechute + sommecds.readmission + sommecds.transfert_interne_i  || 0}}</b></td>
+                              <td><b>{{sommecds.ptb + sommecds.oedemes + sommecds.rechute + sommecds.readmission + sommecds.transfert_interne_i  || 0}}</b></td>
                               <td><b>{{sommecds.gueri || 0}}</b></td>
                               <td><b>{{sommecds.deces || 0}}</b></td>
                               <td><b>{{sommecds.abandon || 0}}</b></td>
                               <td><b>{{sommecds.non_repondant || 0}}</b></td>
                               <td><b>{{sommecds.transfert_interne_o || 0}}</b></td>
                               <td><b>{{sommecds.gueri + sommecds.deces + sommecds.abandon + sommecds.non_repondant + sommecds.transfert_interne_o  || 0}}</b></td>
-                              <td><b>{{(sommecds.total_debut_semaine + sommecds.ptb + sommecds.oedemes + sommecds.rechute + sommecds.readmission + sommecds.transfert_interne_i) - (sommecds.gueri + sommecds.deces + sommecds.abandon + sommecds.non_repondant +sommecds.transfert_interne_o) || 0}}</b></td>
+                              <td><b></b></td>
                             </tr>
                             {% endverbatim %}
                           </tbody>
@@ -252,16 +283,17 @@
                       </div>
                       <div class="tab-pane " id="SST">
                         <div class="row" >
-                          <div class="col-md-3">
-                            <h3>Taux de guerison</h3>
+                          <div class="col-md-4 text-success">
+                            <h3>{% trans "Rate of healing" %}</h3>
                             <h1 >{% verbatim %}
                               {{((hopitauxgnrl.gueri/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
                               {% endverbatim %}%</h1>
-                              <table class="table bg-warning">
+                              <table class="table bg-success">
                                 <thead>
                                   <tr>
                                     <th>Province</th>
                                     <th>District</th>
+                                    <th>Hopital</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -272,12 +304,15 @@
                                     <td>{% verbatim %}
                               {{((hopitauxdistr.gueri/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
                               {% endverbatim %}%</td>
+                              <td>{% verbatim %}
+                              {{((hopitauxcds.gueri/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
+                              {% endverbatim %}%</td>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
-                            <div class="col-md-3">
-                              <h3>Taux de deces</h3>
+                            <div class="col-md-4 text-danger">
+                              <h3>{% trans "Death rate" %}</h3>
                               <h1 >{% verbatim %}
                                 {{((hopitauxgnrl.deces/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
                                 {% endverbatim %}%</h1>
@@ -286,6 +321,7 @@
                                     <tr>
                                       <th>Province</th>
                                       <th>District</th>
+                                      <th>Hopital</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -296,12 +332,15 @@
                                       <td>{% verbatim %}
                                 {{((hopitauxdistr.deces/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
                                 {% endverbatim %}%</td>
+                                <td>{% verbatim %}
+                                {{((hopitauxcds.deces/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
+                                {% endverbatim %}%</td>
                                     </tr>
                                   </tbody>
                                 </table>
                               </div>
-                              <div class="col-md-3">
-                                <h3>Taux d'abandon</h3>
+                              <div class="col-md-4 text-info">
+                                <h3>{% trans "Dropout rate" %}</h3>
                                 <h1>{% verbatim %}
                                   {{((hopitauxgnrl.abandon/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
                                   {% endverbatim %}%</h1>
@@ -310,6 +349,7 @@
                                       <tr>
                                         <th>Province</th>
                                         <th>District</th>
+                                        <th>Hopital</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -319,6 +359,9 @@
                                   {% endverbatim %}%</td>
                                         <td>{% verbatim %}
                                   {{((hopitauxdistr.abandon/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
+                                  {% endverbatim %}%</td>
+                                  <td>{% verbatim %}
+                                  {{((hopitauxcds.abandon/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
                                   {% endverbatim %}%</td>
                                       </tr>
                                     </tbody>
@@ -358,7 +401,7 @@
                                     <td>{{y.rechute}}</td>
                                     <td>{{y.readmission}}</td>
                                     <td>{{y.transfert_interne_i}}</td>
-                                    <td>{{y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne }}</td>
+                                    <td>{{y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne }}</td>
                                     <td>{{y.gueri}}</td>
                                     <td>{{y.deces}}</td>
                                     <td>{{y.abandon}}</td>
@@ -368,19 +411,19 @@
                                   </tr>
                                   <tr class="success">
                                     <td><b>Weeks</b></td>
-                                    <td><b>{{sommehopitaux.total_debut_semaine || 0}}</b> </td>
+                                    <td><b></b></td>
                                     <td><b>{{sommehopitaux.ptb || 0}}</b></td>
                                     <td><b>{{sommehopitaux.oedemes || 0}}</b></td>
                                     <td><b>{{sommehopitaux.rechute || 0}}</b></td>
                                     <td><b>{{sommehopitaux.readmission || 0}}</b></td>
                                     <td><b>{{sommehopitaux.transfert_interne_i || 0}}</b></td>
-                                    <td><b>{{sommehopitaux.total_debut_semaine + sommehopitaux.ptb + sommehopitaux.oedemes + sommehopitaux.rechute + sommehopitaux.readmission + sommehopitaux.transfert_interne  || 0}}</b></td>
+                                    <td><b>{{sommehopitaux.ptb + sommehopitaux.oedemes + sommehopitaux.rechute + sommehopitaux.readmission + sommehopitaux.transfert_interne  || 0}}</b></td>
                                     <td><b>{{sommehopitaux.gueri || 0}}</b></td>
                                     <td><b>{{sommehopitaux.deces || 0}}</b></td>
                                     <td><b>{{sommehopitaux.abandon || 0}}</b></td>
                                     <td><b>{{sommehopitaux.non_repondant || 0}}</b></td>
                                     <td><b>{{sommehopitaux.gueri + sommehopitaux.deces + sommehopitaux.abandon + sommehopitaux.non_repondant || 0}}</b></td>
-                                    <td><b>{{(sommehopitaux.total_debut_semaine + sommehopitaux.ptb + sommehopitaux.oedemes + sommehopitaux.rechute + sommehopitaux.readmission + sommehopitaux.transfert_interne_i) - (sommehopitaux.gueri + sommehopitaux.deces + sommehopitaux.abandon + sommehopitaux.non_repondant) || 0}}</b></td>
+                                    <td><b></b></td>
                                   </tr>
                                   {% endverbatim %}
                                 </tbody>

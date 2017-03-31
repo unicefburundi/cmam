@@ -1,0 +1,190 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-09 18:06+0200\n"
+"PO-Revision-Date: 2016-11-09 18:08+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+#: bdiadmin/forms.py:85
+#, python-brace-format
+msgid "Profile created and mail sent to {0}."
+msgstr "Profil créé et le mail envoyé à {0}"
+
+#: bdiadmin/forms.py:87
+#, python-brace-format
+msgid "Profil created, but unable to send mail to {0}."
+msgstr "Profil créé et mais impossible d'envoyer le mail à {0}"
+
+#: bdiadmin/models.py:17
+msgid "Phone number in the format: '+999999999'. Up to 15 digits allowed."
+msgstr "Le numero de telephone au format: '+999999999'. Jusqu'à 15 chiffres."
+
+#: bdiadmin/models.py:18
+msgid "The facility attached to this user."
+msgstr "L’établissement sanitaire attaché déjà cet utilisateur."
+
+#: bdiadmin/models.py:19
+msgid "telephone"
+msgstr "téléphone "
+
+#: bdiadmin/models.py:19
+msgid "The telephone to contact you."
+msgstr "Le téléphone pour te contacter."
+
+#: bdiadmin/models.py:33 bdiadmin/models.py:50 bdiadmin/models.py:67
+msgid "name"
+msgstr "Nom"
+
+#: bdiadmin/models.py:84
+msgid "nom"
+msgstr "nom"
+
+#: bdiadmin/models.py:107
+msgid "Either Public, Conf, Ass, Prive  or Hospital status."
+msgstr "Soit Public, Conf, Assoc, Prive ou Hopital"
+
+#: cmam/settings.py:126
+msgid "French"
+msgstr "Français "
+
+#: cmam/settings.py:127
+msgid "English"
+msgstr "Englais"
+
+#: templates/base.html:32
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/base.html:36 templates/bdiadmin/profileuser_list.html:45
+#: templates/cmam_app/programs.html:78 templates/cmam_app/stocks.html:79
+#: templates/index.html:80 templates/landing_page.html:68
+msgid "Logout"
+msgstr "Se déconnecter "
+
+#: templates/bdiadmin/account_creation_email.html:2
+msgid "You're receiving this email because you requested a password reset"
+msgstr ""
+"Vous recevez cet e-mail parce que vous avez demandé une réinitialisation du "
+"mot de passe"
+
+#: templates/bdiadmin/account_creation_email.html:2
+msgid " for your user account at"
+msgstr "pour votre compte d'utilisateur à"
+
+#: templates/bdiadmin/account_creation_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr "Veuillez aller à la page suivante et choisir un nouveau mot de passe:"
+
+#: templates/bdiadmin/account_creation_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr "Votre nom d'utilisateur, au cas où vous auriez oublié:"
+
+#: templates/bdiadmin/account_creation_email.html:10
+msgid "Thanks for using our site!"
+msgstr "Merci d'utiliser notre site!"
+
+#: templates/bdiadmin/account_creation_email.html:12
+msgid "The "
+msgstr "Le"
+
+#: templates/bdiadmin/account_creation_email.html:12
+msgid "team"
+msgstr "team"
+
+#: templates/bdiadmin/account_creation_subject.txt:1
+msgid "Account activation on "
+msgstr "Activation du compte sur"
+
+#: templates/bdiadmin/profileuser_list.html:41
+#: templates/cmam_app/programs.html:74 templates/cmam_app/stocks.html:75
+msgid " Profiles"
+msgstr " Profils"
+
+#: templates/bdiadmin/profileuser_list.html:51
+#: templates/cmam_app/programs.html:84 templates/cmam_app/stocks.html:85
+#: templates/index.html:86 templates/landing_page.html:72
+msgid "Login"
+msgstr "Se connecter"
+
+#: templates/bdiadmin/province_form.html:5
+msgid "Group"
+msgstr "Groupe:"
+
+#: templates/bdiadmin/province_form.html:9
+msgid "Telephone"
+msgstr "Téléphone"
+
+#: templates/cmam_app/programs.html:125 templates/cmam_app/stocks.html:125
+#: templates/index.html:133 templates/landing_page.html:93
+msgid "Community-based Management of Acute Malnutrition"
+msgstr "Gestion communautaire de la malnutrition aiguë"
+
+#: templates/cmam_app/programs.html:136 templates/cmam_app/programs.html:287
+msgid "Rate of healing"
+msgstr "Taux de guérison"
+
+#: templates/cmam_app/programs.html:164 templates/cmam_app/programs.html:315
+msgid "Death rate"
+msgstr "Taux de mortalité"
+
+#: templates/cmam_app/programs.html:192 templates/cmam_app/programs.html:343
+msgid "Dropout rate"
+msgstr "Taux d'abandon"
+
+#: templates/cmam_app/stocks.html:62 templates/index.html:63
+msgid "Programs"
+msgstr "Programmes"
+
+#: templates/index.html:76
+msgid "Profiles"
+msgstr " Profils"
+
+#: templates/index.html:99
+msgid "Year"
+msgstr "Année"
+
+#: templates/landing_page.html:53
+msgid "A propos !"
+msgstr "A propos !"
+
+#: templates/landing_page.html:56
+msgid "What ?"
+msgstr "Quoi ?"
+
+#: templates/landing_page.html:59
+msgid "How ?"
+msgstr "Comment ?"
+
+#: templates/login.html:9
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+"Votre nom d'utilisateur et votre mot de passe ne correspondent pas. Veuillez "
+"réessayer."
+
+#: templates/login.html:15
+msgid ""
+"Your account doesn't have access to this page. To proceed, please login with "
+"an account that has access."
+msgstr ""
+"Votre compte n'a pas accès à cette page. Pour continuer, veuillez vous "
+"connecter avec un compte qui a accès."
+
+#: templates/login.html:19
+msgid "Please login to see this page."
+msgstr "Veuillez vous connecter pour voir cette page."
+
+#: templates/login.html:26
+msgid "Please Sign In"
+msgstr "Veuillez vous connecter pour voir cette page."

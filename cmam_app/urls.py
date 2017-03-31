@@ -7,14 +7,14 @@ router = routers.DefaultRouter()
 router.register(r'products', ProductViewSet)
 router.register(r'provinces', ProvinceDistrictViewSet)
 router.register(r'districts', DistrictCDSViewSet)
+router.register(r'cdss', CDSCDSViewSet)
 router.register(r'incoming', IncomingViewset)
 router.register(r'outgoing', OutgoingViewset)
 router.register(r'outsum', SumOutgoingViewset)
-router.register(r'inoutreport', InOutViewset, base_name="inoutreport")
+router.register(r'inoutreport', InOutViewset)
 
-
-
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '', 
     url(r'^', include(router.urls)),
     url(r'external_request', handel_rapidpro_request, name="handel_request"),
     url(r'^stocks/$', StockView.as_view(), name="stocks"),

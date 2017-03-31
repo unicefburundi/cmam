@@ -1,61 +1,55 @@
-var app = angular.module('StockApp', []);
+var app = angular.module('StockApp', ['ngSanitize']);
+
 app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
-        // products
-        $http.get("/cmam/products/")
-        .then(function (response) {
-          $scope.produits = response.data;
-        });
+        // // products
+        // $http.get("/cmam/products/")
+        // .then(function (response) {
+        //   $scope.etablissements = response.data;
+        // });
 
         // province
         $http.get("/bdiadmin/province/")
-          .then(function (response) {
-              $scope.provinces = response.data;
-          });
-          $scope.update_province = function () {
-            var province = $scope.dashboard.province;
-            $(".cds").hide();
-            $(".district").show();
-            if ($scope.produits) {
-              $http.get("/cmam/provinces/" + province.code + "/" )
+        .then(function (response) {
+            if (response.data.length > 0) {
+                $scope.provinces = response.data;
+            } else {
+                $("#province-group").hide();
+                $http.get("/cmam/districts/")
                 .then(function (response) {
-                    $scope.districts = response.data.districts;
-                  console.log($scope.districts);
-              });
+                    $scope.districts = response.data;
+                });
             }
-        };
+        });
+        $scope.update_province = function () {
+            var province = $scope.dashboard.province;
+            if (province) {
+              $http.get("/cmam/provinces/" + province.code + "/" )
+              .then(function (response) {
+                $scope.etablissements = response.data.etablissements;
+                $scope.districts = response.data.etablissements;
+            });
+          }
+      };
           // district
-        $scope.update_district = function () {
+          $scope.update_district = function () {
             var district = $scope.dashboard.district;
-            if ($scope.dashboard.province) {
+            if (district) {
               $http.get("/cmam/districts/" + district.code + "/" )
-                .then(function (response) {
-                  $scope.cds = response.data.cds;
-                  console.log($scope.cds);
-                  $(".cds").show();
-
+              .then(function (response) {
+                  $scope.etablissements = response.data.etablissements;
+                  $scope.cdss = response.data.etablissements;
               });
-              }
-        };
-        // Datepicker
-        $scope.debut = '19/03/2013';
-        $scope.fin = '19/03/2013';
-
-        // years
-        $http.get("/cmam/get_year/")
-        .then(function (response) {
-          $scope.years = response.data;
-        });
-
-        // weeks
-        $http.get("/cmam/get_week/")
-        .then(function (response) {
-          $scope.weeks = response.data;
-        });
-
-        $scope.update_years = function () {
-        };
-
-        $scope.update_weeks = function () {
-        };
-}]);
+          }
+      };
+        // CDS
+        $scope.update_cds = function () {
+            var cds = $scope.dashboard.cds;
+            if (cds) {
+              $http.get("/cmam/cdss/" + cds.code + "/" )
+              .then(function (response) {
+                  $scope.etablissements = response.data.etablissements;
+              });
+          }
+      };
+  }]);
 

@@ -69,7 +69,7 @@
                             </li>
                     {% else %}
                             <li>
-                                <a class="page-scroll" href="{% url 'login' %}?next=/">{% trans "Login" %}</a>
+                                <a class="page-scroll" href="{% url 'login' %}?next=/dashboard/">{% trans "Login" %}</a>
                             </li>
                     {% endif %}
                 </ul>
@@ -90,7 +90,7 @@
                     <div class="intro-message">
                         <h1>CMAM</h1>
                         <hr class="intro-divider">
-                        <h3>Community-based Management of Acute Malnutrition</h3>
+                        <h3>{% trans "Community-based Management of Acute Malnutrition" %}</h3>
                     </div>
                 </div>
             </div>
