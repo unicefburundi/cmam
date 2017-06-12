@@ -29,7 +29,6 @@ function getsum(response){
     return [weeks, columns];
 }
 
-
 var app = angular.module('ProgramApp', []);
 
 app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
@@ -49,8 +48,8 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.hopitauxgnrl =  sums[1];
         $scope.sommehopitaux = sums[1];
     });
-
-        // province
+		
+		// province
         $http.get("/bdiadmin/province/")
         .then(function (response) {
             if (response.data.length > 0) {
@@ -95,7 +94,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 });
             }
         };
-
+		
         // district
         $scope.update_district = function () {
             var district = $scope.district;
@@ -147,5 +146,6 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
                 });
               }
         };
+		
   }]);
 

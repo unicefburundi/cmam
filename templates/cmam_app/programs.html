@@ -32,8 +32,32 @@
 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-<script src="{% static "js/angular.min.js" %}"></script>
+
+<!-- jQuery -->
+<script src='{% static "js/libs/jquery.min.js" %}'></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+
+<script src='{% static "js/angular.min.js" %}'></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src='{% static "vendor/metisMenu/metisMenu.min.js" %}'></script>
+
+<!-- Custom Theme JavaScript -->
+<script src='{% static "js/sb-admin-2.js" %}'></script>
+
+<!-- dataTable JS -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.js"></script>
+
+<link rel="stylesheet"; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
+<script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
+
+<!-- CMAM based Js -->
+<script src='{% static "js/cmam-programs.js" %}'></script>
+			
 </head>
+
 
 <body ng-app="ProgramApp">
 
@@ -92,22 +116,35 @@
             <li >
               {% block search_form %}
               <form role="form" class="side-form" >
-                <!-- Province -->
+				<!-- Province -->
                 <div id="province-group" class="form-group">
                   <label>Province</label>
-                  <select class="form-control"  ng-model="province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+                  <select class="form-control" id="provinceselect" ng-model="province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
                 </div>
 
                 <!-- District -->
                 <div id="district-group" class="form-group">
                   <label>District</label>
-                  <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+                  <select class="form-control" id="districtselect" ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
                 </div>
 
                 <!-- CDS -->
                   <div id="cds-group" class="form-group">
                     <label>CDS</label>
-                    <select class="form-control"  ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
+                    <select class="form-control" id="cdsselect" ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
+                  </div>
+				  
+				  
+				   <!-- Start Week -->
+                  <div id="cds-group" class="form-group">
+                    <label>Start Week</label>
+                    <select class="form-control" id="startweekselect" ng-model="startweek" ng-options="x.name for x in cdss track by x.code" ng-change="update_startweek()" ></select>
+                  </div>
+				  
+				   <!-- End Week -->
+                  <div id="cds-group" class="form-group">
+                    <label>End Week</label>
+                    <select class="form-control" id="endweekselect" ng-model="endweek" ng-options="x.name for x in cdss track by x.code" ng-change="update_endweek()" ></select>
                   </div>
               </form>
               {% endblock search_form %}
@@ -217,7 +254,7 @@
                             </table>
                           </div>
                         </div>
-                        <table  class="table fixed table-bordered table-hover">
+                        <table class="table fixed table-bordered table-hover datatable">
                           <thead class="thead-default">
                             <tr>
                               <th rowspan="2">Week</th>
@@ -243,7 +280,7 @@
                           </thead>
                           <tbody >
                             {% verbatim %}
-                            <tr ng-repeat="(x, y) in lescds  ">
+                            <tr ng-repeat="(x, y) in lescds">
                               <td>{{x}}</td>
                               <td>{{y.total_debut_semaine}}</td>
                               <td>{{y.ptb}}</td>
@@ -280,6 +317,7 @@
                             {% endverbatim %}
                           </tbody>
                         </table>
+						
                       </div>
                       <div class="tab-pane " id="SST">
                         <div class="row" >
@@ -428,6 +466,7 @@
                                   {% endverbatim %}
                                 </tbody>
                               </table>
+							  
                             </div>
                           </div>
                         </div>
@@ -442,26 +481,13 @@
               </div>
               <!-- /#page-wrapper -->
 
-            </div>
             <!-- /#wrapper -->
             <footer class="container-fluid">
               <p class="text-right ">©2016 UNICEF Burundi</p>
             </footer>
-
-            <!-- jQuery -->
-            <script src="{% static "js/libs/jquery.min.js" %}"></script>
-
-            <!-- Bootstrap Core JavaScript -->
-            <script src="{% static "js/bootstrap.min.js" %}"></script>
-
-            <!-- Metis Menu Plugin JavaScript -->
-            <script src="{% static "vendor/metisMenu/metisMenu.min.js" %}"></script>
-
-            <!-- Custom Theme JavaScript -->
-            <script src="{% static "js/sb-admin-2.js" %}"></script>
-
-            <!-- CMAM based Js -->
-            <script src="{% static "js/cmam-programs.js" %}"></script>
+			
+			
           </body>
+		 
 
           </html>

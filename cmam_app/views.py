@@ -10,7 +10,7 @@ from bdiadmin.models import Province, District
 from django.views.generic.edit import FormView
 from cmam_app.forms import SortiesForm
 from cmam_app.utils import get_adminqueryset, get_reportqueryset
-
+from django.http import HttpResponse
 
 @login_required
 def get_year(request):
@@ -47,6 +47,7 @@ def dashboard(request):
 @login_required(login_url="/login/")
 def programs(request):
     return render(request, "cmam_app/programs.html")
+
 
 
 class ProductViewSet(viewsets.ModelViewSet):
