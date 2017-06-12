@@ -90,7 +90,7 @@ class ReportAdminResource(resources.ModelResource):
             try:
                 name = CDS.objects.get(code=report.facility.id_facility).district.province.name
             except Exception as e:
-                print report.facility.id_facility , e
+                print report.facility.id_facility, e
             else:
                 return name
         elif report.facility.facility_level.name in ["District"]:

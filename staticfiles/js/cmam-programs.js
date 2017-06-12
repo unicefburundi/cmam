@@ -30,7 +30,7 @@ function getsum(response){
 }
 
 
-var app = angular.module('ProgramApp', []);
+var app = angular.module('ProgramApp', ['ngSanitize', 'datatables', 'datatables.buttons']);
 
 app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
     // in out reports
@@ -149,3 +149,5 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
         };
   }]);
 
+app.controller('ExportCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {$scope.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withButtons([ 'copy', 'csv', 'excel', 'pdf', 'print']).withDOM("<'row'<'col-sm-3'l><'col-sm-4'i><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-4'B><'col-sm-8'p>>").withDisplayLength(10);
+  }]);
