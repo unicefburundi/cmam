@@ -21,4 +21,5 @@ urlpatterns = patterns(
     url(r'^programs/$', programs, name="programs"),
     url(r'^get_year/$', get_year, name="get_year"),
     url(r'^get_week/$', get_week, name="get_week"),
+	#url(r'^fetchreportingrates/$', fetchreportingrates, name='fetchreportingrates'),
 )

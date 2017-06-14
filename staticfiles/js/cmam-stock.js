@@ -1,11 +1,6 @@
-var app = angular.module('StockApp', ['ngSanitize']);
+var app = angular.module('StockApp', ['ngSanitize', 'datatables', 'datatables.buttons']);
 
-app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
-        // // products
-        // $http.get("/cmam/products/")
-        // .then(function (response) {
-        //   $scope.etablissements = response.data;
-        // });
+app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {
 
         // province
         $http.get("/bdiadmin/province/")
@@ -49,7 +44,10 @@ app.controller('StockCtrl', ['$scope', '$http', function($scope, $http) {
               .then(function (response) {
                   $scope.etablissements = response.data.etablissements;
               });
-          }
-      };
+    }
+  };
+}]);
+
+app.controller('ExportCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {$scope.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withButtons([ 'copy', 'csv', 'excel', 'pdf', 'print']).withDOM("<'row'<'col-sm-3'l><'col-sm-4'i><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-4'B><'col-sm-8'p>>").withDisplayLength(10);
   }]);
 

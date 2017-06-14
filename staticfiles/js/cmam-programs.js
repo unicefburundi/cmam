@@ -29,9 +29,20 @@ function getsum(response){
     return [weeks, columns];
 }
 
-var app = angular.module('ProgramApp', []);
+var app = angular.module('ProgramApp', ['ngSanitize', 'datatables', 'datatables.buttons']);
 
-app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
+app.directive("repeatEnd", function(){
+	return {
+		restrict: "A",
+		link: function (scope, element, attrs) {
+			if (scope.$last) {
+				scope.$eval(attrs.repeatEnd);
+			}
+		}
+	};
+});
+
+app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
     // in out reports
     $http.get("/cmam/inoutreport/?facility__facility_level__name=CDS")
     .then(function (response) {
@@ -147,5 +158,20 @@ app.controller('pgrmCtrl', ['$scope', '$http', function($scope, $http) {
               }
         };
 		
+		$scope.loadColumns = function(){
+			$timeout(function(){
+				if (typeof(angular.element("#ddprovince").val() === 'number')) {
+					alert(angular.element("#ddprovince").val());
+					angular.element("#thprovince").css ({ display: block });
+				} else {
+					angular.element("#thprovince").css ({ display: none });
+				}
+			}, 1);
+		};
+		
+		
+		
   }]);
 
+app.controller('ExportCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {$scope.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withButtons([ 'copy', 'csv', 'excel', 'pdf', 'print']).withDOM("<'row'<'col-sm-3'l><'col-sm-4'i><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-4'B><'col-sm-8'p>>").withDisplayLength(10);
+  }]);

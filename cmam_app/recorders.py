@@ -1,4 +1,5 @@
 from cmam_app.models import *
+from bdiadmin.models import *
 from django.db.models import Q
 import re
 import datetime
@@ -33,9 +34,6 @@ def check_supervisor_phone_number_not_for_this_contact(args):
 
 def check_number_of_values(args):
     #This function checks if the message sent is composed by an expected number of values
-    print("==len(args['text'].split(' '))==")
-    print(len(args['text'].split(' ')))
-    print(args['text'].split(' '))
 
     # Let's identify the number of active products
     '''active_products = Product.objects.filter(is_in_use = True)
@@ -202,6 +200,25 @@ def check_if_is_reporter(args):
     args['valide'] = True
     args['info_to_contact'] = " Le bureau d affectation de ce rapporteur est connu "
 
+    
+    args['location'] = ""
+
+    #Let's check were this reporter reports from
+    the_concerned_facilit = CDS.objects.filter(code = args['facility'].id_facility)
+    if len(the_concerned_facilit) > 0:
+        #The report comes from a CDS or a Hospital
+        the_one_concerned_faci = the_concerned_facilit[0]
+        district_name = the_one_concerned_faci.district.name
+        province_name = the_one_concerned_faci.district.province.name
+        args['location'] = ", "+district_name+", "+province_name
+        return
+    the_concerned_facilit = District.objects.filter(code = args['facility'].id_facility)
+    if len(the_concerned_facilit) > 0:
+        #The report comes from a District
+        the_one_concerned_faci = the_concerned_facilit[0]
+        args['location'] = ", "+the_one_concerned_faci.province.name
+        return
+
 
 def check_date_is_valid(args):
     ''' This function checks if a given date is valid '''
@@ -211,8 +228,6 @@ def check_date_is_valid(args):
     if(args['message_type'] == 'STOCK_RECU' or args['message_type'] == 'STOCK_SORTI' or args['message_type'] == 'BALANCE' or args['message_type'] == 'ADMISSION' or args['message_type'] == 'SORTI' or args['message_type'] == 'STOCK_RECU_M' or args['message_type'] == 'STOCK_SORTI_M' or args['message_type'] == 'BALANCE_M' or args['message_type'] == 'ADMISSION_M' or args['message_type'] == 'SORTI_M'):
         given_date = args['text'].split(' ')[1]
 
-    print("------------------given_date-------------------")
-    print(given_date)
 
     if not given_date:
         args['valide'] = False
@@ -529,14 +544,13 @@ def check_products_reports_values_validity(args):
 
     if(args['message_type'] == 'STOCK_SORTI' or args['message_type'] == 'STOCK_SORTI_M'):
         if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
-            print("aaaa")
-            args['facility_code'] = args['text'].split(' ')[2]
+            args['facility_code'] =  args['text'].split(' ')[2]
+
             args['position'] = 2
             check_facility_code_is_valid(args)
             if not args['valide']:
                 return
         else:
-            print("0000")
             facility_type, created = FacilityType.objects.get_or_create(name='None')
             args['destination_facility'], created = Facility.objects.get_or_create(id_facility = 'ben', name = 'Beneficiaires', facility_level = facility_type)
 
@@ -563,16 +577,13 @@ def check_products_reports_values_validity(args):
     # Let's check if numbers are correct
     if(args['message_type'] == 'STOCK_RECU' or args['message_type'] == 'STOCK_RECU_M' or args['message_type'] == 'BALANCE' or args['message_type'] == 'BALANCE_M'):
         #Products values starts at the indice 2
-        print("#Products values starts at the indice 2")
         first_product_indice = 2
 
     if(args['message_type'] == 'STOCK_SORTI' or args['message_type'] == 'STOCK_SORTI_M'):
         #Products values starts at the indice 3
         if(args['facility'].facility_level.name.upper() not in CDS_SYNONYMS and args['facility'].facility_level.name.upper() not in HOSPITAL_SYNONYMS):
-            print("#Products values starts at the indice 3")
             first_product_indice = 3
         else:
-            print("#Products values starts at the indice 2")
             first_product_indice = 2
 
     ok = True
@@ -580,12 +591,8 @@ def check_products_reports_values_validity(args):
     indice = first_product_indice
 
     while(priority <= number_of_attached_products and ok == True):
-        print("======priority=======")
-        print(priority)
-        print("------------INDICE----------")
-        print(indice)
+        args['value_to_check'] =  args['text'].split(' ')[indice]
 
-        args['value_to_check'] = args['text'].split(' ')[indice]
         args['position'] = indice
 
         one_attached_product = FacilityTypeProduct.objects.filter(facility_type = the_current_facility_level, priority_in_sms = priority)[0]
@@ -624,7 +631,6 @@ def check_supervisor_phone_number(args):
     the_supervisor_phone_number_no_space = the_supervisor_phone_number.replace(" ", "")
     #expression = r'^(\+?(257)?)((62)|(79)|(71)|(76))([0-9]{6})$'
     expression = r'^(\+?(257)?)((61)|(62)|(68)|(69)|(71)|(72)|(75)|(76)|(79))([0-9]{6})$'
-    print(the_supervisor_phone_number_no_space)
     if re.search(expression, the_supervisor_phone_number_no_space) is None:
         #The phone number is not well written
         args['valide'] = False
@@ -835,20 +841,17 @@ def record_stock_received(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the values sent are valid
     #check_values_validity(args)
     check_products_reports_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -921,20 +924,17 @@ def modify_stock_received(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the values sent are valid
     #check_values_validity(args)
     check_products_reports_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1006,7 +1006,6 @@ def record_sent_stock(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1018,14 +1017,12 @@ def record_sent_stock(args):
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the values sent are valid
     #check_values_validity(args)
     check_products_reports_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1107,7 +1104,6 @@ def modify_sent_stock(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1119,14 +1115,12 @@ def modify_sent_stock(args):
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the values sent are valid
     #check_values_validity(args)
     check_products_reports_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1206,19 +1200,16 @@ def record_stock_out(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the values sent are valid
     check_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1259,7 +1250,8 @@ def record_stock_out(args):
     args['info_to_contact'] = "Rapport bien recu. Vous venez de rapporter une rupture du stock pour le produit '"+the_concerned_product.designation+"'. La quantite restante est " + args['remaining_quantity']+""
 
     #The below message message will be sent to the supervisor
-    args['info_to_supervisor'] = "Une rupture du stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '" + args['facility'].name+"'. La quantite restante est " + args['remaining_quantity']+"."
+    args['info_to_supervisor'] = "Une rupture du stock pour le produit '"+the_concerned_product.designation+"' est signalee au site '"+args['facility'].name+"'"+args['location']+". La quantite restante est "+args['remaining_quantity']+"."
+
 
 
 
@@ -1290,19 +1282,16 @@ def modify_stock_out(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the values sent are valid
     check_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1375,20 +1364,17 @@ def record_current_stock(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the values sent are valid
     #check_values_validity(args)
     check_products_reports_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1456,20 +1442,17 @@ def modify_current_stock(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the values sent are valid
     #check_values_validity(args)
     check_products_reports_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1537,13 +1520,11 @@ def record_patient_served(args):
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1555,7 +1536,6 @@ def record_patient_served(args):
 
     # Let's check if the values sent are valid
     check_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1605,31 +1585,20 @@ def record_patient_served(args):
 
         all_incoming_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5]) + float(args['text'].split(' ')[6]) + float(args['text'].split(' ')[7])
 
-        print("===============================")
-        print("OUT")
-        print(all_outgoing_patient_for_that_week)
-        print("IN")
-        print(all_incoming_patient_for_that_week)
-        print("===============================")
-
 
         if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
             #If the reported out going patients number is super to the reported incoming patient number for a given week, the
             #system should alert the concerned persons
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            print("Message to the supervisor")
+
+            args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
+
             args['info_to_supervisor'] = "Probable erreur. Au site '" + args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
-            print("Probable erreur. Au site '" + args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+"")
 
-            print("Message to the contact")
+
             args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects"
-            print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects")
-            print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-
-
-
 
             #The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
+
 
             the_supervisor_phone_number = "tel:" + args['the_sender'].supervisor_phone_number
             data = {"urns": [the_supervisor_phone_number],"text": args['info_to_supervisor']}
@@ -1651,13 +1620,11 @@ def modify_patient_served(args):
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1669,7 +1636,6 @@ def modify_patient_served(args):
 
     # Let's check if the values sent are valid
     check_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1711,28 +1677,13 @@ def modify_patient_served(args):
 
         all_incoming_patient_for_that_week = float(args['text'].split(' ')[2]) + float(args['text'].split(' ')[3]) + float(args['text'].split(' ')[4]) + float(args['text'].split(' ')[5]) + float(args['text'].split(' ')[6]) + float(args['text'].split(' ')[7])
 
-        print("===============================")
-        print("OUT")
-        print(all_outgoing_patient_for_that_week)
-        print("IN")
-        print(all_incoming_patient_for_that_week)
-        print("===============================")
-
 
         if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
             #If the reported out going patients number is super to the reported incoming patient number for a given week, the
             #system should alert the concerned persons
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            print("Message to the supervisor")
-            args['info_to_supervisor'] = "Probable erreur. Au site '" + args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
-            print("Probable erreur. Au site '" + args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+"")
+            args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
 
-            print("Message to the contact")
             args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects"
-            print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects")
-            print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-
-
 
             #The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 
@@ -1760,14 +1711,12 @@ def record_out_going_patients(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1779,7 +1728,6 @@ def record_out_going_patients(args):
 
     # Let's check if the values sent are valid
     check_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1838,18 +1786,10 @@ def record_out_going_patients(args):
         if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
             #If the reported out going patients number is super to the reported incoming patient number for a given week, the
             #system should alert the concerned persons
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            print("Message to the supervisor")
-            args['info_to_supervisor'] = "Probable erreur. Au site '" + args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
-            print("Probable erreur. Au site '" + args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+"")
+            args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
 
-            print("Message to the contact")
+
             args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects"
-            print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects")
-            print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-
-
-
 
             #The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number
 
@@ -1874,14 +1814,12 @@ def modify_out_going_patients(args):
 
     # Let's check if the person who send this message is a reporter
     check_if_is_reporter(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
 
     # Let's check if the message sent is composed by an expected number of values
     check_number_of_values(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1893,7 +1831,6 @@ def modify_out_going_patients(args):
 
     # Let's check if the values sent are valid
     check_values_validity(args)
-    print(args['valide'])
     if not args['valide']:
         return
 
@@ -1941,19 +1878,10 @@ def modify_out_going_patients(args):
         if(all_outgoing_patient_for_that_week > all_incoming_patient_for_that_week):
             #If the reported out going patients number is super to the reported incoming patient number for a given week, the
             #system should alert the concerned persons
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            args['info_to_supervisor'] = "Probable erreur. Au site '"+args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
 
-            print("Message to the supervisor")
-            args['info_to_supervisor'] = "Probable erreur. Au site '" + args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])
-            print("Probable erreur. Au site '" + args['facility'].name+"', le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+"")
 
-            print("Message to the contact")
             args['an_alert_message_to_contact'] = "Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects"
-            print("Probable erreur. Le total des decharges rapporte est superieur au total des admissions rapporte pour la semaine commencee a la date suivante : "+str(args['sent_date'])+". Verfier si les chiffres envoyes sont corrects")
-
-            print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-
-
 
 
             #The bolow code is for sending alert messages in case of outgoing patient number greater than the total patient number

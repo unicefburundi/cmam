@@ -97,25 +97,25 @@
                           <!-- Year -->
                           <div id="year-group" class="form-group">
                             <label>{% trans "Year" %}</label>
-                            <select class="form-control"  ng-model="dashboard.year" ng-options="x for x in years track by x" ng-change="update_years()"></select>
+                            <select id="yearselect" class="form-control"  ng-model="dashboard.year" ng-options="x for x in years track by x" ng-change="update_years()" onchange="yearchange(this.value)"></select>
                           </div>
 
                           <!-- Province -->
                           <div id="province-group" class="form-group">
                             <label>Province</label>
-                            <select class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+                            <select id="provinceselect" class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()" onchange="provincechange(this.value)"></select>
                           </div>
 
                           <!-- District -->
                           <div id="district-group" class="form-group">
                             <label>District</label>
-                            <select class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+                            <select id="districtselect" class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" onchange="districtchange(this.value)"></select>
                           </div>
 
                           <!-- CDS -->
                           <div id="cds-group" class="form-group">
                             <label>CDS</label>
-                            <select class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
+                            <select id="cdsselect" class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" onchange="cdschange(this.value)"></select>
                           </div>
                         </form>
                         {% endblock search_form %}
@@ -152,7 +152,36 @@
                                       <div id="tendance_sst" class="col-md-6" ></div>
                                     </div>
                               </div>
+							  
                             </div>
+								<div id="target_pop" style="clear:both;"><p><h4>Reporting Rate</h4></p></div>
+							
+								<div id="reportingcategory-div" class="form-group">
+									<label>Rate Category</label>
+									<select id="ratecategory" class="form-control" style="width:300px" onchange="ratecategorychange(this.value)" ></select>
+								</div>
+								
+								
+								
+								 
+								<div id="reportingrate-div" class="form-group">
+									
+								
+								
+								
+								
+								
+								</div>
+								
+							
+							
+							
+							
+							<div>
+							
+							
+							
+							</div>
                               <!--/row-->
                             <!--/col-->
                           </div>
@@ -173,19 +202,159 @@
     </footer>
 
     <!-- jQuery -->
-    <script src="{% static "js/libs/jquery.min.js" %}"></script>
+    <script src="{% static 'js/libs/jquery.min.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="{% static "vendor/metisMenu/metisMenu.min.js" %}"></script>
+    <script src="{% static 'vendor/metisMenu/metisMenu.min.js' %}"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="{% static "js/sb-admin-2.js" %}"></script>
+    <script src="{% static 'js/sb-admin-2.js' %}"></script>
 
     <!-- CMAM based Js -->
-    <script src="{% static "js/cmam-app.js" %}"></script>
+    <script src="{% static 'js/cmam-app.js' %}"></script>
+	
+	 <script type="text/javascript">
+	 $(document).ready(function() {
+          if ("{{ reportingcategories }}") {
+            {% for c in reportingcategories %}
+              $('#ratecategory').append('<option value="{{ c }}">{{ c }}</option>');
+            {% endfor %}
+			
+			fetchreportingrates($('#yearselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+          }
+		  
+      });
+	  
+	  
+	  function ratecategorychange(ratecategoryid) {
+		fetchreportingrates($('#yearselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), ratecategoryid);
+	  }
+	  
+	  function yearchange(selectedyear) {
+		fetchreportingrates(selectedyear, $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+	  }
+	  
+	  function provincechange(provinceid) {
+		fetchreportingrates($('#yearselect option:selected').val(), provinceid, $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+	  }
+	  
+	  function districtchange(districtid) {
+		fetchreportingrates($('#yearselect option:selected').val(), $('#provinceselect option:selected').val(), districtid, $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+	  }
+	  
+	  function cdschange(cdsid) {
+		fetchreportingrates($('#yearselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), cdsid, $('#ratecategory option:selected').val());
+	  }
+	  
+	  function fetchreportingrates(yearselected, provinceid, districtid,cdsid,ratecategoryid) {
+		$('#reportingrate-div').empty();
+		var posturl = "fetchreportingrates";
+		
+		$.ajax({
+			  /*beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			  },*/
+				url: posturl,
+				type: "get",
+				data: {
+				  yearselected : yearselected, provinceid : provinceid, districtid : districtid, cdsid : cdsid, ratecategoryid : ratecategoryid
+				},
+				
+				success: function (response) {
+					if (response){
+						var expected
+						var aretype = response["aretype"];
+						var area;
+						var received;
+						
+						$('#reportingrate-div').append('<p><b></b></p>' +
+							'<div style="clear:both; height:10px;"></div>' +
+							'<table id="tblreportingrate" class="table table-striped table-bordered table-condensed">');
+							
+							  $('#tblreportingrate').append('<thead>' +
+							'<th>' + aretype + '</th><th>Expected</th><th>Received</th><th>Percentage (%)</th>' +
+							'</thead>' +
+							  
+							'<tbody>' +
+							  
+							'</tbody>');
+						
+						for (i = 0; i < response["receivednumberlist"].length; i++) { 
+							area = jQuery.makeArray(response["receivednumberlist"][i])[0];
+							received = jQuery.makeArray(response["receivednumberlist"][i])[1];
+							expected = jQuery.makeArray(response["receivednumberlist"][i])[2];
+							
+							$('#tblreportingrate').find('tbody').append('<tr style="cursor:pointer;"></tr>');
+							$('#tblreportingrate tr:last').append('<td>' + area +'</td>');
+							$('#tblreportingrate tr:last').append('<td>' + expected +'</td>');
+							$('#tblreportingrate tr:last').append('<td>' + received +'</td>');
+							$('#tblreportingrate tr:last').append('<td>' + ((received/expected)*100).toFixed(2) +'</td>');
+						
+						
+						}
+						
+						
+						
+						if(response.length != 0){ 
+							
+						} else {
+							alert("No data");
+						}
+					} else {
+						alert("No data");
+					}
+				},
+				
+				failure: function (json) {
+					alert("failure");
+				},
+				error: function (jqXHR, exception) {
+					alert(getajaxerrormessage(jqXHR, exception));
+				}
+			});
+			
+			
+	  
+	  
+	  }
+	  
+	  
+	  function getajaxerrormessage(jqXHR, exception) {
+            var msg = jqXHR.responseText;
+			
+            if (jqXHR.status === 0) {
+                msg = "Not connect.n Verify Network. -- " + jqXHR.responseText;
+            } else if (jqXHR.status == 401) {
+                msg = "Requested page not found. [401] --" + jqXHR.responseText;
+            } else if (jqXHR.status == 402) {
+                msg = "Requested page not found. [402] --" + jqXHR.responseText;
+            } else if (jqXHR.status == 403) {
+                msg = "Requested page not found. [403] --" + jqXHR.responseText;
+            } else if (jqXHR.status == 404) {
+                msg = "Requested page not found. [404] --" + jqXHR.responseText;
+            } else if (jqXHR.status == 500) {
+                msg = "Internal Server Error. [500] --" + jqXHR.responseText;
+            } else if (exception === 'parsererror') {
+                msg = "Requested JSON parse failed.--" + jqXHR.responseText;
+            } else if (exception === 'timeout') {
+                msg = "Time out error.--" + jqXHR.responseText;
+            } else if (exception === 'abort') {
+                msg = "Ajax request aborted.--" + jqXHR.responseText;
+            } else {
+                msg = "Uncaught Error.n--" + jqXHR.responseText;
+            }
+            return msg;
+        }
+	  
+	  
+	  
+	</script>
+	
 </body>
 
 </html>
