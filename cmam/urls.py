@@ -16,5 +16,6 @@ urlpatterns = patterns(
     url(r'^$', 'cmam_app.views.landing'),
 	
 	url(r'^dashboard/fetchreportingrates/$', 'cmam_app.views.fetchreportingrates', name='fetchreportingrates'),
+	url(r'^dashboard/fetchweeks/$', 'cmam_app.views.fetchweeks', name='fetchweeks'),
 )
 

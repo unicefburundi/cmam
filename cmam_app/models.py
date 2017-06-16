@@ -44,7 +44,7 @@ class FacilityTypeProduct(models.Model):
     class Meta:
         unique_together = ('facility_type', 'priority_in_sms',)
         ordering = ('priority_in_sms',)
-
+	
     def __unicode__(self):
         return "{0}".format(self.priority_in_sms)
 
