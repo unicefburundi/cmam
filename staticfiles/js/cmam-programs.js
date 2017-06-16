@@ -42,6 +42,9 @@ app.directive("repeatEnd", function(){
 	};
 });
 
+// global variable outside angular
+var province1 = null, district1=null, cds1=null;
+
 app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
     // in out reports
     $http.get("/cmam/inoutreport/?facility__facility_level__name=CDS")
@@ -76,6 +79,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
 
         $scope.update_province = function () {
             var province = $scope.province;
+            $scope.province1 = province;
             if ($scope.province) {
                 $scope.cdscds =  0;
                 $scope.hopitauxcds =  0;
@@ -109,6 +113,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
         // district
         $scope.update_district = function () {
             var district = $scope.district;
+            $scope.province1 = district;
             if ($scope.district) {
               $http.get("/cmam/districts/" + district.code + "/" )
               .then(function (response) {
@@ -138,6 +143,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
         // CDS
         $scope.update_cds = function () {
             var cds = $scope.cds;
+            $scope.province1 = cds;
             if (cds) {
                 // update cds
                 $http.get("/cmam/inoutreport/?search=" + cds.code+ "&facility__facility_level__name=CDS")
@@ -161,7 +167,6 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
 		$scope.loadColumns = function(){
 			$timeout(function(){
 				if (typeof(angular.element("#ddprovince").val() === 'number')) {
-					alert(angular.element("#ddprovince").val());
 					angular.element("#thprovince").css ({ display: block });
 				} else {
 					angular.element("#thprovince").css ({ display: none });
