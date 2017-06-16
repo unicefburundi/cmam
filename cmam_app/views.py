@@ -12,6 +12,7 @@ from cmam_app.forms import SortiesForm
 from cmam_app.utils import get_adminqueryset, get_reportqueryset
 from django.http import HttpResponse
 import json
+import datetime
 from datetime import datetime
 from datetime import date
 from django.db import models
@@ -88,6 +89,18 @@ def fetchreportingrates(request):
 	areatype = ""
 	cdslist = None
 	exepectednumber = 0
+	noofweeks = 0
+	
+	lowestreportdate = Report.objects.all().order_by('-reporting_date')[0]
+	if (lowestreportdate):
+		lowestreportdate = datetime.strptime(str(lowestreportdate.reporting_date), "%Y-%m-%d")
+		
+	highestreportdate = Report.objects.all().order_by('reporting_date')[0]
+	if (highestreportdate):
+		highestreportdate = datetime.strptime(str(highestreportdate.reporting_date), "%Y-%m-%d")
+		
+	if (lowestreportdate and highestreportdate):
+		noofweeks = abs((highestreportdate - lowestreportdate).days/7)
 	
 	if (cdsid.isdigit()):
 		cdslistids = CDS.objects.values_list("code" , flat=True).get(code = cdsid)
@@ -100,10 +113,15 @@ def fetchreportingrates(request):
 					if (b.reporting_date.isocalendar()[1] == int(weekid)):
 						recnumber += 1 # Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, id = cdslistids).count()
 			else:
-				recnumber = Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()
+				if datetime.now().year == yearselected:
+					noofweeks = datetime.now().isocalendar()[1]
+				else:
+					noofweeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
+					
+				recnumber = Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()/noofweeks
 			
 		else:
-			recnumber = Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()
+			recnumber = Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()/noofweeks
 			
 		exepectednumber = 1 # cdslist.count()
 		recnumberList.append([cdslist.code, cdslist.name, recnumber, exepectednumber])
@@ -127,10 +145,15 @@ def fetchreportingrates(request):
 							if (b.reporting_date.isocalendar()[1] == int(weekid)):
 								recnumber += 1 # Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, id__in = cdslistids).count()
 					else:
-						recnumber += Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()
+						if datetime.now().year == yearselected:
+							noofweeks = datetime.now().isocalendar()[1]
+						else:
+							noofweeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
+							
+						recnumber += Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()/noofweeks
 						
 				else:
-					recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()
+					recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()/noofweeks
 				
 				recnumberList.append([cds.code, cds.name, recnumber, exepectednumber])
 		areatype = "CDS"
@@ -153,12 +176,15 @@ def fetchreportingrates(request):
 								if (b.reporting_date.isocalendar()[1] == int(weekid)):
 									recnumber += 1 # Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, id__in = cdslist).count()
 						else:
-							data = Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist)
-							for b in data:
-								recnumber += 1
+							if datetime.now().year == yearselected:
+								noofweeks = datetime.now().isocalendar()[1]
+							else:
+								noofweeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
+								
+							recnumber += Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()/noofweeks
 							
 					else:
-						recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()
+						recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()/noofweeks
 					
 					exepectednumber += cdslist.count()
 					recnumberList.append([dist.code, dist.name, recnumber, exepectednumber])
@@ -183,10 +209,15 @@ def fetchreportingrates(request):
 									if (b.reporting_date.isocalendar()[1] == int(weekid)):
 										recnumber += 1 #Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, reporting_date__week = weekid, id__in = cdslist).count()
 							else:
-								recnumber += Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()
+								if datetime.now().year == yearselected:
+									noofweeks = datetime.now().isocalendar()[1]
+								else:
+									noofweeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
+		
+								recnumber += Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()/noofweeks
 								
 						else:
-							recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()
+							recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()/noofweeks
 							
 						exepectednumber += cdslist.count()
 				recnumberList.append([prov.code, prov.name, recnumber, exepectednumber])
