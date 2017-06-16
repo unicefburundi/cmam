@@ -155,31 +155,26 @@
 							  
                             </div>
 								<div id="target_pop" style="clear:both;"><p><h4>Reporting Rate</h4></p></div>
-							
-								<div id="reportingcategory-div" class="form-group">
-									<label>Rate Category</label>
-									<select id="ratecategory" class="form-control" style="width:300px" onchange="ratecategorychange(this.value)" ></select>
+								
+								<div class="form-group col-sm-12">
+									<div id="week-div" class="form-group col-sm-4">
+										<label for="weekselect">Week:</label>
+										<select id="weekselect" class="form-control" style="width:300px" onchange="weekchange(this.value)" >
+											<option value="" selected="selected">[ Select Week ]</option>
+										</select>
+									</div>
+									
+									<div id="reportingcategory-div" class="form-group col-sm-4">
+										<label for="ratecategory">Rate Category</label>
+										<select id="ratecategory" class="form-control" style="width:300px" onchange="ratecategorychange(this.value)" ></select>
+									</div>
 								</div>
 								
-								
-								
-								 
 								<div id="reportingrate-div" class="form-group">
 									
-								
-								
-								
-								
-								
 								</div>
 								
-							
-							
-							
-							
 							<div>
-							
-							
 							
 							</div>
                               <!--/row-->
@@ -217,39 +212,46 @@
     <script src="{% static 'js/cmam-app.js' %}"></script>
 	
 	 <script type="text/javascript">
+	 var areatype;
+	 
 	 $(document).ready(function() {
           if ("{{ reportingcategories }}") {
             {% for c in reportingcategories %}
               $('#ratecategory').append('<option value="{{ c }}">{{ c }}</option>');
             {% endfor %}
-			
-			fetchreportingrates($('#yearselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
           }
+		  
+		  fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
 		  
       });
 	  
 	  
 	  function ratecategorychange(ratecategoryid) {
-		fetchreportingrates($('#yearselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), ratecategoryid);
+		fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), ratecategoryid);
+	  }
+	  
+	  function weekchange(week) {
+		fetchreportingrates($('#yearselect option:selected').val(), week, $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
 	  }
 	  
 	  function yearchange(selectedyear) {
-		fetchreportingrates(selectedyear, $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+		fetchweeks(selectedyear);
+		fetchreportingrates(selectedyear, $('#weekselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
 	  }
 	  
 	  function provincechange(provinceid) {
-		fetchreportingrates($('#yearselect option:selected').val(), provinceid, $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+		fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), provinceid, $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
 	  }
 	  
 	  function districtchange(districtid) {
-		fetchreportingrates($('#yearselect option:selected').val(), $('#provinceselect option:selected').val(), districtid, $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+		fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), $('#provinceselect option:selected').val(), districtid, $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
 	  }
 	  
 	  function cdschange(cdsid) {
-		fetchreportingrates($('#yearselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), cdsid, $('#ratecategory option:selected').val());
+		fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), cdsid, $('#ratecategory option:selected').val());
 	  }
 	  
-	  function fetchreportingrates(yearselected, provinceid, districtid,cdsid,ratecategoryid) {
+	  function fetchreportingrates(yearselected, week, provinceid, districtid,cdsid,ratecategoryid) {
 		$('#reportingrate-div').empty();
 		var posturl = "fetchreportingrates";
 		
@@ -262,14 +264,15 @@
 				url: posturl,
 				type: "get",
 				data: {
-				  yearselected : yearselected, provinceid : provinceid, districtid : districtid, cdsid : cdsid, ratecategoryid : ratecategoryid
+				  yearselected : yearselected, week : week, provinceid : provinceid, districtid : districtid, cdsid : cdsid, ratecategoryid : ratecategoryid
 				},
 				
 				success: function (response) {
 					if (response){
 						var expected
-						var aretype = response["aretype"];
+						areatype = response["areatype"];
 						var area;
+						var areacode;
 						var received;
 						
 						$('#reportingrate-div').append('<p><b></b></p>' +
@@ -277,7 +280,7 @@
 							'<table id="tblreportingrate" class="table table-striped table-bordered table-condensed">');
 							
 							  $('#tblreportingrate').append('<thead>' +
-							'<th>' + aretype + '</th><th>Expected</th><th>Received</th><th>Percentage (%)</th>' +
+							'<th>Code</th><th>' + areatype + '</th><th>Expected</th><th>Received</th><th>Percentage (%)</th>' +
 							'</thead>' +
 							  
 							'<tbody>' +
@@ -285,20 +288,19 @@
 							'</tbody>');
 						
 						for (i = 0; i < response["receivednumberlist"].length; i++) { 
-							area = jQuery.makeArray(response["receivednumberlist"][i])[0];
-							received = jQuery.makeArray(response["receivednumberlist"][i])[1];
-							expected = jQuery.makeArray(response["receivednumberlist"][i])[2];
+							areacode = jQuery.makeArray(response["receivednumberlist"][i])[0];
+							area = jQuery.makeArray(response["receivednumberlist"][i])[1];
+							received = jQuery.makeArray(response["receivednumberlist"][i])[2];
+							expected = jQuery.makeArray(response["receivednumberlist"][i])[3];
 							
 							$('#tblreportingrate').find('tbody').append('<tr style="cursor:pointer;"></tr>');
-							$('#tblreportingrate tr:last').append('<td>' + area +'</td>');
+							$('#tblreportingrate tr:last').append('<td>' + areacode +'</td>');
+							$('#tblreportingrate tr:last').append('<td style="color:green;" onclick="fetchclickedarea(this)">' + area +'</td>');
 							$('#tblreportingrate tr:last').append('<td>' + expected +'</td>');
 							$('#tblreportingrate tr:last').append('<td>' + received +'</td>');
 							$('#tblreportingrate tr:last').append('<td>' + ((received/expected)*100).toFixed(2) +'</td>');
 						
-						
 						}
-						
-						
 						
 						if(response.length != 0){ 
 							
@@ -317,10 +319,55 @@
 					alert(getajaxerrormessage(jqXHR, exception));
 				}
 			});
-			
-			
+	  }
+	  
+	  function fetchclickedarea (td) {
+		var code = $(td).closest('td').prev('td').text();
+		
+		if (areatype == "Province") {
+			fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), code, $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+		} else if (areatype == "District") {
+			fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), $('#provinceselect option:selected').val(), code, $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+		} else if (areatype == "CDS") {
+			fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), code, $('#ratecategory option:selected').val());
+		} else {
+			fetchreportingrates($('#yearselect option:selected').val(), $('#weekselect option:selected').val(), $('#provinceselect option:selected').val(), $('#districtselect option:selected').val(), $('#cdsselect option:selected').val(), $('#ratecategory option:selected').val());
+		}
+	  }
 	  
 	  
+	  function fetchweeks(yearselected) {
+		var posturl = "fetchweeks";
+		
+		$.ajax({
+			  /*beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			  },*/
+				url: posturl,
+				type: "get",
+				data: {
+				  yearselected : yearselected
+				},
+				
+				success: function (response) {
+					if (response){
+						for (i = 0; i < response["weeks"].length; i++) {
+							$('#weekselect').append('<option value=' + response["weeks"][i] + '>' + response["weeks"][i] + '</option>');
+						}
+					} else {
+						alert("No data");
+					}
+				},
+				
+				failure: function (json) {
+					alert("failure");
+				},
+				error: function (jqXHR, exception) {
+					alert(getajaxerrormessage(jqXHR, exception));
+				}
+			});
 	  }
 	  
 	  
