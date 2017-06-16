@@ -228,7 +228,9 @@
                         <table  class="table fixed table-bordered table-hover"  data-toggle="table" datatable="ng" dt-options="dtOptions" >
                           <thead class="thead-default">
                             <tr>
-                              <th rowspan="2">Facility</th>
+                              <th ng-if="province1 != null" rowspan="2">Province</th>
+                              <th ng-if="district1 != null" rowspan="2">District</th>
+                              <th ng-if="cds1 != null" rowspan="2">Cds</th>
                               <th rowspan="2">Week</th>
                               <th rowspan="2">Total debut semaine</th>
                               <th colspan="3">Nouvelles Admissions</th>
@@ -253,7 +255,9 @@
                           <tbody >
                             {% verbatim %}
                             <tr ng-repeat="(x, y) in lescds  ">
-                              <td>{{province1.name}}</td>
+                              <td ng-if="province1 != null">{{province1.name}}</td>
+                              <td ng-if="district1 != null">{{district1.name}}</td>
+                              <td ng-if="cds1 != null">{{cds1.name}}</td>
                               <td>{{x}}</td>
                               <td>{{y.total_debut_semaine}}</td>
                               <td>{{y.ptb}}</td>
@@ -271,7 +275,9 @@
                               <td>{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne_i) - (y.gueri + y.deces + y.abandon + y.non_repondant +y.transfert_interne_0) }}</td>
                             </tr>
                             <tr class="success">
-                              <td><b>Facility</b></td>
+                              <th ng-if="province1 != null" rowspan="2">Province</th>
+                              <th ng-if="district1 != null" rowspan="2">District</th>
+                              <th ng-if="cds1 != null" rowspan="2">Cds</th>
                               <td><b>Weeks</b></td>
                               <td><b></b> </td>
                               <td><b>{{sommecds.ptb || 0}}</b></td>
@@ -382,7 +388,9 @@
                               <table class="table fixed table-bordered table-hover" data-toggle="table" datatable="ng" dt-options="dtOptions" id="tblSST" >
                                 <thead class="thead-default">
                                   <tr>
-                                    <th rowspan="2">Facility</th>
+                                    <th ng-if="province1 != null" rowspan="2">Province</th>
+                                    <th ng-if="district1 != null" rowspan="2">District</th>
+                                    <th ng-if="cds1 != null" rowspan="2">Cds</th>
 									                  <th rowspan="2">Week</th>
                                     <th rowspan="2">Total debut de semaine</th>
                                     <th colspan="3">Nouvelles Admissions</th>
@@ -406,7 +414,9 @@
                                 <tbody >
                                   {% verbatim %}
                                   <tr ng-repeat="(x, y) in leshopitaux" class="selectedcolumndata" repeat-end="loadColumns()">
-									                  <td>{{province1.name}}</td>
+									                  <td ng-if="province1 != null">{{province1.name}}</td>
+                                    <td ng-if="district1 != null">{{district1.name}}</td>
+                                    <td ng-if="cds1 != null">{{cds1.name}}</td>
                                     <td>{{x}}</td>
                                     <td>{{y.total_debut_semaine}}</td>
                                     <td>{{y.ptb}}</td>
@@ -423,7 +433,9 @@
                                     <td>{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant)}}</td>
                                   </tr>
                                   <tr class="success">
-                                    <td><b>Facility</b></td>
+                                    <td ng-if="province1 != null">{{province1.name}}</td>
+                                    <td ng-if="district1 != null">{{district1.name}}</td>
+                                    <td ng-if="cds1 != null">{{cds1.name}}</td>
                                     <td><b>Weeks</b></td>
                                     <td><b></b></td>
                                     <td><b>{{sommehopitaux.ptb || 0}}</b></td>

@@ -80,6 +80,8 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
         $scope.update_province = function () {
             var province = $scope.province;
             $scope.province1 = province;
+            $scope.district1 = null;
+            $scope.cds1 = null;
             if ($scope.province) {
                 $scope.cdscds =  0;
                 $scope.hopitauxcds =  0;
@@ -113,7 +115,8 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
         // district
         $scope.update_district = function () {
             var district = $scope.district;
-            $scope.province1 = district;
+            $scope.district1 = district;
+            $scope.cds1 = null;
             if ($scope.district) {
               $http.get("/cmam/districts/" + district.code + "/" )
               .then(function (response) {
@@ -143,7 +146,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
         // CDS
         $scope.update_cds = function () {
             var cds = $scope.cds;
-            $scope.province1 = cds;
+            $scope.cds1 = cds;
             if (cds) {
                 // update cds
                 $http.get("/cmam/inoutreport/?search=" + cds.code+ "&facility__facility_level__name=CDS")
