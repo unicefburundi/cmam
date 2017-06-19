@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'django_tables2',
     'drf_multiple_model',
     'django_filters',
+    'explorer',
     'djng',
     'bdiadmin',
     'cmam_app',
@@ -173,6 +174,28 @@ REST_FRAMEWORK = {
 
 FAKER_LOCALE = None     # settings.LANGUAGE_CODE is loaded
 FAKER_PROVIDERS = None  # faker.DEFAULT_PROVIDERS is loaded (all)
+
+
+EXPLORER_SCHEMA_EXCLUDE_TABLE_PREFIXES = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.admin',
+    'auth.group'
+    )
+
+EXPLORER_SCHEMA_INCLUDE_TABLE_PREFIXES = (
+    'cmam_ap',
+    'bdiadmin')
+
+EXPLORER_PERMISSION_CHANGE = lambda u: u.is_superuser
+
+EXPLORER_DATA_EXPORTERS = [
+    ('csv', 'explorer.exporters.CSVExporter'),
+    ('excel', 'explorer.exporters.ExcelExporter'),
+    ('json', 'explorer.exporters.JSONExporter'),
+    ('pdf', 'explorer.exporters.PdfExporter')
+    ]
 
 try:
     from localsettings import *
