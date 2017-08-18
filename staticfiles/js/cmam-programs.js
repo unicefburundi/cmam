@@ -46,6 +46,11 @@ app.directive("repeatEnd", function(){
 var province1 = null, district1=null, cds1=null;
 
 app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+    // years
+    $http.get("/cmam/get_year/")
+    .then(function (response) {
+      $scope.years = response.data;
+    });
     // in out reports
     $http.get("/cmam/inoutreport/?facility__facility_level__name=CDS")
     .then(function (response) {
@@ -54,7 +59,6 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
         $scope.cdsgnrl = sums[1];
         $scope.sommecds = sums[1];
     });
-
     $http.get("/cmam/inoutreport/?facility__facility_level__name=Hospital")
     .then(function (response) {
         var sums = getsum(response);

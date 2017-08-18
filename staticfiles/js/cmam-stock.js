@@ -1,7 +1,12 @@
 var app = angular.module('StockApp', ['ngSanitize', 'datatables', 'datatables.buttons']);
 
 app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {
-
+        
+        // years
+        $http.get("/cmam/get_year/")
+        .then(function (response) {
+          $scope.years = response.data;
+        });
         // province
         $http.get("/bdiadmin/province/")
         .then(function (response) {

@@ -206,22 +206,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                     $scope.districts = response.data.etablissements;
               });
               //  out reports CDS
-              $http.get(url_gen_taux_sta + "&search=" + province.code)
+              $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year + "&search=" + province.code)
                 .then(function (response) {
                   return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
               });
               // Out reports Hospital
-              $http.get(url_gen_taux_sst + "&search=" + province.code)
+              $http.get(url_gen_taux_sst + "&year=" + $scope.dashboard.year + "&search=" + province.code)
                 .then(function (response) {
                   return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
                 });
               //  tendance reports CDS
-              $http.get(url_gen_tendance_sta + "&search=" + province.code)
+              $http.get(url_gen_tendance_sta + "&year=" + $scope.dashboard.year + "&search=" + province.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
               });
               // tendance reports Hospital
-              $http.get(url_gen_tendance_sst + "&search=" + province.code)
+              $http.get(url_gen_tendance_sst + "&year=" + $scope.dashboard.year + "&search=" + province.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
@@ -236,22 +236,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                   $scope.cdss = response.data.etablissements;
               });
               //  out reports CDS
-              $http.get(url_gen_taux_sta + "&search=" + district.code)
+              $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year + "&search=" + district.code)
               .then(function (response) {
                   return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
               });
               // Out reports Hospital
-              $http.get(url_gen_taux_sst + "&search=" + district.code)
+              $http.get(url_gen_taux_sst + "&year=" + $scope.dashboard.year + "&search=" + district.code)
                 .then(function (response) {
                   return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
                 });
               //  tendance reports CDS
-              $http.get(url_gen_tendance_sta + "&search=" + district.code)
+              $http.get(url_gen_tendance_sta + "&year=" + $scope.dashboard.year + "&search=" + district.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
               });
               // tendance reports Hospital
-              $http.get(url_gen_tendance_sst + "&search=" + district.code)
+              $http.get(url_gen_tendance_sst + "&year=" + $scope.dashboard.year + "&search=" + district.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
@@ -267,22 +267,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                   $scope.cds = response.data;
               });
               //  out reports CDS
-              $http.get(url_gen_taux_sta + "&search=" + cds.code)
+              $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year + "&search=" + cds.code)
               .then(function (response) {
                   return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
               });
               // Out reports Hospital
-              $http.get(url_gen_taux_sst + "&search=" + cds.code)
+              $http.get(url_gen_taux_sst + "&year=" + $scope.dashboard.year + "&search=" + cds.code)
                 .then(function (response) {
                   return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
                 });
               //  tendance reports CDS
-              $http.get(url_gen_tendance_sta + "&search=" + cds.code)
+              $http.get(url_gen_tendance_sta + "&year=" + $scope.dashboard.year + "&search=" + cds.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
               });
               // tendance reports Hospital
-              $http.get(url_gen_tendance_sst + "&search=" + cds.code)
+              $http.get(url_gen_tendance_sst + "&year=" + $scope.dashboard.year + "&search=" + cds.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
@@ -291,22 +291,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 
         $scope.update_years = function () {
           //  out reports CDS
-          $http.get(url_gen_taux_sta)
+          $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year)
           .then(function (response) {
               return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
           });
           //  tendance reports CDS
-          $http.get(url_gen_tendance_sta )
+          $http.get(url_gen_tendance_sta  + "&year=" + $scope.dashboard.year)
           .then(function (response) {
               return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
           });
           // Out reports Hospital
-          $http.get(url_gen_taux_sst)
+          $http.get(url_gen_taux_sst + "&year=" + $scope.dashboard.year)
             .then(function (response) {
               return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
             });
           //  tendance reports Hospital
-          $http.get(url_gen_tendance_sst )
+          $http.get(url_gen_tendance_sst  + "&year=" + $scope.dashboard.year)
           .then(function (response) {
               return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
           });
