@@ -49,8 +49,20 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
               .then(function (response) {
                   $scope.etablissements = response.data.etablissements;
               });
-    }
-  };
+          }
+        };
+
+        $scope.update_years = function () {
+           // province
+        $http.get("/bdiadmin/province/")
+          .then(function (response) {
+            if (response.data.length > 0) {
+                $scope.provinces = response.data;
+                $scope.districts = '';
+                $scope.cdss = '';
+              }
+            });
+        };
 }]);
 
 app.controller('ExportCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {$scope.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withButtons([ 'copy', 'csv', 'excel', 'pdf', 'print']).withDOM("<'row'<'col-sm-3'l><'col-sm-4'i><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-4'B><'col-sm-8'p>>").withDisplayLength(10);

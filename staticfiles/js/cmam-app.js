@@ -290,6 +290,15 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         };
 
         $scope.update_years = function () {
+           // province
+        $http.get("/bdiadmin/province/")
+          .then(function (response) {
+            if (response.data.length > 0) {
+                $scope.provinces = response.data;
+                $scope.districts = '';
+                $scope.cdss = '';
+              }
+            });
           //  out reports CDS
           $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year)
           .then(function (response) {
