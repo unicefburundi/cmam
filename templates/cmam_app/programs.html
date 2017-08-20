@@ -122,6 +122,25 @@
                     <label>CDS</label>
                     <select class="form-control"  ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
                   </div>
+                <!-- dates -->
+                            <div class="form-group">
+                                <label for="dstartdate">{% trans "Start Date" %}:</label>
+                                <div class="input-group date" data-provide="datepicker">
+                                    <input type="text" id="startdate" class="form-control datepicker" readonly="readonly" ng-model="startdate" ng-change="get_bydate()" style="position: relative; z-index: 100000;">
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dendtdate">{% trans "End Date" %}:</label>
+                                <div class="input-group date" data-provide="datepicker">
+                                    <input type="text" id="endtdate" class="form-control datepicker" readonly="readonly" ng-model="enddate" ng-change="get_bydate()" style="position: relative; z-index: 100000;">
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                            </div>
               </form>
               {% endblock search_form %}
             </li>
@@ -504,6 +523,22 @@
 
             <!-- CMAM based Js -->
             <script src="{% static 'js/cmam-programs.js' %}"></script>
+            <!-- Include Bootstrap Datepicker -->
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
+
+            <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+            <script>
+            $(document).ready(function() {
+                $('.datePicker')
+                    .datepicker({
+                        dateFormat: 'yy-mm-dd'
+                    })
+                    .on('changeDate', function(e) {
+                        // Revalidate the date field
+                        $('#eventForm').formValidation('revalidateField', 'date');
+                    });
+                });
+            </script>
           </body>
 
 </html>

@@ -1,5 +1,6 @@
 .side-form{
-  padding: 10px;
+    padding-left: 5px;
+    z-index: 1 !important;
 }
 
 table
@@ -66,4 +67,12 @@ table.table
 .highcharts-container{
     position: relative;
     width: 100% !important;  
+}
+
+.petit {
+    margin-left: 20px;
+}
+.datepicker.dropdown-menu {
+    position: relative;
+    z-index: 9999 !important;
 }
