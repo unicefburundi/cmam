@@ -1,7 +1,30 @@
 var app = angular.module('StockApp', ['ngSanitize', 'datatables', 'datatables.buttons']);
 
+
+function getsum (obj) {
+  var AMX = {balance: 0, sortie: 0, reception: 0};
+  var F75 = {balance: 0, sortie: 0, reception: 0};
+  var ATPE = {balance: 0, sortie: 0, reception: 0};
+  var F100 = {balance: 0, sortie: 0, reception: 0};
+  obj.forEach( function (a) {
+    AMX.balance += a.AMX.balance;
+    AMX.sortie += a.AMX.sortie;
+    AMX.reception += a.AMX.reception;
+    F75.balance += a.F75.balance;
+    F75.sortie += a.F75.sortie;
+    F75.reception += a.F75.reception;
+    ATPE.balance += a.ATPE.balance;
+    ATPE.sortie += a.ATPE.sortie;
+    ATPE.reception += a.ATPE.reception;
+    F100.balance += a.F100.balance;
+    F100.sortie += a.F100.sortie;
+    F100.reception += a.F100.reception;
+  });
+  var somme = {AMX: AMX, F75: F75, ATPE: ATPE, F100: F100};
+  return somme;
+}
+
 app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {
-        
         // years
         $http.get("/cmam/get_year/")
         .then(function (response) {
@@ -26,33 +49,13 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
             if (response.data.length > 0) {
               var etablissements = [];
               for (var i = response.data.length - 1; i >= 0; i--) {
+                var somme = getsum(response.data[i].etablissements);
                 var province = { 
                   name: response.data[i].name, 
-                  code: response.data[i].code,
-                  AMX: {
-                    balance : i * 2 + 2,
-                    sortie : i * 3 + 45,
-                    reception : i * 4 + 21,
-                  },
-                  F75: {
-                    balance : i * 5 + 51,
-                    sortie : i * 6 + 471,
-                    reception : i * 7 + 31,
-                  },
-                  ATPE: {
-                    balance : i * 8 + 28,
-                    sortie : i * 9 + 71,
-                    reception : i * 10 + 251,
-                  },
-                  F100: {
-                    balance : i * 11 + 311,
-                    sortie : i * 12 + 61,
-                    reception : i * 13 + 111,
-                  },
+                  code: response.data[i].code
                 };
-                etablissements.push(province);
+                etablissements.push($.extend(somme, province));
               }
-                console.log(etablissements);
                 $scope.etablissements = etablissements;
             } 
         });
