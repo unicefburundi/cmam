@@ -304,8 +304,8 @@ class OutgoingViewset(viewsets.ModelViewSet):
 
 
 class InOutViewset(viewsets.ModelViewSet):
-    serializer_class = InOutSerialiser
     queryset = PatientReports.objects.all()
+    serializer_class = InOutSerialiser
     filter_fields = ('facility__facility_level__name', 'date_of_first_week_day')
     search_fields = ('^facility__id_facility',)
 

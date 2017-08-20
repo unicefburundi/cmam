@@ -20,6 +20,42 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
                 });
             }
         });
+        // province
+        $http.get("/cmam/provinces/")
+        .then(function (response) {
+            if (response.data.length > 0) {
+              var etablissements = [];
+              for (var i = response.data.length - 1; i >= 0; i--) {
+                var province = { 
+                  name: response.data[i].name, 
+                  code: response.data[i].code,
+                  AMX: {
+                    balance : i * 2 + 2,
+                    sortie : i * 3 + 45,
+                    reception : i * 4 + 21,
+                  },
+                  F75: {
+                    balance : i * 5 + 51,
+                    sortie : i * 6 + 471,
+                    reception : i * 7 + 31,
+                  },
+                  ATPE: {
+                    balance : i * 8 + 28,
+                    sortie : i * 9 + 71,
+                    reception : i * 10 + 251,
+                  },
+                  F100: {
+                    balance : i * 11 + 311,
+                    sortie : i * 12 + 61,
+                    reception : i * 13 + 111,
+                  },
+                };
+                etablissements.push(province);
+              }
+                console.log(etablissements);
+                $scope.etablissements = etablissements;
+            } 
+        });
         $scope.update_province = function () {
             var province = $scope.dashboard.province;
             if (province) {
