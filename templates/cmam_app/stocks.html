@@ -156,7 +156,9 @@
                                 <th colspan="3">F75</th>
                             </tr>
                             <tr>
-                                <th >STA</th>
+                            {% verbatim %}
+                                <th ng-model="title" >{{ title || "CDS"}}</th>
+                            {% endverbatim %}
                                 <th >Code</th>
                                 <th >Reception</th>
                                 <th >Sortie</th>
@@ -209,7 +211,9 @@
                             <th colspan="3">F75</th>
                         </tr>
                         <tr>
-                            <th >SST</th>
+                            {% verbatim %}
+                                <th ng-model="titles" >{{ title || "Hopital"}}</th>
+                            {% endverbatim %}
                             <th >Code</th>
                             <th >Reception</th>
                             <th >Sortie</th>

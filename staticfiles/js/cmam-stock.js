@@ -58,9 +58,12 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
                 etablissements.push($.extend(somme, province));
               }
                 $scope.etablissements = etablissements;
+                $scope.title = 'Province';
             } 
         });
         $scope.update_province = function () {
+            $scope.title = "District";
+            $scope.titles = "District";
             var province = $scope.dashboard.province;
             if (province) {
               $http.get("/cmam/provinces/" + province.code + "/"+ "?year=" + $scope.year )
@@ -72,6 +75,8 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
       };
           // district
           $scope.update_district = function () {
+            $scope.title = "CDS";
+            $scope.titles = "Hopital";
             var district = $scope.dashboard.district;
             if (district) {
               $http.get("/cmam/districts/" + district.code + "/"+ "?year=" + $scope.year )
