@@ -254,6 +254,12 @@ class ProvinceDistrictViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return get_adminqueryset(self.request, self.queryset)
 
+    def get_serializer_context(self):
+        YEAR = datetime.today().year
+        if self.request.GET.get('year'):
+            YEAR = self.request.GET['year']    
+        return {'YEAR': YEAR}
+
 
 class DistrictCDSViewSet(viewsets.ModelViewSet):
     """
@@ -323,7 +329,7 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     """
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = SumOutSerialiser
-    filter_fields = ('report__facility__facility_level__name', 'date_of_first_week_day' )
+    filter_fields = ('report__facility__facility_level__name', 'date_of_first_week_day')
     search_fields = ('^report__facility__id_facility',)
 
     def get_queryset(self):
