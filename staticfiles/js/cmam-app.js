@@ -178,6 +178,7 @@ function draw_tendance_chart(response, id, texte) {
 var app = angular.module('myApp', []);
 
 app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+        $scope.year = new Date().getFullYear();
         // years
         $http.get("/cmam/get_year/")
         .then(function (response) {
@@ -206,22 +207,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                     $scope.districts = response.data.etablissements;
               });
               //  out reports CDS
-              $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year + "&search=" + province.code)
+              $http.get(url_gen_taux_sta + "&year=" + $scope.year + "&search=" + province.code)
                 .then(function (response) {
                   return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
               });
               // Out reports Hospital
-              $http.get(url_gen_taux_sst + "&year=" + $scope.dashboard.year + "&search=" + province.code)
+              $http.get(url_gen_taux_sst + "&year=" + $scope.year + "&search=" + province.code)
                 .then(function (response) {
                   return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
                 });
               //  tendance reports CDS
-              $http.get(url_gen_tendance_sta + "&year=" + $scope.dashboard.year + "&search=" + province.code)
+              $http.get(url_gen_tendance_sta + "&year=" + $scope.year + "&search=" + province.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
               });
               // tendance reports Hospital
-              $http.get(url_gen_tendance_sst + "&year=" + $scope.dashboard.year + "&search=" + province.code)
+              $http.get(url_gen_tendance_sst + "&year=" + $scope.year + "&search=" + province.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
@@ -236,22 +237,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                   $scope.cdss = response.data.etablissements;
               });
               //  out reports CDS
-              $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year + "&search=" + district.code)
+              $http.get(url_gen_taux_sta + "&year=" + $scope.year + "&search=" + district.code)
               .then(function (response) {
                   return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
               });
               // Out reports Hospital
-              $http.get(url_gen_taux_sst + "&year=" + $scope.dashboard.year + "&search=" + district.code)
+              $http.get(url_gen_taux_sst + "&year=" + $scope.year + "&search=" + district.code)
                 .then(function (response) {
                   return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
                 });
               //  tendance reports CDS
-              $http.get(url_gen_tendance_sta + "&year=" + $scope.dashboard.year + "&search=" + district.code)
+              $http.get(url_gen_tendance_sta + "&year=" + $scope.year + "&search=" + district.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
               });
               // tendance reports Hospital
-              $http.get(url_gen_tendance_sst + "&year=" + $scope.dashboard.year + "&search=" + district.code)
+              $http.get(url_gen_tendance_sst + "&year=" + $scope.year + "&search=" + district.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
@@ -267,22 +268,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                   $scope.cds = response.data;
               });
               //  out reports CDS
-              $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year + "&search=" + cds.code)
+              $http.get(url_gen_taux_sta + "&year=" + $scope.year + "&search=" + cds.code)
               .then(function (response) {
                   return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
               });
               // Out reports Hospital
-              $http.get(url_gen_taux_sst + "&year=" + $scope.dashboard.year + "&search=" + cds.code)
+              $http.get(url_gen_taux_sst + "&year=" + $scope.year + "&search=" + cds.code)
                 .then(function (response) {
                   return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
                 });
               //  tendance reports CDS
-              $http.get(url_gen_tendance_sta + "&year=" + $scope.dashboard.year + "&search=" + cds.code)
+              $http.get(url_gen_tendance_sta + "&year=" + $scope.year + "&search=" + cds.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
               });
               // tendance reports Hospital
-              $http.get(url_gen_tendance_sst + "&year=" + $scope.dashboard.year + "&search=" + cds.code)
+              $http.get(url_gen_tendance_sst + "&year=" + $scope.year + "&search=" + cds.code)
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
@@ -300,22 +301,22 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
               }
             });
           //  out reports CDS
-          $http.get(url_gen_taux_sta + "&year=" + $scope.dashboard.year)
+          $http.get(url_gen_taux_sta + "&year=" + $scope.year)
           .then(function (response) {
               return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
           });
           //  tendance reports CDS
-          $http.get(url_gen_tendance_sta  + "&year=" + $scope.dashboard.year)
+          $http.get(url_gen_tendance_sta  + "&year=" + $scope.year)
           .then(function (response) {
               return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
           });
           // Out reports Hospital
-          $http.get(url_gen_taux_sst + "&year=" + $scope.dashboard.year)
+          $http.get(url_gen_taux_sst + "&year=" + $scope.year)
             .then(function (response) {
               return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
             });
           //  tendance reports Hospital
-          $http.get(url_gen_tendance_sst  + "&year=" + $scope.dashboard.year)
+          $http.get(url_gen_tendance_sst  + "&year=" + $scope.year)
           .then(function (response) {
               return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
           });

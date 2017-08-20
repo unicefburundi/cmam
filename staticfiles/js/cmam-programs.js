@@ -46,6 +46,7 @@ app.directive("repeatEnd", function(){
 var province1 = null, district1=null, cds1=null;
 
 app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+    $scope.year = new Date().getFullYear();
     // years
     $http.get("/cmam/get_year/")
     .then(function (response) {
@@ -98,7 +99,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
                 });
 
                 // update hopitaux
-                $http.get("/cmam/inoutreport/?search=" + province.code+ "&facility__facility_level__name=Hospital" + "&year=" + $scope.dashboard.year)
+                $http.get("/cmam/inoutreport/?search=" + province.code+ "&facility__facility_level__name=Hospital" + "&year=" + $scope.year)
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.leshopitaux =  sums[0];
@@ -106,7 +107,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
                     $scope.sommehopitaux = sums[1];
                 });
                 // update cds
-                $http.get("/cmam/inoutreport/?search=" + province.code+ "&facility__facility_level__name=CDS" + "&year=" + $scope.dashboard.year)
+                $http.get("/cmam/inoutreport/?search=" + province.code+ "&facility__facility_level__name=CDS" + "&year=" + $scope.year)
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.lescds =  sums[0];
@@ -130,7 +131,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
             $scope.cdscds =  0;
             $scope.hopitauxcds =  0;
             // update cds
-            $http.get("/cmam/inoutreport/?search=" + district.code+ "&facility__facility_level__name=CDS" + "&year=" + $scope.dashboard.year)
+            $http.get("/cmam/inoutreport/?search=" + district.code+ "&facility__facility_level__name=CDS" + "&year=" + $scope.year)
             .then(function (response) {
                 var sums = getsum(response);
                 $scope.lescds =  sums[0];
@@ -138,7 +139,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
                 $scope.sommecds = sums[1];
             });
             // update hopitaux
-            $http.get("/cmam/inoutreport/?search=" + district.code+ "&facility__facility_level__name=Hospital" + "&year=" + $scope.dashboard.year)
+            $http.get("/cmam/inoutreport/?search=" + district.code+ "&facility__facility_level__name=Hospital" + "&year=" + $scope.year)
             .then(function (response) {
                 var sums = getsum(response);
                 $scope.leshopitaux =  sums[0];
@@ -153,7 +154,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
             $scope.cds1 = cds;
             if (cds) {
                 // update cds
-                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&facility__facility_level__name=CDS" + "&year=" + $scope.dashboard.year)
+                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&facility__facility_level__name=CDS" + "&year=" + $scope.year)
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.lescds =  sums[0];
@@ -161,7 +162,7 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
                     $scope.sommecds = sums[1];
                 });
                 // update hopitaux
-                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&facility__facility_level__name=Hospital" + "&year=" + $scope.dashboard.year)
+                $http.get("/cmam/inoutreport/?search=" + cds.code+ "&facility__facility_level__name=Hospital" + "&year=" + $scope.year)
                 .then(function (response) {
                     var sums = getsum(response);
                     $scope.leshopitaux =  sums[0];
@@ -182,14 +183,14 @@ app.controller('pgrmCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
               }
             });
           // in out reports
-            $http.get("/cmam/inoutreport/?facility__facility_level__name=CDS"+ "&year=" + $scope.dashboard.year)
+            $http.get("/cmam/inoutreport/?facility__facility_level__name=CDS"+ "&year=" + $scope.year)
             .then(function (response) {
                  var sums = getsum(response);
                 $scope.lescds =  sums[0];
                 $scope.cdsgnrl = sums[1];
                 $scope.sommecds = sums[1];
             });
-            $http.get("/cmam/inoutreport/?facility__facility_level__name=Hospital"+ "&year=" + $scope.dashboard.year)
+            $http.get("/cmam/inoutreport/?facility__facility_level__name=Hospital"+ "&year=" + $scope.year)
             .then(function (response) {
                 var sums = getsum(response);
                 $scope.leshopitaux =  sums[0];
