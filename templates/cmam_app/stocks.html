@@ -196,7 +196,7 @@
                         <tbody>
                             {% verbatim %}
                             <tr ng-repeat="(x, y) in etablissements" ng-if="y.code.length != 7">
-                                <td>{{y.name}}</td>
+                                <td><a href="/cmam/detailscds/{{y.code}}">{{y.name}}</a></td>
                                 <td>{{y.code}}</td>
                                 <td >{{ y.AMX.reception  }}</td>
                                 <td >{{ y.AMX.sortie  }}</td>
@@ -231,7 +231,7 @@
                         </tr>
                         <tr>
                             {% verbatim %}
-                                <th ng-model="titles" >{{ title || "Hopital"}}</th>
+                                <th ng-model="titles" >{{ titles || "Hopital"}}</th>
                             {% endverbatim %}
                             <th >Code</th>
                             <th >Reception</th>
@@ -251,7 +251,7 @@
                     <tbody>
                         {% verbatim %}
                         <tr ng-repeat="(x, y) in etablissements" ng-if="y.code.length === 7" >
-                            <td>{{y.name}}</td>
+                            <td><a href="/cmam/detailscds/{{y.code}}">{{y.name}}</a></td>
                             <td>{{y.code}}</td>
                             <td >{{ y.AMX.reception  || 0}}</td>
                             <td >{{ y.AMX.sortie || 0 }}</td>
@@ -298,9 +298,9 @@
         <!-- CMAM based Js -->
         <script src="{% static "js/cmam-stock.js" %}"></script>
         <!-- Include Bootstrap Datepicker -->
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
+        <link rel="stylesheet" href="{% static 'css/datepicker.css' %}" />
 
-        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+        <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
         <script>
         $(document).ready(function() {
             $('.datePicker')

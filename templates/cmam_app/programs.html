@@ -281,7 +281,7 @@
                             <tr ng-repeat="(x, y) in lescds  ">
                               <td ng-if="province1 != null">{{province1.name}}</td>
                               <td ng-if="district1 != null">{{district1.name}}</td>
-                              <td ng-if="cds1 != null">{{cds1.name}}</td>
+                              <td ng-if="cds1 != null"><a href="#">{{cds1.name}}</a></td>
                               <td>{{x}}</td>
                               <td>{{y.total_debut_semaine}}</td>
                               <td>{{y.ptb}}</td>
@@ -447,7 +447,7 @@
                                   <tr ng-repeat="(x, y) in leshopitaux" class="selectedcolumndata" repeat-end="loadColumns()">
 									                  <td ng-if="province1 != null">{{province1.name}}</td>
                                     <td ng-if="district1 != null">{{district1.name}}</td>
-                                    <td ng-if="cds1 != null">{{cds1.name}}</td>
+                                    <td ng-if="cds1 != null"><a href="#">{{cds1.name}}</a></td>
                                     <td>{{x}}</td>
                                     <td>{{y.total_debut_semaine}}</td>
                                     <td>{{y.ptb}}</td>
@@ -466,7 +466,7 @@
                                   <tr class="success">
                                     <td ng-if="province1 != null">{{province1.name}}</td>
                                     <td ng-if="district1 != null">{{district1.name}}</td>
-                                    <td ng-if="cds1 != null">{{cds1.name}}</td>
+                                    <td ng-if="cds1 != null"><a href="#"> {{cds1.name}}</a></td>
                                     <td><b>Weeks</b></td>
                                     <td><b></b></td>
                                     <td><b>{{sommehopitaux.ptb || 0}}</b></td>
@@ -524,9 +524,9 @@
             <!-- CMAM based Js -->
             <script src="{% static 'js/cmam-programs.js' %}"></script>
             <!-- Include Bootstrap Datepicker -->
-            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
+            <link rel="stylesheet" href="{% static 'css/datepicker.css' %}" />
 
-            <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+            <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
             <script>
             $(document).ready(function() {
                 $('.datePicker')
@@ -540,5 +540,4 @@
                 });
             </script>
           </body>
-
 </html>

@@ -291,7 +291,7 @@
                 
                 success: function (response) {
                     if (response){
-                        var expected
+                        var expected;
                         areatype = response["areatype"];
                         var area;
                         var areacode;
@@ -327,18 +327,18 @@
                         if(response.length != 0){ 
                             
                         } else {
-                            alert("No data");
+                            console.log("No data");
                         }
                     } else {
-                        alert("No data");
+                        console.log("No data");
                     }
                 },
                 
                 failure: function (json) {
-                    alert("failure");
+                    console.log("failure");
                 },
                 error: function (jqXHR, exception) {
-                    alert(getajaxerrormessage(jqXHR, exception));
+                    console.log(getajaxerrormessage(jqXHR, exception));
                 }
             });
       };
@@ -379,15 +379,15 @@
                             $('#weekselect').append('<option value=' + response["weeks"][i] + '>' + response["weeks"][i] + '</option>');
                         }
                     } else {
-                        alert("No data");
+                        console.log("No data");
                     }
                 },
                 
                 failure: function (json) {
-                    alert("failure");
+                    console.log("failure");
                 },
                 error: function (jqXHR, exception) {
-                    alert(getajaxerrormessage(jqXHR, exception));
+                    console.log(getajaxerrormessage(jqXHR, exception));
                 }
             });
       }
@@ -424,9 +424,9 @@
       
     </script>
     <!-- Include Bootstrap Datepicker -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
+    <link rel="stylesheet" href="{% static 'css/datepicker.css' %}" />
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
     <script>
     $(document).ready(function() {
         $('.datePicker')

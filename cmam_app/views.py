@@ -12,10 +12,10 @@ from cmam_app.forms import SortiesForm
 from cmam_app.utils import get_adminqueryset, get_reportqueryset
 from django.http import HttpResponse
 import json
-import datetime
 from datetime import datetime
 
 NOWYEAR = datetime.today().year
+
 
 @login_required
 def get_year(request):
@@ -52,7 +52,20 @@ def dashboard(request):
     
     return render(request, "index.html", d)
     
+
+@login_required(login_url="/login/")
+def detailscds(request, code=None):
+    data = {}
+    data['Report'] = Report.objects.filter(facility__id_facility=code)
+    data['ProductsReceptionReport'] = ProductsReceptionReport.objects.filter(reception__report__facility__id_facility=code)
+    data['ProductsTranferReport'] = ProductsTranferReport.objects.filter(sortie__report__facility__id_facility=code)
+    data['ProductStockReport'] = ProductStockReport.objects.filter(stock_report__report__facility__id_facility=code)
+    data['StockOutReport'] = StockOutReport.objects.filter(report__facility__id_facility=code)
+    data['Facility'] = Facility.objects.get(id_facility=code)
     
+    return render(request, "cmam_app/details.html", data)
+    
+
 @login_required
 def fetchweeks(request):
     d = {}
@@ -275,7 +288,7 @@ class DistrictCDSViewSet(viewsets.ModelViewSet):
 
 class CDSCDSViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to view or edit district.
+    API endpoint that allows users to view or edit cds.
     """
     queryset = CDS.objects.all()
     serializer_class = CDSSerializers
