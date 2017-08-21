@@ -6,7 +6,7 @@
   
 {% endblock search_form %}
 {% block container %}
-    <div class="contain" ng-controller="StockCtrl">
+    <div class="contain" ng-controller="ExportCtrl">
       <div class="row">
       <div class="ProductsReceptionReport col-md-6">
         <h4>Products Reception Report at {{Facility.facility_level}} {{Facility}}</h4>
@@ -109,9 +109,9 @@
         <table class="table table-bordered"  data-toggle="table" datatable="ng" dt-options="dtOptions">
         <thead>
           <tr>
+            <th>Reporting_date</th>
             <th>Facility</th>
             <th>Type</th>
-            <th>Reporting_date</th>
             <th>Text</th>
             <th>Category</th>
           </tr>
@@ -119,10 +119,10 @@
         <tbody>
           {% for report in Report %}
             <tr>
+              <td>{{report.reporting_date}}</td>
               <td>{{report.facility}}</td>
               <td>{{report.facility.facility_level}}</td>
               <td>{{report.text}}</td>
-              <td>{{report.reporting_date}}</td>
               <td>{{report.category}}</td>
             </tr>
           {% endfor %}
