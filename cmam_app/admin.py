@@ -75,6 +75,7 @@ class ReportAdminResource(resources.ModelResource):
         return
 
     def dehydrate_district(self, report):
+        print report.facility.id_facility
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
             return CDS.objects.get(code=report.facility.id_facility).district.name
         elif report.facility.facility_level.name in ["District"]:
