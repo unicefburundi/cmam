@@ -329,10 +329,14 @@ class InOutViewset(viewsets.ModelViewSet):
     search_fields = ('^facility__id_facility',)
 
     def get_queryset(self):
-        YEAR = datetime.today().year
-        if self.request.GET.get('year'):
-            YEAR = self.request.GET['year']    
-        self.queryset = self.queryset.filter(date_of_first_week_day__year=YEAR)
+        startdate = self.request.GET.get('startdate', '')
+        enddate = self.request.GET.get('enddate', '')
+        if startdate and startdate != 'undefined':
+            self.queryset = self.queryset.filter(date_of_first_week_day__gte=datetime.strptime(startdate, "%Y-%m-%d"))
+        if enddate and enddate != 'undefined':
+            self.queryset = self.queryset.filter(date_of_first_week_day__lte=datetime.strptime(enddate, "%Y-%m-%d"))
+        else:
+            self.queryset = self.queryset.filter(date_of_first_week_day__year=datetime.today().year)
         return get_reportqueryset(self.request, self.queryset)
 
 
@@ -346,8 +350,12 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     search_fields = ('^report__facility__id_facility',)
 
     def get_queryset(self):
-        YEAR = datetime.today().year
-        if self.request.GET.get('year'):
-            YEAR = self.request.GET['year']    
-        self.queryset = self.queryset.filter(date_of_first_week_day__year=YEAR)
+        startdate = self.request.GET.get('startdate', '')
+        enddate = self.request.GET.get('enddate', '')
+        if startdate and startdate != 'undefined':
+            self.queryset = self.queryset.filter(date_of_first_week_day__gte=datetime.strptime(startdate, "%Y-%m-%d"))
+        if enddate and enddate != 'undefined':
+            self.queryset = self.queryset.filter(date_of_first_week_day__lte=datetime.strptime(enddate, "%Y-%m-%d"))
+        else:
+            self.queryset = self.queryset.filter(date_of_first_week_day__year=datetime.today().year)
         return get_reportqueryset(self.request, self.queryset)

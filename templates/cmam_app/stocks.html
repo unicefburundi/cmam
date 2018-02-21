@@ -25,8 +25,10 @@
   <!-- Custom Fonts -->
   <link href="{% static "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
   <link href="{% static "css/styles.css" %}" rel="stylesheet" type="text/css">
-
-        <script src="{% static "js/libs/jquery.min.js" %}"></script>
+  <script src="{% static 'bower_components/jquery/jquery.min.js' %}"></script>
+  <!-- Bootstrap Core CSS -->
+  <link rel="stylesheet" href="{% static 'bower_components/jquery-ui/themes/base/jquery-ui.css' %}">
+  <script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -104,11 +106,6 @@
                 <li >
                         {% block search_form %}
                     <form role="form" class="side-form" >
-                        <!-- Year -->
-                          <div id="year-group" class="form-group">
-                            <label>{% trans "Year" %}</label>
-                            <select id="yearselect" class="form-control"  ng-model="year" ng-options="x for x in years track by x" ng-change="update_years()" ></select>
-                          </div>
                           <!-- Province -->
                           <div id="province-group" class="form-group">
                             <label>Province</label>
@@ -297,20 +294,10 @@
 
         <!-- CMAM based Js -->
         <script src="{% static "js/cmam-stock.js" %}"></script>
-        <!-- Include Bootstrap Datepicker -->
-        <link rel="stylesheet" href="{% static 'css/datepicker.css' %}" />
-
-        <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
         <script>
         $(document).ready(function() {
-            $('.datePicker')
-                .datepicker({
-                    dateFormat: 'yy-mm-dd'
-                })
-                .on('changeDate', function(e) {
-                    // Revalidate the date field
-                    $('#eventForm').formValidation('revalidateField', 'date');
-                });
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-mm-dd' });
             });
         </script>
     </body>
