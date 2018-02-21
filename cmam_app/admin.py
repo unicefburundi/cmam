@@ -75,7 +75,6 @@ class ReportAdminResource(resources.ModelResource):
         return
 
     def dehydrate_district(self, report):
-        print report.facility.id_facility
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
             return CDS.objects.get(code=report.facility.id_facility).district.name
         elif report.facility.facility_level.name in ["District"]:
@@ -86,7 +85,6 @@ class ReportAdminResource(resources.ModelResource):
         return report.facility.facility_level.name
 
     def dehydrate_province(self, report):
-        # import ipdb; ipdb.set_trace()
         if report.facility.facility_level.name in ["CDS", "Hospital"]:
             try:
                 name = CDS.objects.get(code=report.facility.id_facility).district.province.name

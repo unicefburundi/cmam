@@ -66,7 +66,7 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
             $scope.titles = "District";
             var province = $scope.dashboard.province;
             if (province) {
-              $http.get("/cmam/provinces/" + province.code + "/"+ "?year=" + $scope.year )
+              $http.get("/cmam/provinces/" + province.code + "/"+ "?startdate=" + $scope.startdate + "&enddate=" + $scope.enddate )
               .then(function (response) {
                 $scope.etablissements = response.data.etablissements;
                 $scope.districts = response.data.etablissements;
@@ -79,7 +79,7 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
             $scope.titles = "Hopital";
             var district = $scope.dashboard.district;
             if (district) {
-              $http.get("/cmam/districts/" + district.code + "/"+ "?year=" + $scope.year )
+              $http.get("/cmam/districts/" + district.code + "/"+ "?startdate=" + $scope.startdate + "&enddate=" + $scope.enddate )
               .then(function (response) {
                   $scope.etablissements = response.data.etablissements;
                   $scope.cdss = response.data.etablissements;
@@ -90,7 +90,7 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
         $scope.update_cds = function () {
             var cds = $scope.dashboard.cds;
             if (cds) {
-              $http.get("/cmam/cdss/" + cds.code + "/"+ "?year=" + $scope.year )
+              $http.get("/cmam/cdss/" + cds.code + "/"+ "?startdate=" + $scope.startdate + "&enddate=" + $scope.enddate )
               .then(function (response) {
                   $scope.etablissements = response.data.etablissements;
               });
@@ -107,7 +107,7 @@ app.controller('StockCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($sc
                 $scope.cdss = '';
               }
             });
-        $http.get("/cmam/provinces/"+ "?year=" + $scope.year)
+        $http.get("/cmam/provinces/"+ "?startdate=" + $scope.startdate + "&enddate=" + $scope.enddate)
           .then(function (response) {
               if (response.data.length > 0) {
                 var etablissements = [];

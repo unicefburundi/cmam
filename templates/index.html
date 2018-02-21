@@ -12,10 +12,11 @@
     <meta name="author" content="UNICEF Burundi">
 
     <title>{% block title %}CMAM Dashboard{% endblock title %}</title>
-    <script src="{% static 'js/libs/jquery.min.js' %}"></script>
+    <script src="{% static 'bower_components/jquery/jquery.min.js' %}"></script>
     <!-- Bootstrap Core CSS -->
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
-
+    <link rel="stylesheet" href="{% static 'bower_components/jquery-ui/themes/base/jquery-ui.css' %}">
+    <script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
     <!-- MetisMenu CSS -->
     <link href="{% static "vendor/metisMenu/metisMenu.min.css" %}" rel="stylesheet">
 
@@ -34,20 +35,6 @@
     <![endif]-->
     <script src="{% static "js/angular.min.js" %}"></script>
     <script src="{% static "js/highcharts/highcharts.js" %}"></script>
-    <script>
-    $(document).ready(function() {
-        $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
-        $.fn.datepicker.defaults.autoclose = true;
-        $('.datepicker')
-          .datepicker({
-              dateFormat: 'yyyy-mm-dd'
-          })
-          .on('changeDate', function(e) {
-              // Revalidate the date field
-              $('#eventForm').formValidation('revalidateField', 'date');
-          });
-        });
-    </script>
 </head>
 
 <body ng-app="myApp">
@@ -107,48 +94,42 @@
                         <li >
                         {% block search_form %}
                         <form role="form" class="side-form">
-                          <!-- Year -->
-                          <div id="year-group" class="form-group">
-                            <label>{% trans "Year" %}</label>
-                            <select id="yearselect" class="form-control"  ng-model="year" ng-options="x for x in years track by x" ng-change="update_years()" ></select>
-                          </div>
-
                           <!-- Province -->
                           <div id="province-group" class="form-group">
                             <label>Province</label>
-                            <select id="provinceselect" class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()" onchange="provincechange(this.value)"></select>
+                            <select id="provinceselect" class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()" ></select>
                           </div>
 
                           <!-- District -->
                           <div id="district-group" class="form-group">
                             <label>District</label>
-                            <select id="districtselect" class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" onchange="districtchange(this.value)"></select>
+                            <select id="districtselect" class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
                           </div>
 
                           <!-- CDS -->
                           <div id="cds-group" class="form-group">
                             <label>CDS</label>
-                            <select id="cdsselect" class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" onchange="cdschange(this.value)"></select>
+                            <select id="cdsselect" class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cd"></select>
                           </div>
                           <!-- dates -->
-                            <div class="form-group">
-                                <label for="dstartdate">{% trans "Start Date" %}:</label>
-                                <div class="input-group date" data-provide="datepicker">
-                                    <input type="text" id="startdate" readonly="readonly" ng-model="startdate" ng-change="get_bydate()" class="form-control datepicker">
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
+                          <div class="form-group">
+                            <label for="startdate">{% trans "End Date" %}:</label>
+                            <div class="input-group date" data-provide="datepicker">
+                                <input type="text" class="form-control datepicker" readonly="readonly" style="position: relative; z-index: 100000;" ng-model="startdate" ng-change="get_by_date()">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="dendtdate">{% trans "End Date" %}:</label>
-                                <div class="input-group date" data-provide="datepicker">
-                                    <input type="text" id="endtdate" readonly="readonly" ng-model="enddate" ng-change="get_bydate()"  class="form-control datepicker">
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="dendtdate">{% trans "End Date" %}:</label>
+                            <div class="input-group date" data-provide="datepicker">
+                                <input type="text" class="form-control datepicker" readonly="readonly" style="position: relative; z-index: 100000;" ng-model="enddate" ng-change="get_by_date()">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
                                 </div>
                             </div>
+                          </div>
                         </form>
                         {% endblock search_form %}
                       </li>
@@ -204,9 +185,6 @@
       <p class="text-right ">©2016 UNICEF Burundi</p>
     </footer>
 
-    <!-- jQuery -->
-    <script src="{% static 'js/libs/jquery.min.js' %}"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
@@ -219,8 +197,12 @@
     <!-- CMAM based Js -->
     <script src="{% static 'js/cmam-app.js' %}"></script>
     <!-- Include Bootstrap Datepicker -->
-    <link rel="stylesheet" href="{% static 'css/datepicker.css' %}" />
-    <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd' });
+        });
+    </script>
 
 </body>
 
