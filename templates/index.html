@@ -97,19 +97,25 @@
                           <!-- Province -->
                           <div id="province-group" class="form-group">
                             <label>Province</label>
-                            <select id="provinceselect" class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()" ></select>
+                            <select id="provinceselect" class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()" >
+                                <option value="">-------</option>
+                            </select>
                           </div>
 
                           <!-- District -->
                           <div id="district-group" class="form-group">
                             <label>District</label>
-                            <select id="districtselect" class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+                            <select id="districtselect" class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" >
+                                <option value="">-------</option>
+                            </select>
                           </div>
 
                           <!-- CDS -->
                           <div id="cds-group" class="form-group">
                             <label>CDS</label>
-                            <select id="cdsselect" class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cd"></select>
+                            <select id="cdsselect" class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()">
+                                <option value="">-------</option>
+                            </select>
                           </div>
                           <!-- dates -->
                           <div class="form-group">

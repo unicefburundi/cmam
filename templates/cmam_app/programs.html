@@ -106,25 +106,31 @@
                 <!-- Province -->
                 <div id="province-group" class="form-group">
                   <label>Province</label>
-                  <select id="ddprovince" class="form-control"  ng-model="province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()"></select>
+                  <select id="ddprovince" class="form-control"  ng-model="province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()">
+                  <option value="">-------</option>
+                  </select>
                 </div>
 
                 <!-- District -->
                 <div id="district-group" class="form-group">
                   <label>District</label>
-                  <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" ></select>
+                  <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" >
+                  <option value="">-------</option>
+                  </select>
                 </div>
 
                 <!-- CDS -->
                   <div id="cds-group" class="form-group">
                     <label>CDS</label>
-                    <select class="form-control"  ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" ></select>
+                    <select class="form-control"  ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" >
+                    <option value="">-------</option>
+                    </select>
                   </div>
                 <!-- dates -->
                   <div class="form-group">
                       <label for="dstartdate">{% trans "Start Date" %}:</label>
                       <div class="input-group date" data-provide="datepicker">
-                          <input type="text" id="startdate" class="form-control datepicker" readonly="readonly" ng-model="startdate" ng-change="get_bydate()" style="position: relative; z-index: 100000;">
+                          <input type="text" id="startdate" class="form-control datepicker" readonly="readonly" ng-model="startdate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
                           <div class="input-group-addon">
                               <span class="glyphicon glyphicon-th"></span>
                           </div>
@@ -133,7 +139,7 @@
                   <div class="form-group">
                       <label for="dendtdate">{% trans "End Date" %}:</label>
                       <div class="input-group date" data-provide="datepicker">
-                          <input type="text" id="endtdate" class="form-control datepicker" readonly="readonly" ng-model="enddate" ng-change="get_bydate()" style="position: relative; z-index: 100000;">
+                          <input type="text" id="endtdate" class="form-control datepicker" readonly="readonly" ng-model="enddate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
                           <div class="input-group-addon">
                               <span class="glyphicon glyphicon-th"></span>
                           </div>
@@ -156,8 +162,8 @@
             {% block container %}
             <div class="container"  >
               <ul class="nav nav-tabs">
-                <li class="active"><a href="#STA" data-toggle="tab">STA</a></li>
-                <li ><a href="#SST" data-toggle="tab">SST</a></li>
+                <li class="active"><a href="#STA" data-toggle="tab">STA in {% verbatim %}{{region}}{% endverbatim %}</a></li>
+                <li ><a href="#SST" data-toggle="tab">SST in {% verbatim %}{{region}}{% endverbatim %}</a></li>
               </ul>
               <div class="tab-content" >
                 <div class="tab-pane active" id="STA">
@@ -250,9 +256,6 @@
                         <table  class="table fixed table-bordered table-hover"  data-toggle="table" datatable="ng" dt-options="dtOptions" >
                           <thead class="thead-default">
                             <tr>
-                              <th ng-if="province1 != null" rowspan="2">Province</th>
-                              <th ng-if="district1 != null" rowspan="2">District</th>
-                              <th ng-if="cds1 != null" rowspan="2">Cds</th>
                               <th rowspan="2">Week</th>
                               <th rowspan="2">Total debut semaine</th>
                               <th colspan="3">Nouvelles Admissions</th>
@@ -277,9 +280,6 @@
                           <tbody >
                             {% verbatim %}
                             <tr ng-repeat="(x, y) in lescds  ">
-                              <td ng-if="province1 != null">{{province1.name}}</td>
-                              <td ng-if="district1 != null">{{district1.name}}</td>
-                              <td ng-if="cds1 != null">{{cds1.name}}</td>
                               <td>{{x}}</td>
                               <td>{{y.total_debut_semaine}}</td>
                               <td>{{y.ptb}}</td>
@@ -297,9 +297,6 @@
                               <td>{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne_i) - (y.gueri + y.deces + y.abandon + y.non_repondant +y.transfert_interne_0) }}</td>
                             </tr>
                             <tr class="success">
-                              <th ng-if="province1 != null" rowspan="2">Province</th>
-                              <th ng-if="district1 != null" rowspan="2">District</th>
-                              <th ng-if="cds1 != null" rowspan="2">Cds</th>
                               <td><b>Weeks</b></td>
                               <td><b></b> </td>
                               <td><b>{{sommecds.ptb || 0}}</b></td>
@@ -417,9 +414,6 @@
                               <table class="table fixed table-bordered table-hover" data-toggle="table" datatable="ng" dt-options="dtOptions" id="tblSST" >
                                 <thead class="thead-default">
                                   <tr>
-                                    <th ng-if="province1 != null" rowspan="2">Province</th>
-                                    <th ng-if="district1 != null" rowspan="2">District</th>
-                                    <th ng-if="cds1 != null" rowspan="2">Cds</th>
 									                  <th rowspan="2">Week</th>
                                     <th rowspan="2">Total debut de semaine</th>
                                     <th colspan="3">Nouvelles Admissions</th>
@@ -442,10 +436,7 @@
                                 </thead>
                                 <tbody >
                                   {% verbatim %}
-                                  <tr ng-repeat="(x, y) in leshopitaux" class="selectedcolumndata" repeat-end="loadColumns()">
-									                  <td ng-if="province1 != null">{{province1.name}}</td>
-                                    <td ng-if="district1 != null">{{district1.name}}</td>
-                                    <td ng-if="cds1 != null"><a href="#">{{cds1.name}}</a></td>
+                                  <tr ng-repeat="(x, y) in leshopitaux" class="selectedcolumndata" >
                                     <td>{{x}}</td>
                                     <td>{{y.total_debut_semaine}}</td>
                                     <td>{{y.ptb}}</td>
@@ -462,9 +453,6 @@
                                     <td>{{(y.total_debut_semaine + y.ptb + y.oedemes + y.rechute + y.readmission + y.transfert_interne) - (y.gueri + y.deces + y.abandon + y.non_repondant)}}</td>
                                   </tr>
                                   <tr class="success">
-                                    <td ng-if="province1 != null">{{province1.name}}</td>
-                                    <td ng-if="district1 != null">{{district1.name}}</td>
-                                    <td ng-if="cds1 != null"><a href="#"> {{cds1.name}}</a></td>
                                     <td><b>Weeks</b></td>
                                     <td><b></b></td>
                                     <td><b>{{sommehopitaux.ptb || 0}}</b></td>

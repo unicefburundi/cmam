@@ -178,12 +178,6 @@ function draw_tendance_chart(response, id, texte) {
 var app = angular.module('myApp', []);
 
 app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
-        $scope.year = new Date().getFullYear();
-        // years
-        $http.get("/cmam/get_year/")
-        .then(function (response) {
-          $scope.years = response.data;
-        });
 
         // province
         $http.get("/bdiadmin/province/")
@@ -201,6 +195,8 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 
         $scope.update_province = function () {
             var province = $scope.dashboard.province;
+            var district = $scope.dashboard.district;
+            $scope.cdss = '';
             if (province) {
               $http.get("/cmam/provinces/" + province.code + "/" )
                 .then(function (response) {
@@ -226,11 +222,35 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
+            } else {
+              $scope.districts = '';
+              $scope.cdss = '';
+              //  out reports CDS
+              $http.get(url_gen_taux_sta + "&startdate=" + $scope.startdate + "&enddate=" + $scope.enddate)
+              .then(function (response) {
+                  return draw_taux_chart(response, id_taux_sta, texte_taux_sta);
+              });
+              //  tendance reports CDS
+              $http.get(url_gen_tendance_sta + "&startdate=" + $scope.startdate + "&enddate=" + $scope.enddate)
+              .then(function (response) {
+                  return draw_tendance_chart(response, id_tendance_sta, texte_tendance_sta);
+              });
+              // Out reports Hospital
+              $http.get(url_gen_taux_sst + "&startdate=" + $scope.startdate + "&enddate=" + $scope.enddate)
+                .then(function (response) {
+                  return draw_taux_chart(response, id_taux_sst, texte_taux_sst);
+                });
+              //  tendance reports Hospital
+              $http.get(url_gen_tendance_sst  + "&startdate=" + $scope.startdate + "&enddate=" + $scope.enddate)
+              .then(function (response) {
+                  return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
+              });
             }
         };
           // district
         $scope.update_district = function () {
             var district = $scope.dashboard.district;
+            $scope.cdss = '';
             if (district) {
               $http.get("/cmam/districts/" + district.code + "/" )
                 .then(function (response) {
@@ -256,11 +276,14 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
+            } else {
+              console.log($scope.dashboard.district);
             }
         };
 
         // cds
         $scope.update_cds = function () {
+          console.log($scope)
             var cds = $scope.dashboard.cds;
             if (cds) {
               $http.get("/cmam/cdss/" + cds.code + "/" )
@@ -287,11 +310,12 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                 .then(function (response) {
                   return draw_tendance_chart(response, id_tendance_sst, texte_tendance_sst);
                 });
+            } else {
+              console.log($scope.dashboard.cds);
             }
         };
 
-        $scope.update_dates = function () {
-          console.log($scope)
+        $scope.get_by_date = function () {
           //  out reports CDS
           $http.get(url_gen_taux_sta + "&startdate=" + $scope.startdate + "&enddate=" + $scope.enddate)
           .then(function (response) {
@@ -341,5 +365,5 @@ app.controller('DashCtrl', ['$scope', '$http', function($scope, $http) {
     });
 }]);
 
-app.controller('ExportCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {$scope.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withButtons([ 'copy', 'csv', 'excel', 'pdf', 'print']).withDOM("<'row'<'col-sm-3'l><'col-sm-4'i><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-4'B><'col-sm-8'p>>").withDisplayLength(10);
+app.controller('ExportCtrl', ['$scope', '$http', 'DTOptionsBuilder', function($scope, $http, DTOptionsBuilder) {$scope.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withButtons([ 'copy', 'csv', 'excel', 'pdf', 'print']).withDOM("<'row'<'col-sm-3'l><'col-sm-4'i><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-4'B><'col-sm-8'p>>").withDisplayLength(50);
   }]);
