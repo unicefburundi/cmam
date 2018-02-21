@@ -17,3 +17,4 @@ staticfiles/img/
 *.bak
 facility.json
 *.sql
+data.json

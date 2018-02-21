@@ -36,7 +36,7 @@ def eliminate_unnecessary_spaces(args):
 
     # Messages from RapidPro comes with spaces replaced by '+'
     # Let's replace those '+' (one or more) by one space
-    the_new_message = re.sub('[+]+',' ',the_incoming_message)
+    the_new_message = re.sub('[+]+', ' ', the_incoming_message)
 
     #  Find any comma
     the_new_message = urllib.unquote_plus(the_new_message)
