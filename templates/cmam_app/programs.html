@@ -298,7 +298,7 @@
                             </tr>
                             <tr class="success">
                               <td><b>Weeks</b></td>
-                              <td><b></b> </td>
+                              <td><b>{{sommecds.total_debut_semaine || 0}}</b> </td>
                               <td><b>{{sommecds.ptb || 0}}</b></td>
                               <td><b>{{sommecds.oedemes || 0}}</b></td>
                               <td><b>{{sommecds.rechute || 0}}</b></td>
@@ -311,7 +311,7 @@
                               <td><b>{{sommecds.non_repondant || 0}}</b></td>
                               <td><b>{{sommecds.transfert_interne_o || 0}}</b></td>
                               <td><b>{{sommecds.gueri + sommecds.deces + sommecds.abandon + sommecds.non_repondant + sommecds.transfert_interne_o  || 0}}</b></td>
-                              <td><b></b></td>
+                              <td><b>{{(sommecds.total_debut_semaine + sommecds.ptb + sommecds.oedemes + sommecds.rechute + sommecds.readmission + sommecds.transfert_interne_i) - (sommecds.gueri + sommecds.deces + sommecds.abandon + sommecds.non_repondant + sommecds.transfert_interne_o)  || 0}}</b></td>
                             </tr>
                             {% endverbatim %}
                           </tbody>
@@ -454,7 +454,7 @@
                                   </tr>
                                   <tr class="success">
                                     <td><b>Weeks</b></td>
-                                    <td><b></b></td>
+                                    <td><b>{{sommehopitaux.total_debut_semaine || 0}}</b></td>
                                     <td><b>{{sommehopitaux.ptb || 0}}</b></td>
                                     <td><b>{{sommehopitaux.oedemes || 0}}</b></td>
                                     <td><b>{{sommehopitaux.rechute || 0}}</b></td>
@@ -466,7 +466,7 @@
                                     <td><b>{{sommehopitaux.abandon || 0}}</b></td>
                                     <td><b>{{sommehopitaux.non_repondant || 0}}</b></td>
                                     <td><b>{{sommehopitaux.gueri + sommehopitaux.deces + sommehopitaux.abandon + sommehopitaux.non_repondant || 0}}</b></td>
-                                    <td><b></b></td>
+                                    <td><b>{{ (sommehopitaux.total_debut_semaine + sommehopitaux.ptb + sommehopitaux.oedemes + sommehopitaux.rechute + sommehopitaux.readmission + sommehopitaux.transfert_interne) - (sommehopitaux.gueri + sommehopitaux.deces + sommehopitaux.abandon + sommehopitaux.non_repondant) || 0}}</b></td>
                                   </tr>
                                   {% endverbatim %}
                                 </tbody>
