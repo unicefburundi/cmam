@@ -105,6 +105,7 @@ class CDS(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(unique=True, max_length=9)
     status = models.CharField(max_length=5, choices=STATUS_CHOICES, blank=True, null=True, help_text=_('Either Public, Conf, Ass, Prive  or Hospital status.'))
+    functional = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name

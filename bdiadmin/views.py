@@ -48,7 +48,7 @@ class CDSViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit products.
     """
-    queryset = CDS.objects.all()
+    queryset = CDS.objects.filter(functional=True)
     serializer_class = CDSSerializer
 
     def get_queryset(self):
@@ -115,5 +115,3 @@ class ProfileUserCreateView(CreateView):
         context = self.get_context_data(**kwargs)
         context['form'] = form
         return self.render_to_response(context)
-
-        

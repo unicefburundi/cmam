@@ -85,8 +85,8 @@ class CDSResource(resources.ModelResource):
 class CDSAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = CDSResource
     search_fields = ('name', 'code')
-    list_display = ('name', 'code', 'district', 'province')
-    list_filter = ('district__province', 'district', )
+    list_display = ('name', 'code', 'district', 'province', 'functional')
+    list_filter = ('district__province', 'district', 'functional')
 
     def province(self, obj):
         return obj.district.province
