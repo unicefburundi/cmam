@@ -27,9 +27,9 @@ class FacilityAdminResource(resources.ModelResource):
 
 class FacilityAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = FacilityAdminResource
-    list_display = ('id_facility', 'name', 'facility_level')
+    list_display = ('id_facility', 'name', 'facility_level', 'functional', 'cds', 'district', 'province')
     search_fields = ('id_facility', 'name')
-    list_filter = ('facility_level',)
+    list_filter = ('facility_level', 'functional', 'province')
 
 
 class StockAdminResource(resources.ModelResource):
@@ -106,7 +106,7 @@ class ReportAdminResource(resources.ModelResource):
 
 class ReportAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReportAdminResource
-    list_display = ('facility', 'reporting_date', 'text', 'category')
+    list_display = ('facility', 'reporting_date', 'text', 'category',)
     date_hierarchy = 'reporting_date'
     search_fields = ('facility__name', 'reporting_date', 'text', 'category',)
     list_filter = ('category', 'facility__facility_level', 'reporting_date')

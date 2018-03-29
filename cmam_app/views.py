@@ -49,9 +49,8 @@ def dashboard(request):
     d = {}
     data = ["BAL", "ADM", "STR"]
     d['reportingcategories'] = data
-    
     return render(request, "index.html", d)
-    
+
 
 @login_required(login_url="/login/")
 def detailscds(request, code=None):
@@ -62,182 +61,8 @@ def detailscds(request, code=None):
     data['ProductStockReport'] = ProductStockReport.objects.filter(stock_report__report__facility__id_facility=code)
     data['StockOutReport'] = StockOutReport.objects.filter(report__facility__id_facility=code)
     data['Facility'] = Facility.objects.get(id_facility=code)
-    
     return render(request, "cmam_app/details.html", data)
-    
 
-@login_required
-def fetchweeks(request):
-    d = {}
-    yearselected = request.GET["yearselected"]
-    weekslist = []
-    if (yearselected.isdigit()):
-        weeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
-        
-        for w in range(0, weeks):
-            weekslist.append(w+1)
-    d["weeks"] = weekslist
-    response_data = json.dumps(d)
-    return HttpResponse(response_data, content_type="application/json")
-    
-    
-@login_required
-def fetchreportingrates(request):
-    d = {}
-    yearselected = request.GET["yearselected"]
-    weekid = request.GET["week"]
-    provinceid = request.GET["provinceid"]
-    districtid = request.GET["districtid"]
-    cdsid = request.GET["cdsid"]
-    ratecategoryid = request.GET["ratecategoryid"]
-    
-    recnumber = 0
-    recnumberList = []
-    areatype = ""
-    cdslist = None
-    exepectednumber = 0
-    noofweeks = 0
-    
-    lowestreportdate = Report.objects.all().order_by('-reporting_date')[0]
-    if (lowestreportdate):
-        lowestreportdate = datetime.strptime(str(lowestreportdate.reporting_date), "%Y-%m-%d")
-        
-    highestreportdate = Report.objects.all().order_by('reporting_date')[0]
-    if (highestreportdate):
-        highestreportdate = datetime.strptime(str(highestreportdate.reporting_date), "%Y-%m-%d")
-        
-    if (lowestreportdate and highestreportdate):
-        noofweeks = abs((highestreportdate - lowestreportdate).days/7)
-    
-    if (cdsid.isdigit()):
-        cdslistids = CDS.objects.values_list("code" , flat=True).get(code = cdsid)
-        facilitylist = Facility.objects.filter(id_facility__in = cdslistids)
-        cdslist = CDS.objects.get(code = cdsid)
-        if (yearselected.isdigit()):
-            if (weekid.isdigit()):
-                data = Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist)
-                noofweeks = 1
-                for b in data:
-                    if (b.reporting_date.isocalendar()[1] == int(weekid)):
-                        recnumber += 1
-            else:
-                if datetime.now().year == yearselected:
-                    noofweeks = datetime.now().isocalendar()[1]
-                else:
-                    noofweeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
-                    
-                recnumber = Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()/noofweeks
-            
-        else:
-            recnumber = Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()/noofweeks
-            
-        exepectednumber = 1
-        recnumberList.append([cdslist.code, cdslist.name, recnumber, exepectednumber])
-        areatype = "CDS"
-        
-    elif (districtid.isdigit()):
-        districtlist = District.objects.get(code = districtid)
-        if (districtlist):
-            cdslist = CDS.objects.filter(district = districtlist)
-            for cds in cdslist.iterator():
-                cdslistids = CDS.objects.values_list("code" ,flat=True).filter(code = cds.code)
-                facilitylist = Facility.objects.filter(id_facility__in = cdslistids)
-                recnumber = 0
-                if (yearselected.isdigit()):
-                    if (weekid.isdigit()):
-                        data = Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist)
-                        noofweeks = 1
-                        for b in data:
-                            if (b.reporting_date.isocalendar()[1] == int(weekid)):
-                                recnumber += 1
-                    else:
-                        if datetime.now().year == yearselected:
-                            noofweeks = datetime.now().isocalendar()[1]
-                        else:
-                            noofweeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
-                            
-                        recnumber += Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()/noofweeks
-                        
-                else:
-                    recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()/noofweeks
-                
-                exepectednumber = 1
-                recnumberList.append([cds.code, cds.name, recnumber, exepectednumber])
-        areatype = "CDS"
-        
-    elif (provinceid.isdigit()):
-        provincelist = Province.objects.get(code = provinceid)
-        if (provincelist):
-            districtlist = District.objects.filter(province = provincelist)
-            if (districtlist):
-                for dist in districtlist.iterator():
-                    recnumber = 0
-                    exepectednumber = 0
-                    cdslistids = CDS.objects.values_list("code" , flat=True).filter(district = dist)
-                    facilitylist = Facility.objects.filter(id_facility__in = cdslistids)
-                    #cdslist = CDS.objects.filter(district = dist)
-                    if (yearselected.isdigit()):
-                        if (weekid.isdigit()):
-                            data = Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist)
-                            noofweeks = 1
-                            for b in data:
-                                if (b.reporting_date.isocalendar()[1] == int(weekid)):
-                                    recnumber += 1
-                        else:
-                            if datetime.now().year == yearselected:
-                                noofweeks = datetime.now().isocalendar()[1]
-                            else:
-                                noofweeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
-                                
-                            recnumber += Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()/noofweeks
-                            
-                    else:
-                        recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()/noofweeks
-                    
-                    exepectednumber += facilitylist.count()
-                    recnumberList.append([dist.code, dist.name, recnumber, exepectednumber])
-        areatype = "District"
-                    
-    else:
-        provincelist = Province.objects.all()
-        if (provincelist):
-            for prov in provincelist.iterator():
-                recnumber = 0
-                exepectednumber = 0
-                districtlist = District.objects.filter(province = prov)
-                if (districtlist):
-                    for dist in districtlist.iterator():
-                        cdslistids = CDS.objects.values_list("code" , flat=True).filter(district = dist)
-                        facilitylist = Facility.objects.filter(id_facility__in = cdslistids)
-                        #cdslist = CDS.objects.filter(district = dist)
-                        if (yearselected.isdigit()):
-                            if (weekid.isdigit()):
-                                data = Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist)
-                                noofweeks = 1
-                                for b in data:
-                                    if (b.reporting_date.isocalendar()[1] == int(weekid)):
-                                        recnumber += 1
-                            else:
-                                if datetime.now().year == yearselected:
-                                    noofweeks = datetime.now().isocalendar()[1]
-                                else:
-                                    noofweeks = abs(((datetime.strptime(str(yearselected) + "-12" + "-31", "%Y-%m-%d")) - (datetime.strptime(str(yearselected) + "-1" + "-1", "%Y-%m-%d"))).days/7)
-        
-                                recnumber += Report.objects.filter(text__icontains=ratecategoryid, reporting_date__year = yearselected, facility__in = facilitylist).count()/noofweeks
-                                
-                        else:
-                            recnumber += Report.objects.filter(text__icontains=ratecategoryid, facility__in = facilitylist).count()/noofweeks
-                            
-                        exepectednumber += facilitylist.count()
-                recnumberList.append([prov.code, prov.name, recnumber, exepectednumber])
-        areatype = "Province"
-        
-    d['areatype'] = areatype
-    d['receivednumberlist'] = recnumberList
-    
-    response_data = json.dumps(d)
-    return HttpResponse(response_data, content_type="application/json")
-    
 
 @login_required(login_url="/login/")
 def programs(request):
@@ -270,7 +95,7 @@ class ProvinceDistrictViewSet(viewsets.ModelViewSet):
     def get_serializer_context(self):
         YEAR = datetime.today().year
         if self.request.GET.get('year'):
-            YEAR = self.request.GET['year']    
+            YEAR = self.request.GET['year']
         return {'YEAR': YEAR}
 
 
@@ -290,7 +115,7 @@ class CDSCDSViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit cds.
     """
-    queryset = CDS.objects.all()
+    queryset = CDS.objects.filter(functional=True)
     serializer_class = CDSSerializers
     lookup_field = 'code'
     filter_fields = ('code', 'district__code', 'district__province__code')

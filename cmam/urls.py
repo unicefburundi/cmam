@@ -15,8 +15,5 @@ urlpatterns = patterns(
     url(r'^login/$', views.login, {'template_name': 'login.html'}, name="login"),
     url(r'^logout/$', views.logout, {'template_name': 'login.html'}, name="logout"),
     url(r'^$', 'cmam_app.views.landing'),
-	
-	url(r'^dashboard/fetchreportingrates/$', 'cmam_app.views.fetchreportingrates', name='fetchreportingrates'),
-	url(r'^dashboard/fetchweeks/$', 'cmam_app.views.fetchweeks', name='fetchweeks'),
 )
 

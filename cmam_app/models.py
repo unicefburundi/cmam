@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import now
 from django.forms.models import model_to_dict
+from bdiadmin.models import CDS, District, Province
 
 
 # Create your models here.
@@ -44,7 +45,7 @@ class FacilityTypeProduct(models.Model):
     class Meta:
         unique_together = ('facility_type', 'priority_in_sms',)
         ordering = ('priority_in_sms',)
-	
+
     def __unicode__(self):
         return "{0}".format(self.priority_in_sms)
 
@@ -54,12 +55,16 @@ class Facility(models.Model):
     id_facility = models.CharField(primary_key=True, max_length=10)
     name = models.CharField(max_length=50)
     facility_level = models.ForeignKey(FacilityType)
+    functional = models.BooleanField(default=True)
+    cds = models.ForeignKey(CDS, blank=True, null=True)
+    district = models.ForeignKey(District, blank=True, null=True)
+    province = models.ForeignKey(Province, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
 
     class Meta:
-        ordering = ('id_facility',)
+        ordering = ('name',)
 
 
 class Stock(models.Model):
@@ -82,7 +87,7 @@ class Reporter(models.Model):
         return self.phone_number
 
     class Meta:
-        ordering = ('phone_number',)
+        ordering = ('phone_number', 'facility__name')
 
 
 class User(models.Model):
@@ -222,6 +227,9 @@ class PatientReports(models.Model):
 
     def __unicode__(self):
         return "Patient report created on {0} for {1} facility".format(self.date_of_first_week_day, self.facility)
+
+    class Meta:
+        ordering = ('facility',)
 
 
 @receiver(post_save, sender=OutgoingPatientsReport)

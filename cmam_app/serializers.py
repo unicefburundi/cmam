@@ -57,7 +57,7 @@ class DistrictCDSSerializer(ProvinceSerializer):
         fields = ("name", "code", "etablissements")
 
     def get_etablissements(self, obj):
-        cds = CDS.objects.filter(district__code=obj.code).values('name', 'code')
+        cds = CDS.objects.filter(district__code=obj.code, functional=True).values('name', 'code')
         for d in cds:
             for p in Product.objects.all():
                 d[p.designation] = {}
@@ -76,7 +76,7 @@ class CDSSerializers(serializers.ModelSerializer):
         fields = ("etablissements", "name", "code")
 
     def get_etablissements(self, obj):
-        cds = CDS.objects.filter(code=obj.code).values('name', 'code')
+        cds = CDS.objects.filter(code=obj.code, functional=True).values('name', 'code')
         for d in cds:
             for p in Product.objects.all():
                 d[p.designation] = {}
@@ -91,14 +91,14 @@ class IncomingPatientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IncomingPatientsReport
-        fields = ('total_debut_semaine', 'ptb', 'oedemes', 'rechute','readmission','transfert_interne_i','date_of_first_week_day')
+        fields = ('total_debut_semaine', 'ptb', 'oedemes', 'rechute', 'readmission', 'transfert_interne_i', 'date_of_first_week_day')
 
 
 class OutgoingPatientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OutgoingPatientsReport
-        fields = ('gueri','deces','abandon','non_repondant','transfert_interne_o','date_of_first_week_day')
+        fields = ('gueri', 'deces', 'abandon', 'non_repondant', 'transfert_interne_o', 'date_of_first_week_day')
 
 
 class InOutSerialiser(serializers.Serializer):
