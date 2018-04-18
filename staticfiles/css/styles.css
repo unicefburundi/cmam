@@ -50,7 +50,7 @@ table.table
   width: 161px;
 }
 
-#taux_sst {
+/*#taux_sst {
     position: relative;
     width: 50%;
 }
@@ -58,7 +58,7 @@ table.table
 #tendance_sst{
     position: relative;
     width: 50%;  
-}
+}*/
 .highcharts-root{
     position: relative;
     width: 100% !important;  
@@ -66,7 +66,7 @@ table.table
 
 .highcharts-container{
     position: relative;
-    width: 100% !important;  
+    /*width: 100% !important;  */
 }
 
 .petit {
