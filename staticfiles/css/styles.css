@@ -50,28 +50,11 @@ table.table
   width: 161px;
 }
 
-/*#taux_sst {
-    position: relative;
-    width: 50%;
-}
-
-#tendance_sst{
-    position: relative;
-    width: 50%;  
-}*/
 .highcharts-root{
     position: relative;
-    width: 100% !important;  
+    width: 477px !important;  
 }
 
-.highcharts-container{
-    position: relative;
-    /*width: 100% !important;  */
-}
-
-.petit {
-    margin-left: 20px;
-}
 .datepicker.dropdown-menu {
     position: relative;
     z-index: 9999 !important;
