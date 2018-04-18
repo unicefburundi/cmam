@@ -52,7 +52,7 @@ table.table
 
 .highcharts-root{
     position: relative;
-    width: 477px !important;  
+    padding: 15px;
 }
 
 .datepicker.dropdown-menu {
