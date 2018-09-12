@@ -26,6 +26,7 @@ class Product(models.Model):
     general_measuring_unit = models.CharField(max_length=40)
     dose_par_semaine = models.FloatField()
     quantite_en_stock_central = models.FloatField(default=0.0)
+    functional = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.designation
@@ -41,6 +42,7 @@ class FacilityTypeProduct(models.Model):
     site_measuring_unit = models.CharField(max_length=40)
     priority_in_sms = models.IntegerField()
     can_be_fractioned = models.BooleanField()
+    functional = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('facility_type', 'priority_in_sms',)
@@ -72,6 +74,7 @@ class Stock(models.Model):
     id_facility = models.ForeignKey(Facility)
     product = models.ForeignKey(Product)
     quantity = models.FloatField(default=0.0)
+    functional = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "Quantity of {0} at {1}".format(self.product.designation, self.id_facility.name)
@@ -82,6 +85,7 @@ class Reporter(models.Model):
     facility = models.ForeignKey(Facility)
     phone_number = models.CharField(max_length=20)
     supervisor_phone_number = models.CharField(max_length=20)
+    functional = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.phone_number
@@ -97,6 +101,7 @@ class User(models.Model):
     login = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
     e_mail_address = models.CharField(max_length=50)
+    functional = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.nom
@@ -269,6 +274,7 @@ class Temporary(models.Model):
     facility = models.ForeignKey(Facility)
     phone_number = models.CharField(max_length=20)
     supervisor_phone_number = models.CharField(max_length=20)
+    functional = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.phone_number

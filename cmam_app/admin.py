@@ -1,7 +1,7 @@
 from django.contrib import admin
 from cmam_app.models import Product, PatientReports, IncomingPatientsReport, OutgoingPatientsReport, Reception, Report, Reporter, Stock, Sortie, Product, Facility, Stock, ProductsTranferReport, ProductsReceptionReport, StockOutReport, StockReport, ProductStockReport, Temporary, FacilityType, FacilityTypeProduct
 from import_export import resources
-from import_export.admin import ExportMixin
+from import_export.admin import ExportMixin, ImportExportModelAdmin
 from import_export import fields
 from bdiadmin.models import CDS, District
 
@@ -173,9 +173,12 @@ class ReceptionAdminRessource(resources.ModelResource):
 
 class ReceptionProductAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReceptionAdminRessource
-    list_display = ("reception", "produit", "quantite_recue",)
-    search_fields = ("reception__date_de_reception",)
-    list_filter = ("reception__date_de_reception",)
+    list_display = ("reception", "produit", "quantite_recue", "facility")
+    search_fields = ("reception__date_de_reception", "reception__report__facility__name")
+    list_filter = ("reception__date_de_reception", )
+
+    def facility(self, obj):
+        return obj.reception.report.facility
 
 
 class PatientReportsAdminRessource(resources.ModelResource):

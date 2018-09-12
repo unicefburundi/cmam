@@ -1,11 +1,162 @@
-{% extends "index.html"  %}
 {% load staticfiles %}
 {% load i18n %}
-{% block title %}Details of cds{% endblock title %}
-{% block search_form %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A admin dashboard for CMAM Unicef Burundi project">
+  <meta name="author" content="UNICEF Burundi">
+
+  <title>{% block title %}CMAM Dashboard{% endblock title %}</title>
+
+  <!-- Bootstrap Core CSS -->
+  <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+
+  <!-- MetisMenu CSS -->
+  <link href="{% static "vendor/metisMenu/metisMenu.min.css" %}" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="{% static "css/sb-admin-2.css" %}" rel="stylesheet">
+
+  <!-- Custom Fonts -->
+  <link href="{% static "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+  <link href="{% static "css/styles.css" %}" rel="stylesheet" type="text/css">
+  <script src="{% static 'bower_components/jquery/jquery.min.js' %}"></script>
+  <!-- Bootstrap Core CSS -->
+  <link rel="stylesheet" href="{% static 'bower_components/jquery-ui/themes/base/jquery-ui.css' %}">
+  <script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:-->
   
-{% endblock search_form %}
-{% block container %}
+  <script src="{% static 'js/angular.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/angular-sanitize.min.js' %}"></script>
+  <script src="{% static "js/jquery/jquery.dataTables.min.js" %}"></script>
+  <script src="{% static "js/angular-datatables.min.js" %}"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static "css/angular-datatables.min.css" %}">
+  <link rel="stylesheet" href="{% static "css/buttons.dataTables.min.css" %}">
+  <script src="{% static "js/dataTables.buttons.min.js" %}"></script>
+  <script src="{% static "js/buttons.colVis.min.js" %}"></script>
+  <script src="{% static "js/buttons.flash.min.js" %}"></script>
+  <script src="{% static "js/buttons.html5.min.js" %}"></script>
+  <script src="{% static "js/buttons.print.min.js" %}"></script>
+  <script src="{% static "js/angular-datatables.buttons.min.js" %}"></script>
+</head>
+
+<body ng-app="StockApp">
+
+  <div id="wrapper"  ng-controller="stockCtrl">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'home' %}">CMAM</a>
+      </div>
+      <!-- /.navbar-header -->
+
+      <ul class="nav navbar-top-links navbar-right">
+        {% if user.is_authenticated %}
+        <li>
+          <a class="page-scroll" href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'programs' %}"><i class="fa fa-plus-square fa-fw"></i>Programs</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-user"></span> 
+                <strong>{{user}}</strong>
+                <span class="glyphicon glyphicon-chevron-down"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="{% url 'bdiadmin:profile' %}"><i class="fa fa-users"></i>{% trans " Profiles" %}</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
+                </li>
+            </ul>
+        </li>
+        {% else %}
+        <li>
+          <a class="page-scroll" href="{% url 'login' %}?next=/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
+        </li>
+        {% endif %}
+      </ul>
+      <!-- /.navbar-top-links -->
+      <div class="navbar-default sidebar" role="navigation" >
+        <div class="sidebar-nav navbar-collapse">
+          <ul class="nav" >
+            <li >
+              {% block search_form %}
+              <form role="form" class="side-form" >
+                <!-- Province -->
+                <div id="province-group" class="form-group">
+                  <label>Province</label>
+                  <select id="ddprovince" class="form-control"  ng-model="province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()">
+                  <option value="">-------</option>
+                  </select>
+                </div>
+
+                <!-- District -->
+                <div id="district-group" class="form-group">
+                  <label>District</label>
+                  <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" >
+                  <option value="">-------</option>
+                  </select>
+                </div>
+
+                <!-- CDS -->
+                  <div id="cds-group" class="form-group">
+                    <label>CDS</label>
+                    <select class="form-control"  ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" >
+                    <option value="">-------</option>
+                    </select>
+                  </div>
+                <!-- dates -->
+                  <div class="form-group">
+                      <label for="dstartdate">{% trans "Start Date" %}:</label>
+                      <div class="input-group date" data-provide="datepicker">
+                          <input type="text" id="startdate" class="form-control datepicker" readonly="readonly" ng-model="startdate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
+                          <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th"></span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="dendtdate">{% trans "End Date" %}:</label>
+                      <div class="input-group date" data-provide="datepicker">
+                          <input type="text" id="endtdate" class="form-control datepicker" readonly="readonly" ng-model="enddate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
+                          <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th"></span>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+              {% endblock search_form %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="page-wrapper">
+      <div class="container-fluid">
+        <div class="row">
     <div class="contain" ng-controller="ExportCtrl">
       <div class="row">
       <div class="ProductsReceptionReport col-md-6">
@@ -131,5 +282,38 @@
       </div>
     </div>
     </div>
-{% endblock container %}
+<!-- /.col-lg-12 -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+              </div>
+              <!-- /#page-wrapper -->
+
+            </div>
+            <!-- /#wrapper -->
+            <footer class="container-fluid">
+              <p class="text-right ">©2016 UNICEF Burundi</p>
+            </footer>
+
+            <!-- Bootstrap Core JavaScript -->
+            <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+            <!-- Metis Menu Plugin JavaScript -->
+            <script src="{% static 'vendor/metisMenu/metisMenu.min.js' %}"></script>
+
+            <!-- Custom Theme JavaScript -->
+            <script src="{% static 'js/sb-admin-2.js' %}"></script>
+
+            <!-- CMAM based Js -->
+            <script src="{% static 'js/cmam-reports.js' %}"></script>
+            <script>
+            $(document).ready(function() {
+                $('.datepicker').datepicker({
+                    dateFormat: 'yy-mm-dd' });
+                });
+            </script>
+          </body>
+</html>
+
                     

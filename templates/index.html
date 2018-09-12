@@ -191,6 +191,7 @@
       <p class="text-right ">©2016 UNICEF Burundi</p>
     </footer>
 
+    {% block javascripts %}
     <!-- Bootstrap Core JavaScript -->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
@@ -202,6 +203,8 @@
 
     <!-- CMAM based Js -->
     <script src="{% static 'js/cmam-app.js' %}"></script>
+        
+    {% endblock javascripts %}
     <!-- Include Bootstrap Datepicker -->
     <script>
     $(document).ready(function() {

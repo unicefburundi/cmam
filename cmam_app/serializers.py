@@ -39,6 +39,7 @@ class ProvinceDistrictsSerializer(ProvinceSerializer):
     def get_etablissements(self, obj):
         districts = District.objects.filter(province__code=obj.code).values('name', 'code')
         YEAR = self.context["YEAR"]
+        # import ipdb; ipdb.set_trace()
         for d in districts:
             for p in Product.objects.all():
                 d[p.designation] = {}
@@ -127,4 +128,3 @@ class SumOutSerialiser(serializers.ModelSerializer):
 
     def get_week(self, obj):
         return "W{0}".format(obj.date_of_first_week_day.strftime("%W"))
-

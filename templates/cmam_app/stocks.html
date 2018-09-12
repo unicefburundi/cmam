@@ -199,7 +199,7 @@
                         <tbody>
                             {% verbatim %}
                             <tr ng-repeat="(x, y) in etablissements" ng-if="y.code.length != 7">
-                                <td><a href="/cmam/detailscds/{{y.code}}">{{y.name}}</a></td>
+                                <td><a href="/cmam/detailsprovinces/{{y.code}}">{{y.name}}</a></td>
                                 <td>{{y.code}}</td>
                                 <td >{{ y.AMX.reception  }}</td>
                                 <td >{{ y.AMX.sortie  }}</td>

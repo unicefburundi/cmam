@@ -22,4 +22,6 @@ urlpatterns = patterns(
     url(r'^get_year/$', get_year, name="get_year"),
     url(r'^get_week/$', get_week, name="get_week"),
     url(r'^detailscds/(?P<code>\w+)/$', detailscds, name="detailscds"),
+    url(r'^detaildistricts/(?P<code>\w+)/$', detailscds, name="detaildistricts"),
+    url(r'^detailsprovinces/(?P<code>\w+)/$', detailscds, name="detailsprovinces"),
 )
