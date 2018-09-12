@@ -8,7 +8,7 @@ from cmam_app.models import *
 from cmam_app.serializers import *
 from bdiadmin.models import Province, District
 from django.views.generic.edit import FormView
-from cmam_app.forms import SortiesForm
+from django.views.generic.base import TemplateView
 from cmam_app.utils import get_adminqueryset, get_reportqueryset
 from django.http import HttpResponse
 import json
@@ -77,9 +77,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
 
 
-class StockView(FormView):
+class StockView(TemplateView):
     template_name = 'cmam_app/stocks.html'
-    form_class = SortiesForm
 
 
 class ProvinceDistrictViewSet(viewsets.ModelViewSet):

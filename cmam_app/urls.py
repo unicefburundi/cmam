@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from cmam_app.backend import handel_rapidpro_request
 from cmam_app.views import *
 from rest_framework import routers
@@ -13,8 +13,7 @@ router.register(r'outgoing', OutgoingViewset)
 router.register(r'outsum', SumOutgoingViewset)
 router.register(r'inoutreport', InOutViewset)
 
-urlpatterns = patterns(
-    '', 
+urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'external_request', handel_rapidpro_request, name="handel_request"),
     url(r'^stocks/$', StockView.as_view(), name="stocks"),
@@ -24,4 +23,4 @@ urlpatterns = patterns(
     url(r'^detailscds/(?P<code>\w+)/$', detailscds, name="detailscds"),
     url(r'^detaildistricts/(?P<code>\w+)/$', detailscds, name="detaildistricts"),
     url(r'^detailsprovinces/(?P<code>\w+)/$', detailscds, name="detailsprovinces"),
-)
+]
