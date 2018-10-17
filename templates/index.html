@@ -2,217 +2,248 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    {% block head %}
+      {% block meta %}
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      {% endblock meta %}
 
-<head>
+      <title>CMAM | {% block title %}Dashboard{% endblock %}</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A admin dashboard for CMAM Unicef Burundi project">
-    <meta name="author" content="UNICEF Burundi">
+      {% block stylesheets %}
+        <!-- Bootstrap -->
+        <link href="/static/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Jquery-UI -->
+        <link rel="stylesheet" href="{% static 'bower_components/jquery-ui/themes/base/jquery-ui.css' %}">
+        <!-- Font Awesome -->
+        <link href="/static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <!-- NProgress -->
+        <link href="/static/bower_components/nprogress/nprogress.css" rel="stylesheet">
+        <!-- bootstrap-daterangepicker -->
+        <link href="/static/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+        <!-- iCheck -->
+        <link href="/static/bower_components/iCheck/skins/flat/green.css" rel="stylesheet">
+        <!-- bootstrap-progressbar -->
+        <link href="/static/bower_components/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+        <!-- JQVMap -->
+        <link href="/static/bower_components/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+      {% endblock stylesheets %}
+      <!-- Custom Theme Style -->
+      <link href="/static/build/css/custom.css" rel="stylesheet">
+    {% endblock head %}
+  </head>
 
-    <title>{% block title %}CMAM Dashboard{% endblock title %}</title>
-    <script src="{% static 'bower_components/jquery/jquery.min.js' %}"></script>
-    <!-- Bootstrap Core CSS -->
-    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'bower_components/jquery-ui/themes/base/jquery-ui.css' %}">
-    <script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
-    <!-- MetisMenu CSS -->
-    <link href="{% static "vendor/metisMenu/metisMenu.min.css" %}" rel="stylesheet">
+  <body class="{% block body_class %}nav-md {% endblock body_class %}" ng-app="{% block blockname %}myApp{% endblock blockname %}">
+    {% block body %}
+      <div class="container body">
+        <div class="main_container">
 
-    <!-- Custom CSS -->
-    <link href="{% static "css/sb-admin-2.css" %}" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="{% static "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
-    <link href="{% static "css/styles.css" %}" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <script src="{% static "js/angular.min.js" %}"></script>
-    <script src="{% static "js/highcharts/highcharts.js" %}"></script>
-</head>
-
-<body ng-app="myApp">
-
-    <div id="wrapper" >
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{% url 'home' %}">CMAM</a>
+          {% block sidebar %}
+            <div class="col-md-3 left_col {% block sidebar_class %} {% endblock sidebar_class %}">
+              {% include "sidebar.html" %}
             </div>
-            <!-- /.navbar-header -->
+          {% endblock sidebar %}
 
-            <ul class="nav navbar-top-links navbar-right">
-                {% if user.is_authenticated %}
-                <li>
-                    <a class="page-scroll" href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
-                </li>
-                <li>
-                    <a class="page-scroll" href="{% url 'programs' %}"><i class="fa fa-plus-square fa-fw"></i>{% trans "Programs" %}</a>
-                </li>
-                <li>
-                    <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
+          {% block top_navigation %}
+            <div class="top_nav">
+              {% include "top_navigation.html" %}
+            </div>
+          {% endblock top_navigation %}
+
+          {% block content %}
+          <div class="right_col" role="main">
+          <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+            <h2>Search</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+            <div class="x_content">
+              <br />
+              {% block search_form %}
+              <form role="form" class="side-form" ng-controller="myCtrl">
+                <!-- Province -->
+                <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                  <label>Province</label>
+                  <select id="provinceselect" class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()" >
+                      <option value="">-------</option>
+                  </select>
+                </div>
+
+                <!-- District -->
+                <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                  <label>District</label>
+                  <select id="districtselect" class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" >
+                      <option value="">-------</option>
+                  </select>
+                </div>
+
+                <!-- CDS -->
+                  <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                    <label>CDS</label>
+                    <select id="cdsselect" class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()">
+                        <option value="">-------</option>
+                    </select>
+                  </div>
+                <!-- dates -->
+                  <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                      <label for="dstartdate">{% trans "Start Date" %}:</label>
+                      <div class="input-group date" data-provide="datepicker">
+                          <input type="text" id="startdate" class="form-control datepicker" readonly="readonly" ng-model="startdate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
+                          <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th"></span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                      <label for="dendtdate">{% trans "End Date" %}:</label>
+                      <div class="input-group date" data-provide="datepicker">
+                          <input type="text" id="endtdate" class="form-control datepicker" readonly="readonly" ng-model="enddate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
+                          <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th"></span>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+              {% endblock search_form %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% block programs %}
+      <div class="row">
+        <div ng-controller="DashCtrl">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2><i class="fa fa-bars"></i> Situation du pays <small>Burundi</small></h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-user"></span> 
-                        <strong>{{user}}</strong>
-                        <span class="glyphicon glyphicon-chevron-down"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{% url 'bdiadmin:profile' %}"><i class="fa fa-users"></i>{% trans "Profiles" %}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
-                        </li>
-                    </ul>
-                </li>
-                {% else %}
-                    <li>
-                        <a class="page-scroll" href="{% url 'login' %}?next=/dashboard/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Settings 1</a>
                     </li>
-                {% endif %}
-        </ul>
-            <!-- /.navbar-top-links -->
-            <div class="navbar-default sidebar" role="navigation"  ng-controller="myCtrl">
-                <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" >
-                        <li >
-                        {% block search_form %}
-                        <form role="form" class="side-form">
-                          <!-- Province -->
-                          <div id="province-group" class="form-group">
-                            <label>Province</label>
-                            <select id="provinceselect" class="form-control"  ng-model="dashboard.province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()" >
-                                <option value="">-------</option>
-                            </select>
-                          </div>
-
-                          <!-- District -->
-                          <div id="district-group" class="form-group">
-                            <label>District</label>
-                            <select id="districtselect" class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" >
-                                <option value="">-------</option>
-                            </select>
-                          </div>
-
-                          <!-- CDS -->
-                          <div id="cds-group" class="form-group">
-                            <label>CDS</label>
-                            <select id="cdsselect" class="form-control"  ng-model="dashboard.cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()">
-                                <option value="">-------</option>
-                            </select>
-                          </div>
-                          <!-- dates -->
-                          <div class="form-group">
-                            <label for="startdate">{% trans "End Date" %}:</label>
-                            <div class="input-group date" data-provide="datepicker">
-                                <input type="text" class="form-control datepicker" readonly="readonly" style="position: relative; z-index: 100000;" ng-model="startdate" ng-change="get_by_date()">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="dendtdate">{% trans "End Date" %}:</label>
-                            <div class="input-group date" data-provide="datepicker">
-                                <input type="text" class="form-control datepicker" readonly="readonly" style="position: relative; z-index: 100000;" ng-model="enddate" ng-change="get_by_date()">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                          </div>
-                        </form>
-                        {% endblock search_form %}
-                      </li>
+                    <li><a href="#">Settings 2</a>
+                    </li>
+                  </ul>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                  <li role="presentation" class="active"><a href="#sta1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">{% trans "Morbidity rate at STA" %}</a>
+                  </li>
+                  <li role="presentation" class=""><a href="#sta2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{% trans "Recovery trend STA" %}</a>
+                  </li>
+                  <li role="presentation" class=""><a href="#sst1" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{% trans "Morbidity rate at SST" %}</a>
+                  </li>
+                  <li role="presentation" class=""><a href="#sst2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{% trans "Recovery trend at SST" %}</a>
+                  </li>
                 </ul>
-            </div>
-        </div>
-    </nav>
-
-        <!-- Page Content -->
-        <div id="page-wrapper" >
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12 petit">
-                        <h1 class="page-header">{% trans "Community-based Management of Acute Malnutrition" %}</h1>
-                        {% block container %}
-                            <div class="container-fluid" id="main" >
-                              <div class="row">
-                                  <div ng-controller="DashCtrl">
-                                  <ul class="nav nav-tabs">
-                                    <li  class="active">
-                                      <a href="#sta" data-toggle="tab">STA</a>
-                                    </li>
-                                    <li >
-                                      <a href="#sst" data-toggle="tab">SST</a>
-                                    </li>
-                                  </ul>
-                                  <div class="tab-content">
-                                    <div class="tab-pane active" id="sta">
-                                      <div id="taux_sta" class="col-md-6" ></div>
-                                      <div id="tendance_sta"class="col-md-6" ></div>
-                                  </div>
-                                  <div class="tab-pane fade" id="sst">
-                                      <div id="taux_sst" class="col-md-6" ></div>
-                                      <div id="tendance_sst" class="col-md-6" ></div>
-                                  </div>
-                                </div>
-                              </div>
-                            <!--/col-->
-                          </div>
-                        {% endblock container %}
-                    </div>
-                    <!-- /.col-lg-12 -->
+                <div id="myTabContent" class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade active in" id="sta1" aria-labelledby="home-tab">
+                    <div id="taux_sta" class="col-md-12" ></div>
+                  </div>
+                  <div role="tabpanel" class="tab-pane fade" id="sta2" aria-labelledby="home-tab">
+                    <div id="tendance_sta" class="col-md-9" ></div>
+                  </div>
+                  <div role="tabpanel" class="tab-pane fade" id="sst1" aria-labelledby="profile-tab">
+                    <div id="taux_sst" class="col-md-9" ></div>
+                  </div>
+                  <div role="tabpanel" class="tab-pane fade" id="sst2" aria-labelledby="profile-tab">
+                    <div id="tendance_sst" class="col-md-9" ></div>
+                  </div>
                 </div>
-                <!-- /.row -->
+              </div>
             </div>
-            <!-- /.container-fluid -->
+          </div>
         </div>
-        <!-- /#page-wrapper -->
-
+      </div>
+        <!--/col-->
+      </div>
+    {% endblock programs %}
     </div>
-    <!-- /#wrapper -->
-    <footer class="container-fluid">
-      <p class="text-right ">©2016 UNICEF Burundi</p>
-    </footer>
+          {% endblock content %}
 
-    {% block javascripts %}
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+          {% block footer %}
+            <footer>
+              {% include "footer.html" %}
+            </footer>
+          {% endblock footer %}
+        </div>
+      </div>
 
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="{% static 'vendor/metisMenu/metisMenu.min.js' %}"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="{% static 'js/sb-admin-2.js' %}"></script>
-
-    <!-- CMAM based Js -->
-    <script src="{% static 'js/cmam-app.js' %}"></script>
-        
-    {% endblock javascripts %}
-    <!-- Include Bootstrap Datepicker -->
-    <script>
-    $(document).ready(function() {
-        $('.datepicker').datepicker({
-            dateFormat: 'yy-mm-dd' });
-        });
-    </script>
-
-</body>
-
+      {% block javascripts %}
+        <!-- jQuery -->
+        <script src="/static/bower_components/jquery/dist/jquery.min.js"></script>
+        <!-- AngularJs -->
+        <script src="{% static 'js/angular.min.js' %}"></script>
+        <!-- Highchart -->
+        <script src="{% static "js/highcharts/highcharts.js" %}"></script>
+        <!-- Jquery -->
+        <script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
+        <!-- Bootstrap -->
+        <script src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- FastClick -->
+        <script src="/static/bower_components/fastclick/lib/fastclick.js"></script>
+        <!-- NProgress -->
+        <script src="/static/bower_components/nprogress/nprogress.js"></script>
+        <!-- bootstrap-progressbar -->
+        <script src="/static/bower_components/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+        <!-- iCheck -->
+        <script src="/static/bower_components/iCheck/icheck.min.js"></script>
+        <!-- bootstrap-daterangepicker -->
+        <script src="/static/bower_components/moment/min/moment.min.js"></script>
+        <script src="/static/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+        <!-- bootstrap-wysiwyg -->
+        <script src="/static/bower_components/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+        <script src="/static/bower_components/jquery.hotkeys/jquery.hotkeys.js"></script>
+        <script src="/static/bower_components/google-code-prettify/src/prettify.js"></script>
+        <!-- jQuery Tags Input -->
+        <script src="/static/bower_components/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+        <!-- Switchery -->
+        <script src="/static/bower_components/switchery/dist/switchery.min.js"></script>
+        <!-- Select2 -->
+        <script src="/static/bower_components/select2/dist/js/select2.full.min.js"></script>
+        <!-- Parsley -->
+        <script src="/static/bower_components/parsleyjs/dist/parsley.min.js"></script>
+        <!-- Autosize -->
+        <script src="/static/bower_components/autosize/dist/autosize.min.js"></script>
+        <!-- jQuery autocomplete -->
+        <script src="/static/bower_components/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
+        <!-- starrr -->
+        <script src="/static/bower_components/starrr/dist/starrr.js"></script>
+      {% endblock %}
+      {% block custom_js %}
+      <script src="{% static 'js/cmam-app.js' %}"></script>
+      {% endblock custom_js %}
+      <!-- Custom Theme Scripts -->
+      <script src="/static/build/js/custom.js"></script>
+      <!-- CMAM based Js -->
+      <!-- Include Bootstrap Datepicker -->
+      <script>
+      $(document).ready(function() {
+          $('.datepicker').datepicker({
+              dateFormat: 'yy-mm-dd' });
+          });
+      </script>
+    {% endblock body %}
+  </body>
 </html>

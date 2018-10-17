@@ -1,259 +1,260 @@
+{% extends "index.html" %}
 {% load staticfiles %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A admin dashboard for CMAM Unicef Burundi project">
-  <meta name="author" content="UNICEF Burundi">
-
-  <title>{% block title %}CMAM Dashboard{% endblock title %}</title>
-
-  <!-- Bootstrap Core CSS -->
-  <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
-
-  <!-- MetisMenu CSS -->
-  <link href="{% static "vendor/metisMenu/metisMenu.min.css" %}" rel="stylesheet">
-
-  <!-- Custom CSS -->
-  <link href="{% static "css/sb-admin-2.css" %}" rel="stylesheet">
-
-  <!-- Custom Fonts -->
-  <link href="{% static "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
-  <link href="{% static "css/styles.css" %}" rel="stylesheet" type="text/css">
-  <script src="{% static 'bower_components/jquery/jquery.min.js' %}"></script>
-  <!-- Bootstrap Core CSS -->
-  <link rel="stylesheet" href="{% static 'bower_components/jquery-ui/themes/base/jquery-ui.css' %}">
-  <script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:-->
-  
-  <script src="{% static 'js/angular.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/angular-sanitize.min.js' %}"></script>
-  <script src="{% static "js/jquery/jquery.dataTables.min.js" %}"></script>
-  <script src="{% static "js/angular-datatables.min.js" %}"></script>
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="{% static "css/angular-datatables.min.css" %}">
-  <link rel="stylesheet" href="{% static "css/buttons.dataTables.min.css" %}">
-  <script src="{% static "js/dataTables.buttons.min.js" %}"></script>
-  <script src="{% static "js/buttons.colVis.min.js" %}"></script>
-  <script src="{% static "js/buttons.flash.min.js" %}"></script>
-  <script src="{% static "js/buttons.html5.min.js" %}"></script>
-  <script src="{% static "js/buttons.print.min.js" %}"></script>
-  <script src="{% static "js/angular-datatables.buttons.min.js" %}"></script>
-</head>
-
-<body ng-app="ProgramApp">
-
-  <div id="wrapper"  ng-controller="pgrmCtrl">
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="{% url 'home' %}">CMAM</a>
-      </div>
-      <!-- /.navbar-header -->
-
-      <ul class="nav navbar-top-links navbar-right">
-        {% if user.is_authenticated %}
-        <li>
-          <a class="page-scroll" href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="{% url 'programs' %}"><i class="fa fa-plus-square fa-fw"></i>Programs</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="{% url 'stocks' %}"><i class="fa fa-medkit fa-fw"></i>Stocks</a>
-        </li>
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-user"></span> 
-                <strong>{{user}}</strong>
-                <span class="glyphicon glyphicon-chevron-down"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="{% url 'bdiadmin:profile' %}"><i class="fa fa-users"></i>{% trans " Profiles" %}</a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
-                </li>
-            </ul>
-        </li>
-        {% else %}
-        <li>
-          <a class="page-scroll" href="{% url 'login' %}?next=/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
-        </li>
-        {% endif %}
-      </ul>
-      <!-- /.navbar-top-links -->
-      <div class="navbar-default sidebar" role="navigation" >
-        <div class="sidebar-nav navbar-collapse">
-          <ul class="nav" >
-            <li >
-              {% block search_form %}
-              <form role="form" class="side-form" >
-                <!-- Province -->
-                <div id="province-group" class="form-group">
-                  <label>Province</label>
-                  <select id="ddprovince" class="form-control"  ng-model="province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()">
-                  <option value="">-------</option>
-                  </select>
-                </div>
-
-                <!-- District -->
-                <div id="district-group" class="form-group">
-                  <label>District</label>
-                  <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" >
-                  <option value="">-------</option>
-                  </select>
-                </div>
-
-                <!-- CDS -->
-                  <div id="cds-group" class="form-group">
-                    <label>CDS</label>
-                    <select class="form-control"  ng-model="cds" ng-options="x.name for x in cdss track by x.code"  ng-change="update_cds()" >
+{% block title %}Programs{% endblock title %}
+{% block blockname %}ProgramApp{% endblock blockname %}
+{% block content %}
+      {% block programs %}
+      <div class="right_col" role="main" ng-controller="pgrmCtrl">
+        <!-- top tiles -->
+        <div class="row tile_count">
+          <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> {% trans "Rate of healing at STA" %}</span>
+            <div class="count green">{% verbatim %}{{((cdsgnrl.gueri/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}{% endverbatim %}%</div>
+            <span class="count_bottom"><i class="green">
+              <table class="table bg-success">
+                <thead>
+                  <tr>
+                    <th>Prov</th>
+                    <th>Dist</th>
+                    <th>CDS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{% verbatim %}
+                    {{((cdsprov.gueri/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
+                    {% endverbatim %}%</td>
+                          <td>{% verbatim %}
+                    {{((cdsdistr.gueri/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
+                    {% endverbatim %}%</td>
+                          <td>{% verbatim %}
+                    {{((cdscds.gueri/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
+                    {% endverbatim %}%</td>
+                  </tr>
+                </tbody>
+                </table>
+              </i>
+            </span>
+          </div>
+          <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-clock-o"></i>{% trans "Death rate at STA" %}</span>
+            <div class="count red">{% verbatim %}{{((cdsgnrl.deces/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}{% endverbatim %}%</div>
+            <span class="count_bottom"><i class="red">
+              <table class="table bg-danger">
+                <thead>
+                  <tr>
+                    <th>Prov</th>
+                    <th>Dist</th>
+                    <th>CDS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{% verbatim %}
+              {{((cdsprov.deces/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                    <td>{% verbatim %}
+              {{((cdsdistr.deces/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                    <td>{% verbatim %}
+              {{((cdscds.deces/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                  </tr>
+                </tbody>
+              </table>
+              </i>
+            </span>
+          </div>
+          <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> {% trans "Dropout rate at STA" %}</span>
+            <div class="count green">{% verbatim %}{{((cdsgnrl.abandon/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}{% endverbatim %}%</div>
+            <span class="count_bottom"><i class="green">
+              <table class="table bg-info">
+                <thead>
+                  <tr>
+                    <th>Prov</th>
+                    <th>Dist</th>
+                    <th>CDS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{% verbatim %}
+              {{((cdsprov.abandon/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                    <td>{% verbatim %}
+              {{((cdsdistr.abandon/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                    <td>{% verbatim %}
+              {{((cdscds.abandon/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </i>
+          </span>
+          </div>
+          <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> {% trans "Rate of healing at SST" %}</span>
+            <div class="count">{% verbatim %}{{((hopitauxgnrl.gueri/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}{% endverbatim %}%</div>
+            <span class="count_bottom"><i class="green">
+              <table class="table bg-success">
+                <thead>
+                  <tr>
+                    <th>Prov</th>
+                    <th>Dist</th>
+                    <th>Hop</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{% verbatim %}
+              {{((hopitauxprov.gueri/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                    <td>{% verbatim %}
+              {{((hopitauxdistr.gueri/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+              <td>{% verbatim %}
+              {{((hopitauxcds.gueri/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                  </tr>
+                </tbody>
+              </table>
+              </i>
+            </span>
+          </div>
+          <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> {% trans "Death rate at SST" %}</span>
+            <div class="count red">{% verbatim %}{{((hopitauxgnrl.deces/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}{% endverbatim %}%</div>
+            <span class="count_bottom"><i class="red">
+              <table class="table bg-danger">
+                <thead>
+                  <tr>
+                    <th>Prov</th>
+                    <th>Dist</th>
+                    <th>Hop</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{% verbatim %}
+              {{((hopitauxprov.deces/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                    <td>{% verbatim %}
+              {{((hopitauxdistr.deces/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+              <td>{% verbatim %}
+              {{((hopitauxcds.deces/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
+              {% endverbatim %}%</td>
+                  </tr>
+                </tbody>
+              </table>
+                </i>
+            </span>
+          </div>
+          <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> {% trans "Dropout rate at SST" %}</span>
+            <div class="count">{% verbatim %}{{((hopitauxgnrl.abandon/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}{% endverbatim %}%</div>
+            <span class="count_bottom"><i class="green">
+              <table class="table bg-info">
+                  <thead>
+                    <tr>
+                      <th>Prov</th>
+                      <th>Dist</th>
+                      <th>Hop</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td >{% verbatim %}
+                {{((hopitauxprov.abandon/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
+                {% endverbatim %}%</td>
+                      <td>{% verbatim %}
+                {{((hopitauxdistr.abandon/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
+                {% endverbatim %}%</td>
+                <td>{% verbatim %}
+                {{((hopitauxcds.abandon/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
+                {% endverbatim %}%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </i>
+            </span>
+          </div>
+        </div>
+        <!-- /top tiles -->
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="x_panel">
+              <div class="x_content">
+                <br />
+                {% block search_form %}
+                <form role="form" class="side-form">
+                  <!-- Province -->
+                  <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                    <label>Province</label>
+                    <select id="ddprovince" class="form-control"  ng-model="province" ng-options="x.name for x in provinces track by x.code" ng-change="update_province()">
                     <option value="">-------</option>
                     </select>
                   </div>
-                <!-- dates -->
-                  <div class="form-group">
-                      <label for="dstartdate">{% trans "Start Date" %}:</label>
-                      <div class="input-group date" data-provide="datepicker">
-                          <input type="text" id="startdate" class="form-control datepicker" readonly="readonly" ng-model="startdate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
-                          <div class="input-group-addon">
-                              <span class="glyphicon glyphicon-th"></span>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label for="dendtdate">{% trans "End Date" %}:</label>
-                      <div class="input-group date" data-provide="datepicker">
-                          <input type="text" id="endtdate" class="form-control datepicker" readonly="readonly" ng-model="enddate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
-                          <div class="input-group-addon">
-                              <span class="glyphicon glyphicon-th"></span>
-                          </div>
-                      </div>
-                  </div>
-              </form>
-              {% endblock search_form %}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
 
-    <!-- Page Content -->
-    <div id="page-wrapper">
-      <div class="container-fluid">
+                  <!-- District -->
+                  <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                    <label>District</label>
+                    <select id="districtselect" class="form-control"  ng-model="dashboard.district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" >
+                        <option value="">-------</option>
+                    </select>
+                  </div>
+
+                  <!-- CDS -->
+                    <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                      <label>CDS</label>
+                      <select class="form-control"  ng-model="district" ng-options="x.name for x in districts track by x.code"  ng-change="update_district()" >
+                      <option value="">-------</option>
+                      </select>
+                    </div>
+                  <!-- dates -->
+                    <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                        <label for="dstartdate">{% trans "Start Date" %}:</label>
+                        <div class="input-group date" data-provide="datepicker">
+                            <input type="text" id="startdate" class="form-control datepicker" readonly="readonly" ng-model="startdate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                        <label for="dendtdate">{% trans "End Date" %}:</label>
+                        <div class="input-group date" data-provide="datepicker">
+                            <input type="text" id="endtdate" class="form-control datepicker" readonly="readonly" ng-model="enddate" ng-change="get_by_date()" style="position: relative; z-index: 100000;">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                {% endblock search_form %}
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
-          <div class="col-lg-12" ng-controller="ExportCtrl">
-            <h1 class="page-header">{% trans "Community-based Management of Acute Malnutrition" %}</h1>
-            {% block container %}
-            <div class="container"  >
-              <ul class="nav nav-tabs">
-                <li class="active"><a href="#STA" data-toggle="tab">STA in {% verbatim %}{{region}}{% endverbatim %}</a></li>
-                <li ><a href="#SST" data-toggle="tab">SST in {% verbatim %}{{region}}{% endverbatim %}</a></li>
-              </ul>
-              <div class="tab-content" >
-                <div class="tab-pane active" id="STA">
-                  <div class="row" >
-                    <div class="col-md-4 text-success">
-                      <h3>{% trans "Rate of healing" %}</h3>
-                      <h1 >{% verbatim %}
-                        {{((cdsgnrl.gueri/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
-                        {% endverbatim %}%</h1>
-                        <table class="table bg-success">
-                          <thead>
-                            <tr>
-                              <th>Province</th>
-                              <th>District</th>
-                              <th>CDS</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>{% verbatim %}
-                        {{((cdsprov.gueri/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
-                        {% endverbatim %}%</td>
-                              <td>{% verbatim %}
-                        {{((cdsdistr.gueri/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
-                        {% endverbatim %}%</td>
-                              <td>{% verbatim %}
-                        {{((cdscds.gueri/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
-                        {% endverbatim %}%</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div class="col-md-4 text-danger">
-                        <h3 >{% trans "Death rate" %}</h3>
-                        <h1 >{% verbatim %}
-                          {{((cdsgnrl.deces/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
-                          {% endverbatim %}%</h1>
-                          <table class="table bg-danger">
-                            <thead>
-                              <tr>
-                                <th>Province</th>
-                                <th>District</th>
-                                <th>CDS</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>{% verbatim %}
-                          {{((cdsprov.deces/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
-                          {% endverbatim %}%</td>
-                                <td>{% verbatim %}
-                          {{((cdsdistr.deces/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
-                          {% endverbatim %}%</td>
-                                <td>{% verbatim %}
-                          {{((cdscds.deces/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
-                          {% endverbatim %}%</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <div class="col-md-4 text-info">
-                          <h3>{% trans "Dropout rate" %}</h3>
-                          <h1 >{% verbatim %}
-                            {{((cdsgnrl.abandon/(cdsgnrl.gueri+cdsgnrl.deces+cdsgnrl.abandon))*100).toFixed(2) | number: 0}}
-                            {% endverbatim %}%</h1>
-                            <table class="table bg-info">
-                              <thead>
-                                <tr>
-                                  <th>Province</th>
-                                  <th>District</th>
-                                  <th>CDS</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>{% verbatim %}
-                            {{((cdsprov.abandon/(cdsprov.gueri+cdsprov.deces+cdsprov.abandon))*100).toFixed(2) | number: 0}}
-                            {% endverbatim %}%</td>
-                                  <td>{% verbatim %}
-                            {{((cdsdistr.abandon/(cdsdistr.gueri+cdsdistr.deces+cdsdistr.abandon))*100).toFixed(2) | number: 0}}
-                            {% endverbatim %}%</td>
-                                  <td>{% verbatim %}
-                            {{((cdscds.abandon/(cdscds.gueri+cdscds.deces+cdscds.abandon))*100).toFixed(2) | number: 0}}
-                            {% endverbatim %}%</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                        <table  class="table fixed table-bordered table-hover"  data-toggle="table" datatable="ng" dt-options="dtOptions" >
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+              <div class="x_content">
+
+
+                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                  <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#tab_content1" id="sta-tab" role="tab" data-toggle="tab" aria-expanded="true">STA</a>
+                    </li>
+                    <li role="presentation" class=""><a href="#tab_content2" role="tab" id="sst-tab" data-toggle="tab" aria-expanded="false">SST</a>
+                    </li>
+                  </ul>
+                  <div id="myTabContent" class="tab-content" ng-controller="ExportCtrl">
+                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                      <table  class="table fixed table-bordered table-hover"  data-toggle="table" datatable="ng" dt-options="dtOptions" >
                           <thead class="thead-default">
                             <tr>
                               <th rowspan="2">Week</th>
@@ -316,105 +317,12 @@
                             {% endverbatim %}
                           </tbody>
                         </table>
-						
-						<div class="row" >
-							<input type="button" class="btn btn-default" target="_blank" onclick="location.href='http://cmam.unicefburundi.org/explorer/3/';" value="Stock In Excel" />
-						</div>
-						<div class="row" >
-							<input type="button" class="btn btn-default" target="_blank" onclick="location.href='http://cmam.unicefburundi.org/explorer/4/';" value="Stock Out Excel" />
-						</div>
-                      </div>
-                      <div class="tab-pane " id="SST">
-                        <div class="row" >
-                          <div class="col-md-4 text-success">
-                            <h3>{% trans "Rate of healing" %}</h3>
-                            <h1 >{% verbatim %}
-                              {{((hopitauxgnrl.gueri/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
-                              {% endverbatim %}%</h1>
-                              <table class="table bg-success">
-                                <thead>
-                                  <tr>
-                                    <th>Province</th>
-                                    <th>District</th>
-                                    <th>Hopital</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>{% verbatim %}
-                              {{((hopitauxprov.gueri/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
-                              {% endverbatim %}%</td>
-                                    <td>{% verbatim %}
-                              {{((hopitauxdistr.gueri/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
-                              {% endverbatim %}%</td>
-                              <td>{% verbatim %}
-                              {{((hopitauxcds.gueri/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
-                              {% endverbatim %}%</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                            <div class="col-md-4 text-danger">
-                              <h3>{% trans "Death rate" %}</h3>
-                              <h1 >{% verbatim %}
-                                {{((hopitauxgnrl.deces/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
-                                {% endverbatim %}%</h1>
-                                <table class="table bg-danger">
-                                  <thead>
-                                    <tr>
-                                      <th>Province</th>
-                                      <th>District</th>
-                                      <th>Hopital</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      <td>{% verbatim %}
-                                {{((hopitauxprov.deces/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
-                                {% endverbatim %}%</td>
-                                      <td>{% verbatim %}
-                                {{((hopitauxdistr.deces/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
-                                {% endverbatim %}%</td>
-                                <td>{% verbatim %}
-                                {{((hopitauxcds.deces/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
-                                {% endverbatim %}%</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                              <div class="col-md-4 text-info">
-                                <h3>{% trans "Dropout rate" %}</h3>
-                                <h1>{% verbatim %}
-                                  {{((hopitauxgnrl.abandon/(hopitauxgnrl.gueri+hopitauxgnrl.deces+hopitauxgnrl.abandon))*100).toFixed(2) | number: 0}}
-                                  {% endverbatim %}%</h1>
-                                  <table class="table bg-info">
-                                    <thead>
-                                      <tr>
-                                        <th>Province</th>
-                                        <th>District</th>
-                                        <th>Hopital</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>
-                                        <td >{% verbatim %}
-                                  {{((hopitauxprov.abandon/(hopitauxprov.gueri+hopitauxprov.deces+hopitauxprov.abandon))*100).toFixed(2) | number: 0}}
-                                  {% endverbatim %}%</td>
-                                        <td>{% verbatim %}
-                                  {{((hopitauxdistr.abandon/(hopitauxdistr.gueri+hopitauxdistr.deces+hopitauxdistr.abandon))*100).toFixed(2) | number: 0}}
-                                  {% endverbatim %}%</td>
-                                  <td>{% verbatim %}
-                                  {{((hopitauxcds.abandon/(hopitauxcds.gueri+hopitauxcds.deces+hopitauxcds.abandon))*100).toFixed(2) | number: 0}}
-                                  {% endverbatim %}%</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
-                              <table class="table fixed table-bordered table-hover" data-toggle="table" datatable="ng" dt-options="dtOptions" id="tblSST" >
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+                      <table class="table fixed table-bordered table-hover" data-toggle="table" datatable="ng" dt-options="dtOptions" id="tblSST" >
                                 <thead class="thead-default">
                                   <tr>
-									                  <th rowspan="2">Week</th>
+                                    <th rowspan="2">Week</th>
                                     <th rowspan="2">Total debut de semaine</th>
                                     <th colspan="3">Nouvelles Admissions</th>
                                     <th rowspan="2">Re-admission après Abandon (&lt;2mois)</th>
@@ -471,49 +379,31 @@
                                   {% endverbatim %}
                                 </tbody>
                               </table>
-							  
-							  <div class="row" >
-									<input type="button" class="btn btn-default" target="_blank" onclick="location.href='http://cmam.unicefburundi.org/explorer/3/';" value="Stock In Excel" />
-								</div>
-								<div class="row" >
-									<input type="button" class="btn btn-default" target="_blank" onclick="location.href='http://cmam.unicefburundi.org/explorer/4/';" value="Stock Out Excel" />
-								</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      {% endblock container %}
                     </div>
-                    <!-- /.col-lg-12 -->
                   </div>
-                  <!-- /.row -->
                 </div>
-                <!-- /.container-fluid -->
+
               </div>
-              <!-- /#page-wrapper -->
-
             </div>
-            <!-- /#wrapper -->
-            <footer class="container-fluid">
-              <p class="text-right ">©2016 UNICEF Burundi</p>
-            </footer>
+          </div>
+        </div>
+      </div>
+      {% endblock programs %}
+{% endblock content %}
 
-            <!-- Bootstrap Core JavaScript -->
-            <script src="{% static 'js/bootstrap.min.js' %}"></script>
-
-            <!-- Metis Menu Plugin JavaScript -->
-            <script src="{% static 'vendor/metisMenu/metisMenu.min.js' %}"></script>
-
-            <!-- Custom Theme JavaScript -->
-            <script src="{% static 'js/sb-admin-2.js' %}"></script>
-
-            <!-- CMAM based Js -->
-            <script src="{% static 'js/cmam-programs.js' %}"></script>
-            <script>
-            $(document).ready(function() {
-                $('.datepicker').datepicker({
-                    dateFormat: 'yy-mm-dd' });
-                });
-            </script>
-          </body>
-</html>
+{% block custom_js %}
+  <script type="text/javascript" src="{% static 'js/angular-sanitize.min.js' %}"></script>
+  <script src="{% static "js/jquery/jquery.dataTables.min.js" %}"></script>
+  <script src="{% static "js/angular-datatables.min.js" %}"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static "css/angular-datatables.min.css" %}">
+  <link rel="stylesheet" href="{% static "css/buttons.dataTables.min.css" %}">
+  <script src="{% static "js/dataTables.buttons.min.js" %}"></script>
+  <script src="{% static "js/buttons.colVis.min.js" %}"></script>
+  <script src="{% static "js/buttons.flash.min.js" %}"></script>
+  <script src="{% static "js/buttons.html5.min.js" %}"></script>
+  <script src="{% static "js/buttons.print.min.js" %}"></script>
+  <script src="{% static "js/angular-datatables.buttons.min.js" %}"></script>
+  <!-- CMAM based Js -->
+  <script src="{% static 'js/cmam-programs.js' %}"></script>
+{% endblock custom_js %}

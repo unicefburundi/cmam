@@ -18,3 +18,6 @@ staticfiles/img/
 facility.json
 *.sql
 data.json
+.DS_Store
+node_modules/
+
