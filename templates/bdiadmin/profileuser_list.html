@@ -1,71 +1,12 @@
+{% extends "index.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% block title %}Profiles{% endblock title %}
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Profile</title>
-    <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    {% include 'material/includes/material_css.html' %}
-    <script src="{% static 'material/js/jquery-2.2.0.js' %}"></script>
-    {% include 'material/includes/material_js.html' %}
-    {% load material_form %}
-</head>
-
-<body>
-    <div class="container">
-        <nav>
-            <div class="nav-wrapper teal lighten-2">
-                <a href="{% url 'home' %}" class="brand-logo">CMAM</a>
-                <ul class="right hide-on-med-and-down">
-                    {% if user.is_authenticated %}
-                    <li>
-                        <a  href="{% url 'dashboard' %}"><i class="material-icons left">assessment</i>Dashboard</a>
-                    </li>
-                    <li>
-                        <a  href="{% url 'programs' %}"><i class="material-icons left">list</i>Programs</a>
-                    </li>
-                    <li>
-                        <a  href="{% url 'stocks' %}"><i class="material-icons left">list</i>Stocks</a>
-                    </li>
-                    <li>
-                        <a href="#!" class="dropdown-button" data-activates="dropdown1"> 
-                            <i class="material-icons right">perm_identity</i><strong>{{user}}</strong>
-                        </a>
-                        <ul id="dropdown1" class="dropdown-content">
-                            <li>
-                                <a href="{% url 'bdiadmin:profile' %}"><i class="fa fa-users"></i>{% trans " Profiles" %}</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="{% url 'logout' %}?next=/"><i class="fa fa-sign-out fa-fw"></i>{% trans "Logout" %}</a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li>
-                        <a  href="{% url 'login' %}?next=/dashboard/"><i class="fa fa-sign-in fa-fw"></i>{% trans "Login" %}</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
-        {% block content %}
-            {% if object_list %}
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-                {{ message }}
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+{% block content %}
+    {% block programs %}
+    <div class="right_col" role="main" >
         <div class="col s8">
             <table class="table highlight" >
                 <thead>
@@ -105,16 +46,9 @@
             </table>
                 {% if user.is_superuser %}
                     <a class="btn-floating btn-large waves-effect waves-light red" href="{% url 'bdiadmin:profile_create' %}"><i class="material-icons">add</i></a>    
-                {% endif %}  
-            {% else %}
+                {% endif %} 
             <p>No profiles found!!! :(</p>
-            {% endif %}
-        {% endblock content %}
         </div>
-        <script>
-            $(document).ready(function(){
-                $(".dropdown-button").dropdown();
-            });
-        </script>
-    </body>
-    </html>
+    </div>
+    {% endblock programs %}
+{% endblock content %}
