@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -19,7 +19,11 @@ NOWYEAR = datetime.today().year
 
 @login_required
 def get_year(request):
-    dates = Report.objects.values('reporting_date').distinct().dates('reporting_date', 'year')
+    dates = (
+        Report.objects.values("reporting_date")
+        .distinct()
+        .dates("reporting_date", "year")
+    )
     years = {}
     for d in dates:
         years[d.year] = d.year
@@ -28,7 +32,11 @@ def get_year(request):
 
 @login_required
 def get_week(request):
-    dates = Report.objects.values('reporting_date').distinct().dates('reporting_date', 'day')
+    dates = (
+        Report.objects.values("reporting_date")
+        .distinct()
+        .dates("reporting_date", "day")
+    )
     weeks = {}
     for d in dates:
         weeks[d.strftime("%W")] = "W{0}".format(d.strftime("%W"))
@@ -36,7 +44,7 @@ def get_week(request):
 
 
 def landing(request):
-    return render(request, 'landing_page.html')
+    return render(request, "landing_page.html")
 
 
 @login_required(login_url="/login/")
@@ -48,19 +56,27 @@ def home(request):
 def dashboard(request):
     d = {}
     data = ["BAL", "ADM", "STR"]
-    d['reportingcategories'] = data
+    d["reportingcategories"] = data
     return render(request, "index.html", d)
 
 
 @login_required(login_url="/login/")
 def detailscds(request, code=None):
     data = {}
-    data['Report'] = Report.objects.filter(facility__id_facility=code)
-    data['ProductsReceptionReport'] = ProductsReceptionReport.objects.filter(reception__report__facility__id_facility=code)
-    data['ProductsTranferReport'] = ProductsTranferReport.objects.filter(sortie__report__facility__id_facility=code)
-    data['ProductStockReport'] = ProductStockReport.objects.filter(stock_report__report__facility__id_facility=code)
-    data['StockOutReport'] = StockOutReport.objects.filter(report__facility__id_facility=code)
-    data['Facility'] = Facility.objects.get(id_facility=code)
+    data["Report"] = Report.objects.filter(facility__id_facility=code)
+    data["ProductsReceptionReport"] = ProductsReceptionReport.objects.filter(
+        reception__report__facility__id_facility=code
+    )
+    data["ProductsTranferReport"] = ProductsTranferReport.objects.filter(
+        sortie__report__facility__id_facility=code
+    )
+    data["ProductStockReport"] = ProductStockReport.objects.filter(
+        stock_report__report__facility__id_facility=code
+    )
+    data["StockOutReport"] = StockOutReport.objects.filter(
+        report__facility__id_facility=code
+    )
+    data["Facility"] = Facility.objects.get(id_facility=code)
     return render(request, "cmam_app/details.html", data)
 
 
@@ -73,18 +89,20 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit products.
     """
+
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class StockView(TemplateView):
-    template_name = 'cmam_app/stocks.html'
+    template_name = "cmam_app/stocks.html"
 
 
 class ProvinceDistrictViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit province.
     """
+
     queryset = Province.objects.all()
     serializer_class = ProvinceDistrictsSerializer
 
@@ -93,18 +111,19 @@ class ProvinceDistrictViewSet(viewsets.ModelViewSet):
 
     def get_serializer_context(self):
         YEAR = datetime.today().year
-        if self.request.GET.get('year'):
-            YEAR = self.request.GET['year']
-        return {'YEAR': YEAR}
+        if self.request.GET.get("year"):
+            YEAR = self.request.GET["year"]
+        return {"YEAR": YEAR}
 
 
 class DistrictCDSViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit district.
     """
+
     queryset = District.objects.all()
     serializer_class = DistrictCDSSerializer
-    lookup_field = 'code'
+    lookup_field = "code"
 
     def get_queryset(self):
         return get_adminqueryset(self.request, self.queryset)
@@ -114,11 +133,12 @@ class CDSCDSViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit cds.
     """
+
     queryset = CDS.objects.filter(functional=True)
     serializer_class = CDSSerializers
-    lookup_field = 'code'
-    filter_fields = ('code', 'district__code', 'district__province__code')
-    search_fields = ('^code',)
+    lookup_field = "code"
+    filter_fields = ("code", "district__code", "district__province__code")
+    search_fields = ("^code",)
 
     def get_queryset(self):
         return get_adminqueryset(self.request, self.queryset)
@@ -128,6 +148,7 @@ class IncomingViewset(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit district.
     """
+
     queryset = IncomingPatientsReport.objects.all()
     serializer_class = IncomingPatientSerializer
 
@@ -139,6 +160,7 @@ class OutgoingViewset(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit district.
     """
+
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = OutgoingPatientSerializer
 
@@ -149,18 +171,24 @@ class OutgoingViewset(viewsets.ModelViewSet):
 class InOutViewset(viewsets.ModelViewSet):
     queryset = PatientReports.objects.all()
     serializer_class = InOutSerialiser
-    filter_fields = ('facility__facility_level__name', 'date_of_first_week_day')
-    search_fields = ('^facility__id_facility',)
+    filter_fields = ("facility__facility_level__name", "date_of_first_week_day")
+    search_fields = ("^facility__id_facility",)
 
     def get_queryset(self):
-        startdate = self.request.GET.get('startdate', '')
-        enddate = self.request.GET.get('enddate', '')
-        if startdate and startdate != 'undefined':
-            self.queryset = self.queryset.filter(date_of_first_week_day__gte=datetime.strptime(startdate, "%Y-%m-%d"))
-        if enddate and enddate != 'undefined':
-            self.queryset = self.queryset.filter(date_of_first_week_day__lte=datetime.strptime(enddate, "%Y-%m-%d"))
+        startdate = self.request.GET.get("startdate", "")
+        enddate = self.request.GET.get("enddate", "")
+        if startdate and startdate != "undefined":
+            self.queryset = self.queryset.filter(
+                date_of_first_week_day__gte=datetime.strptime(startdate, "%Y-%m-%d")
+            )
+        if enddate and enddate != "undefined":
+            self.queryset = self.queryset.filter(
+                date_of_first_week_day__lte=datetime.strptime(enddate, "%Y-%m-%d")
+            )
         else:
-            self.queryset = self.queryset.filter(date_of_first_week_day__year=datetime.today().year)
+            self.queryset = self.queryset.filter(
+                date_of_first_week_day__year=datetime.today().year
+            )
         return get_reportqueryset(self.request, self.queryset)
 
 
@@ -168,18 +196,25 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit district.
     """
+
     queryset = OutgoingPatientsReport.objects.all()
     serializer_class = SumOutSerialiser
-    filter_fields = ('report__facility__facility_level__name', 'date_of_first_week_day')
-    search_fields = ('^report__facility__id_facility',)
+    filter_fields = ("report__facility__facility_level__name", "date_of_first_week_day")
+    search_fields = ("^report__facility__id_facility",)
 
     def get_queryset(self):
-        startdate = self.request.GET.get('startdate', '')
-        enddate = self.request.GET.get('enddate', '')
-        if startdate and startdate != 'undefined':
-            self.queryset = self.queryset.filter(date_of_first_week_day__gte=datetime.strptime(startdate, "%Y-%m-%d"))
-        if enddate and enddate != 'undefined':
-            self.queryset = self.queryset.filter(date_of_first_week_day__lte=datetime.strptime(enddate, "%Y-%m-%d"))
+        startdate = self.request.GET.get("startdate", "")
+        enddate = self.request.GET.get("enddate", "")
+        if startdate and startdate != "undefined":
+            self.queryset = self.queryset.filter(
+                date_of_first_week_day__gte=datetime.strptime(startdate, "%Y-%m-%d")
+            )
+        if enddate and enddate != "undefined":
+            self.queryset = self.queryset.filter(
+                date_of_first_week_day__lte=datetime.strptime(enddate, "%Y-%m-%d")
+            )
         else:
-            self.queryset = self.queryset.filter(date_of_first_week_day__year=datetime.today().year)
+            self.queryset = self.queryset.filter(
+                date_of_first_week_day__year=datetime.today().year
+            )
         return get_reportqueryset(self.request, self.queryset)

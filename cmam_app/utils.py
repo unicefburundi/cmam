@@ -28,4 +28,6 @@ def get_reportqueryset(request, queryset, **kwargs):
             if queryset.model is PatientReports:
                 return queryset.filter(facility__id_facility__startswith=profile.level)
             else:
-                return queryset.filter(report__facility__id_facility__startswith=profile.level)
+                return queryset.filter(
+                    report__facility__id_facility__startswith=profile.level
+                )

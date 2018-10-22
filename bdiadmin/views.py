@@ -15,10 +15,12 @@ from django.contrib.auth.models import User
 
 @json_view
 def get_district(request, pk):
-    districts = get_adminqueryset(request, District.objects.filter(province=pk).values('id', 'name'))
+    districts = get_adminqueryset(
+        request, District.objects.filter(province=pk).values("id", "name")
+    )
     district = []
     for i in districts:
-        district.append({i['id']: i['name']})
+        district.append({i["id"]: i["name"]})
     return JsonResponse(json.dumps(district), safe=False)
 
 
@@ -26,6 +28,7 @@ class ProvinceViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit products.
     """
+
     queryset = Province.objects.all()
     serializer_class = ProvinceSerializer
 
@@ -37,6 +40,7 @@ class DistrictViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit products.
     """
+
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
 
@@ -48,6 +52,7 @@ class CDSViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to view or edit products.
     """
+
     queryset = CDS.objects.filter(functional=True)
     serializer_class = CDSSerializer
 
@@ -60,7 +65,9 @@ def edit_user(request, pk):
     user = User.objects.get(pk=pk)
     user_form = ProfileUserForm(instance=user)
 
-    ProfileInlineFormset = inlineformset_factory(User, ProfileUser, fields=('telephone', 'level'))
+    ProfileInlineFormset = inlineformset_factory(
+        User, ProfileUser, fields=("telephone", "level")
+    )
     formset = ProfileInlineFormset(instance=user)
 
     if request.user.is_authenticated() and request.user.id == user.id:
@@ -70,20 +77,22 @@ def edit_user(request, pk):
 
             if user_form.is_valid():
                 created_user = user_form.save(commit=False)
-                formset = ProfileInlineFormset(request.POST, request.FILES, instance=created_user)
+                formset = ProfileInlineFormset(
+                    request.POST, request.FILES, instance=created_user
+                )
 
                 if formset.is_valid():
                     created_user.save()
                     formset.save()
-                    return HttpResponseRedirect('/bdiadmin/profile/')
+                    return HttpResponseRedirect("/bdiadmin/profile/")
 
-        return render(request, "bdiadmin/account_update.html", {
-            "noodle": pk,
-            "noodle_form": user_form,
-            "formset": formset,
-        })
+        return render(
+            request,
+            "bdiadmin/account_update.html",
+            {"noodle": pk, "noodle_form": user_form, "formset": formset},
+        )
     else:
-        return HttpResponseRedirect('/bdiadmin/profile/')
+        return HttpResponseRedirect("/bdiadmin/profile/")
 
 
 class ProfileUserListView(ListView):
@@ -96,22 +105,22 @@ class ProfileUserCreateView(CreateView):
     form_class = ProfileUserForm
 
     def get_success_url(self):
-        return HttpResponseRedirect('/bdiadmin/profile/')
+        return HttpResponseRedirect("/bdiadmin/profile/")
 
     def form_valid(self, form, **kwargs):
         user_form = UserCreateForm(self.request.POST)
         if user_form.is_valid:
             new_user = user_form.save()
             profile = ProfileUser.objects.get(user=new_user)
-            profile.telephone = form.cleaned_data['telephone']
-            profile.level = form.cleaned_data['level']
+            profile.telephone = form.cleaned_data["telephone"]
+            profile.level = form.cleaned_data["level"]
             profile.save()
             form.send_email(self.request)
             return self.get_success_url()
         else:
-            return HttpResponseRedirect('/bdiadmin/profile/')
+            return HttpResponseRedirect("/bdiadmin/profile/")
 
     def form_invalid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
-        context['form'] = form
+        context["form"] = form
         return self.render_to_response(context)
