@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "import_export",
     "rest_framework",
+    'debug_toolbar',
     "django_extensions",
     "django_tables2",
     "drf_multiple_model",
@@ -62,6 +63,7 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = "cmam.urls"

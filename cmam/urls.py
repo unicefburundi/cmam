@@ -2,7 +2,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views
 from cmam_app.views import home, dashboard, landing
-
+from django.conf import settings
 
 urlpatterns = [
     url(r"^admin/", include(admin.site.urls)),
@@ -19,3 +19,10 @@ urlpatterns = [
     url(r"^logout/$", views.logout, {"template_name": "login.html"}, name="logout"),
     url(r"^$", landing, name="landing"),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+
+    ] + urlpatterns

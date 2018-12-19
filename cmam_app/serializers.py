@@ -58,9 +58,7 @@ class ProvinceDistrictsSerializer(ProvinceSerializer):
         fields = ("name", "code", "etablissements")
 
     def get_etablissements(self, obj):
-        districts = District.objects.filter(province__code=obj.code).values(
-            "name", "code"
-        )
+        districts = obj.district_set.values("name", "code")
         YEAR = self.context["YEAR"]
         # import ipdb; ipdb.set_trace()
         for d in districts:
@@ -94,9 +92,7 @@ class DistrictCDSSerializer(ProvinceSerializer):
         fields = ("name", "code", "etablissements")
 
     def get_etablissements(self, obj):
-        cds = CDS.objects.filter(district__code=obj.code, functional=True).values(
-            "name", "code"
-        )
+        cds = obj.cds_set.values("name", "code")
         for d in cds:
             for p in Product.objects.all():
                 d[p.designation] = {}

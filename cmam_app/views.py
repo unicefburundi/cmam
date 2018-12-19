@@ -103,7 +103,7 @@ class ProvinceDistrictViewSet(viewsets.ModelViewSet):
     API endpoint that allows users to view or edit province.
     """
 
-    queryset = Province.objects.all()
+    queryset = Province.objects.all().prefetch_related("district_set")
     serializer_class = ProvinceDistrictsSerializer
 
     def get_queryset(self):
@@ -121,7 +121,7 @@ class DistrictCDSViewSet(viewsets.ModelViewSet):
     API endpoint that allows users to view or edit district.
     """
 
-    queryset = District.objects.all()
+    queryset = District.objects.all().prefetch_related("cds_set")
     serializer_class = DistrictCDSSerializer
     lookup_field = "code"
 
@@ -169,7 +169,7 @@ class OutgoingViewset(viewsets.ModelViewSet):
 
 
 class InOutViewset(viewsets.ModelViewSet):
-    queryset = PatientReports.objects.all()
+    queryset = PatientReports.objects.all().select_related("facility__facility_level")
     serializer_class = InOutSerialiser
     filter_fields = ("facility__facility_level__name", "date_of_first_week_day")
     search_fields = ("^facility__id_facility",)
@@ -197,7 +197,7 @@ class SumOutgoingViewset(viewsets.ModelViewSet):
     API endpoint that allows users to view or edit district.
     """
 
-    queryset = OutgoingPatientsReport.objects.all()
+    queryset = OutgoingPatientsReport.objects.all().select_related("report__facility__facility_level")
     serializer_class = SumOutSerialiser
     filter_fields = ("report__facility__facility_level__name", "date_of_first_week_day")
     search_fields = ("^report__facility__id_facility",)
